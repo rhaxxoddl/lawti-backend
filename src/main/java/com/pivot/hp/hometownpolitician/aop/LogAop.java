@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 @Aspect
 @Component
 public class LogAop {
+
     @Around("within(com.pivot.hp.hometownpolitician.controller..*)")
     public Object log(ProceedingJoinPoint pjp) throws Throwable {
         Long start = System.currentTimeMillis();
@@ -36,15 +37,15 @@ public class LogAop {
     }
 
     private void logRequest(JoinPoint joinPoint) {
-        log.info("REQUEST of {} ({})\t\t-> {}", getDeclaringTypeName(joinPoint), getMethod(joinPoint).getName(), getParams(joinPoint));
+        log.info("REQUEST of {} ({})\n-> {}", getDeclaringTypeName(joinPoint), getMethod(joinPoint).getName(), getParams(joinPoint));
     }
 
     private void logResponse(JoinPoint joinPoint, Object returnObj) {
-        log.info("RESPONSE of {} ({})\t-> {}", getDeclaringTypeName(joinPoint), getMethod(joinPoint).getName(), getReturnObj(returnObj));
+        log.info("RESPONSE of {} ({})\n-> {}", getDeclaringTypeName(joinPoint), getMethod(joinPoint).getName(), getReturnObj(returnObj));
     }
 
     private void logSummary(JoinPoint joinPoint, Long start, Long end) {
-        log.info("SUMMARY of {} ({})\t\t-> {}", getDeclaringTypeName(joinPoint), getMethod(joinPoint).getName(), getSummary(start, end));
+        log.info("SUMMARY of {} ({})\n-> {}", getDeclaringTypeName(joinPoint), getMethod(joinPoint).getName(), getSummary(start, end));
     }
 
     private Method getMethod(JoinPoint joinPoint) {
@@ -121,4 +122,5 @@ public class LogAop {
             return "\taddr -> " + addr + "\n\turi -> " + uri + "\n\tmethod -> " + method + "\n\tlatency -> " + Long.toString(latency);
         }
     }
+
 }
