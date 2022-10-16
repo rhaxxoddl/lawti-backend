@@ -1,5 +1,6 @@
 package com.pivot.hp.hometownpolitician;
 
+import com.pivot.hp.hometownpolitician.annotation.EnableQueryLog;
 import com.pivot.hp.hometownpolitician.entity.QSample;
 import com.pivot.hp.hometownpolitician.entity.Sample;
 import com.pivot.hp.hometownpolitician.repository.SampleRepository;
@@ -15,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
+@EnableQueryLog
 class SampleTest {
 
     @Autowired
