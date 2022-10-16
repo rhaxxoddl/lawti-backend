@@ -1,13 +1,11 @@
 package com.pivot.hp.hometownpolitician.aop;
 
 import graphql.com.google.common.base.Joiner;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;

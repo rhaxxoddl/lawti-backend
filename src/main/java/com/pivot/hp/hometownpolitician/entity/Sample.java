@@ -19,4 +19,3 @@ public class Sample {
     private Long id;
 
 }
-
