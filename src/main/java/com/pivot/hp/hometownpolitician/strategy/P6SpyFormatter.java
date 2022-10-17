@@ -5,11 +5,13 @@ import com.p6spy.engine.event.JdbcEventListener;
 import com.p6spy.engine.spy.P6SpyOptions;
 import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
 import org.hibernate.engine.jdbc.internal.FormatStyle;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.sql.SQLException;
 
+@Profile({"local", "test"})
 @Component
 public class P6SpyFormatter extends JdbcEventListener implements MessageFormattingStrategy {
 
