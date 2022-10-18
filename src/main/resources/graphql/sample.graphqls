@@ -1,0 +1,8 @@
+type Query {
+    findAll: [Sample]
+    findById(id: ID!): Sample
+}
+
+type Sample {
+    id: ID!
+}

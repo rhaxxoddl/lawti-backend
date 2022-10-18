@@ -18,4 +18,8 @@ public class Sample {
     @GeneratedValue
     private Long id;
 
+    public Sample(Long id) {
+        this.id = id;
+    }
+
 }

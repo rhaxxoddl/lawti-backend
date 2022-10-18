@@ -66,6 +66,9 @@ public class LogAop {
 
     private String getParamsInternal(Stream<Object> stream) {
         return stream.map(e -> {
+            if (e == null) {
+                return "";
+            }
             Object[] values = new Object[1];
             values[0] = e;
             return String.format("\t%s -> %s", e.getClass().getSimpleName(), Joiner.on(",").join(values));
@@ -73,6 +76,9 @@ public class LogAop {
     }
 
     private Object getReturnObj(Object returnObj) {
+        if (returnObj == null) {
+            return "";
+        }
         Object[] values = new Object[1];
         values[0] = returnObj;
         String obj = String.format("\t%s -> %s", returnObj.getClass().getSimpleName(), Joiner.on(",").join(values));
