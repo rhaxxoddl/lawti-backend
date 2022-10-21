@@ -2,6 +2,7 @@ package com.pivot.hp.hometownpolitician.controller;
 
 import com.pivot.hp.hometownpolitician.entity.Sample;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class SampleController {
     public List<Sample> findAll() {
         List<Sample> sampleList = new ArrayList<>(10);
         IntStream.range(0, 10).forEach(e -> {
-            sampleList.add(new Sample(new Long(e)));
+            sampleList.add(new Sample((long) e));
         });
         return sampleList;
     }

@@ -1,9 +1,8 @@
-package com.pivot.hp.hometownpolitician;
+package com.pivot.hp.hometownpolitician.repository;
 
 import com.pivot.hp.hometownpolitician.annotation.EnableQueryLog;
 import com.pivot.hp.hometownpolitician.entity.QSample;
 import com.pivot.hp.hometownpolitician.entity.Sample;
-import com.pivot.hp.hometownpolitician.repository.SampleRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 @EnableQueryLog
-class SampleTest {
+class SampleRepositoryTest {
 
     @Autowired
     SampleRepository sampleRepository;
