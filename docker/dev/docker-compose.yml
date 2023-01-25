@@ -1,0 +1,25 @@
+version: '3.0'
+services:
+  project-dev:
+    build:
+      args:
+        - ARG_PORT=${PORT}
+        - ARG_PROFILE=dev
+      context: .
+      dockerfile: Dockerfile
+    container_name: project-dev
+    image: project-dev
+    networks:
+      - project-dev-network
+    platform: linux/x86_64
+    ports:
+      - ${PORT}:${PORT}
+    restart: always
+    volumes:
+      - ~/logs:/logs
+
+networks:
+  project-dev-network:
+    driver: bridge
+
+

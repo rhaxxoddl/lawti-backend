@@ -1,0 +1,7 @@
+query ThisIsForBaseQueryDoNotTouchThisMethod {
+    ThisIsForBaseQueryDoNotTouchThisMethod
+}
+
+mutation ThisIsForBaseMutationDoNotTouchThisMethod {
+    ThisIsForBaseMutationDoNotTouchThisMethod
+}
