@@ -1,0 +1,18 @@
+server {
+  listen 80;
+  listen 443 ssl;
+  server_name transcendence.dev www.transcendence.dev;
+  ssl_certificate /etc/letsencrypt/live/transcendence.dev/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/transcendence.dev/privkey.pem; # managed by Certbot
+
+  location ^~/.well-known/acme-challenge/ {
+    default_type "text/plain";
+    root /var/www/letsencrypt;
+  }
+}
+
+server {
+  server_name transcendence.dev www.transcendence.dev;
+  ssl_certificate /etc/letsencrypt/live/transcendence.dev/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/transcendence.dev/privkey.pem; # managed by Certbot
+}

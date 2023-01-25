@@ -1,0 +1,23 @@
+version: '3.0'
+services:
+  project-prod:
+    build:
+      args:
+        - ARG_PORT=${PORT}
+        - ARG_PROFILE=prod
+      context: .
+      dockerfile: Dockerfile
+    container_name: project-prod
+    image: project-prod
+    networks:
+      - project-prod-network
+    platform: linux/x86_64
+    ports:
+      - ${PORT}:${PORT}
+    restart: always
+    volumes:
+      - ~/logs:/logs
+
+networks:
+  project-prod-network:
+    driver: bridge

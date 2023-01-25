@@ -1,0 +1,53 @@
+scalar Null         #Null을 의미하는 타입
+scalar Upload       #Multipart File 업로드 타입
+scalar Date         #ISO8601 YYYY-MM-DD 형식의 Date 타입
+scalar Byte         #Java Byte 타입
+scalar Long         #Java Long 타입
+scalar Short        #Java Short 타입
+scalar Char         #Java Char 타입
+scalar BigDecimal   #Java BigDecimal 타입
+scalar BigInteger   #Java BigInteger 타입
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query {
+    ThisIsForBaseQueryDoNotTouchThisMethod: Null
+}
+
+type Mutation {
+    ThisIsForBaseMutationDoNotTouchThisMethod: Null
+}
+
+input ConditionInput {
+    keyword: String                 #!!!Nullable
+    category: String                #!!!Nullable
+    dateRange: DateRangeInput       #!!!Nullable
+    pagination: PaginationInput!
+}
+
+input DateRangeInput {
+    begin: Date!
+    end: Date!
+}
+
+input PaginationInput {
+    elementSize: Long!      #읽고 싶은 데이터의 크기
+    targetNumber: Long!     #무한 스크롤 방식인 경우 가장 마지막 대상의 Id / 페이지 번호가 있다면 페이지 번호
+    isSliced: Boolean!      #무한 스크롤 방식이라면 true / 페이지 번호가 있다면 false
+    isAscending: Boolean!   #오름차순 여부
+}
+
+type PaginationDto {
+    totalPageSize: Long             #페이지의 총 크기      !!!Nullable (Sliced 인 경우 Null)
+    totalElementSize: Long          #데이터의 총 크기      !!!Nullable (Sliced 인 경우 Null)
+    currentPageNumber: Long!        #현재 페이지 번호
+    currentElementSize: Long!       #현재 페이지에서 읽은 데이터의 크기
+    currentMaxElementSize: Long!    #현재 페이지에서 보여주고자 하는 데이터의 크기
+    isFirst: Boolean!               #첫 페이지인지 여부
+    isLast: Boolean!                #마지막 페이지인지 여부
+    isEmpty: Boolean!               #데이터가 비어있는지 여부
+    isSliced: Boolean!              #무한 스크롤 방식이라면 true / 페이지 번호가 있다면 false
+}
