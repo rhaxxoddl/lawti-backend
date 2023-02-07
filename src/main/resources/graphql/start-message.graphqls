@@ -1,0 +1,23 @@
+extend type Query {
+    # [getStartMessages]
+    # Lawti 어플리케이션을 처음 실행했을 때 시작 메시지를 반환하는 메서드
+    # [Usage]
+    # Query getStartMessages {
+    #    StartMessagesDto {
+    #        list {
+    #            id
+    #            message
+    #        }
+    #    }
+    #}
+    getStartMessages: StartMessagesDto!
+}
+
+type StartMessagesDto {
+    list: [StartMessageDto]!
+}
+
+type StartMessageDto {
+    id: Long!
+    message: String!
+}
