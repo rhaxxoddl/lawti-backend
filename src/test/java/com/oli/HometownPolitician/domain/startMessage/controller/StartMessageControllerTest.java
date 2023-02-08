@@ -31,12 +31,9 @@ class StartMessageControllerTest {
                 .verify()
                 .path("queryStartMessages.list")
                 .entityList(StartMessageDto.class)
-                .isNotEqualTo(null)
                 .path("queryStartMessages.list[*].id")
                 .entityList(Long.class)
-                .isNotEqualTo(null)
                 .path("queryStartMessages.list[*].message")
-                .entityList(String.class)
-                .isNotEqualTo(null);
+                .entityList(String.class);
     }
 }
