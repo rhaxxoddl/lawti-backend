@@ -1,0 +1,67 @@
+extend type Query {
+    #    전체 관심분야를 반환하는 메서드
+    #    [Usage]
+    #    query queryStartMessages {
+    #    queryStartMessages {
+    #        list {
+    #            id
+    #            name
+    #        }
+    #    }
+    #}
+    queryInterests: InterestsDto!
+
+    #    사용자가 follow한 관심분야를 반환하는 메서드
+    #    [Usage]
+    #    query queryFollowedInterests {
+    #    queryFollowedInterests {
+    #        list {
+    #            id
+    #            name
+    #        }
+    #    }
+    #}
+    queryFollowedInterests: InterestsDto!
+}
+
+extend type Mutation {
+    #    관심분야 추가하는 메서드
+    #    [Usage]
+    #    mutation followMyInterests {
+    #       followMyInterests($input: InterestsInput!) {
+    #            followMyInterests(input: $input)
+    #       }
+    #   }
+    #   [GRAPHQL VARIABLES]
+    #
+    followMyInterests(input: InterestsInput!): Null
+
+    #    관심분야 제거하는 메서드
+    #    [Usage]
+    #    mutation unfollowMyInterests {
+    #       unfollowMyInterests($input: InterestsInput!) {
+    #            followMyInterests(input: $input)
+    #       }
+    #   }
+    #   [GRAPHQL VARIABLES]
+    #
+    unfollowMyInterests(input: InterestsInput!): Null
+}
+
+type InterestsDto {
+    list: [InterestDto]!
+}
+
+type InterestDto {
+    id: Long!
+    name: String!
+}
+
+input InterestsInput {
+    list: [InterestInput]!
+}
+
+input InterestInput {
+    id: Long!
+    name: String!
+}
