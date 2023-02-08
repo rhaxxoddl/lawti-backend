@@ -1,4 +1,4 @@
-package com.oli.HometownPolitician.domain.Lawti.entity;
+package com.oli.HometownPolitician.domain.startMessage.entity;
 
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
 import lombok.AccessLevel;

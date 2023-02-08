@@ -1,6 +1,6 @@
-package com.oli.HometownPolitician.domain.StartMessage.dto;
+package com.oli.HometownPolitician.domain.startMessage.dto;
 
-import com.oli.HometownPolitician.domain.StartMessage.entity.StartMessage;
+import com.oli.HometownPolitician.domain.startMessage.entity.StartMessage;
 import lombok.Builder;
 import lombok.Getter;
 

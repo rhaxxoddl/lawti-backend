@@ -1,4 +1,4 @@
-package com.oli.HometownPolitician.domain.StartMessage.dto;
+package com.oli.HometownPolitician.domain.startMessage.dto;
 
 import lombok.Builder;
 import lombok.Getter;
