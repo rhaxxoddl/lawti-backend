@@ -1,0 +1,8 @@
+ query queryStartMessages {
+    queryStartMessages {
+        list {
+            id
+            message
+        }
+    }
+}
