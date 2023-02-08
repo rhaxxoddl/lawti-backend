@@ -1,0 +1,8 @@
+query queryInterests {
+    queryInterests {
+        list {
+            id
+            name
+        }
+    }
+}
