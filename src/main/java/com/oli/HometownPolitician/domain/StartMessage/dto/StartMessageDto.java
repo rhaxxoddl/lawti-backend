@@ -1,6 +1,6 @@
-package com.oli.HometownPolitician.domain.Lawti.dto;
+package com.oli.HometownPolitician.domain.StartMessage.dto;
 
-import com.oli.HometownPolitician.domain.Lawti.entity.StartMessage;
+import com.oli.HometownPolitician.domain.StartMessage.entity.StartMessage;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,13 +8,13 @@ import lombok.Getter;
 @Builder
 public class StartMessageDto {
     private Long id;
-    private String greetings;
+    private String message;
 
     static public StartMessageDto from(StartMessage startMessage) {
         return StartMessageDto
                 .builder()
                 .id(startMessage.getId())
-                .greetings(startMessage.getMessage())
+                .message(startMessage.getMessage())
                 .build();
     }
 }

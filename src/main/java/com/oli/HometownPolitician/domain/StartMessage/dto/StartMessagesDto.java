@@ -1,4 +1,4 @@
-package com.oli.HometownPolitician.domain.Lawti.dto;
+package com.oli.HometownPolitician.domain.StartMessage.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -8,12 +8,12 @@ import java.util.List;
 @Getter
 @Builder
 public class StartMessagesDto {
-    private List<StartMessageDto> startMessageDtoList;
+    private List<StartMessageDto> list;
 
     static public StartMessagesDto from(List<StartMessageDto> startMessageDtoList) {
         return StartMessagesDto
                 .builder()
-                .startMessageDtoList(startMessageDtoList)
+                .list(startMessageDtoList)
                 .build();
     }
 }
