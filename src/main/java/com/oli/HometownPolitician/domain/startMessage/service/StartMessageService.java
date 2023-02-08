@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class StartMessageService {
     private final StartMessageRepository startMessageRepository;
 
-    public StartMessagesDto getStartMessages() {
+    public StartMessagesDto queryStartMessages() {
         return StartMessagesDto.from(startMessageRepository
                 .findAll()
                 .stream()

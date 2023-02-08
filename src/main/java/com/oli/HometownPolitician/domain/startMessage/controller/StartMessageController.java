@@ -15,7 +15,7 @@ public class StartMessageController {
     private final StartMessageService startMessageService;
 
     @QueryMapping(name = "queryStartMessages")
-    public StartMessagesDto getStartMessages() {
-        return startMessageService.getStartMessages();
+    public StartMessagesDto queryStartMessages() {
+        return startMessageService.queryStartMessages();
     }
 }

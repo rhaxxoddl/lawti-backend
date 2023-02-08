@@ -51,7 +51,7 @@ class StartMessageServiceTest {
     @Test
     @DisplayName("시작 메시지가 StartMessagesDto로 데이터 변환 잘 되는지 확인")
     public void start_message_translate() {
-        StartMessagesDto startMessagesDto = startMessageService.getStartMessages();
+        StartMessagesDto startMessagesDto = startMessageService.queryStartMessages();
         assertThat(startMessagesDto).isNotNull();
         assertThat(startMessagesDto.getList()).isNotNull();
         assertThat(startMessagesDto.getList().size()).isEqualTo(START_MESSAGE_SIZE);
