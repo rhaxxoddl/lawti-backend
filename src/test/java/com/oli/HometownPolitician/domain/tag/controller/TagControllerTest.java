@@ -20,17 +20,17 @@ class TagControllerTest {
 
     @Test
     @DisplayName("관심분야 리스트 반환됨을 확인")
-    public void interests_well_test() {
-        graphQlTester.documentName("interest")
-                .operationName("queryInterests")
+    public void tags_well_test() {
+        graphQlTester.documentName("tag")
+                .operationName("queryTags")
                 .execute()
                 .errors()
                 .verify()
-                .path("queryInterests.list")
+                .path("queryTags.list")
                 .entityList(TagDto.class)
-                .path("queryInterests.list[*].id")
+                .path("queryTags.list[*].id")
                 .entityList(Long.class)
-                .path("queryInterests.list[*].name")
+                .path("queryTags.list[*].name")
                 .entityList(String.class);
     }
 

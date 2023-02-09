@@ -50,7 +50,7 @@ class TagRepositoryTest {
 
     @Test
     @DisplayName("저장된 관심분야 전체가 잘 나오는지 확인")
-    public void interests_all_well_test() {
+    public void tags_all_well_test() {
         List<Tag> tagList = tagRepository.findAll();
         assertThat(tagList.size()).isEqualTo(INTERESTS_SIZE);
         assertThat(tagList.get(0).getName()).isEqualTo(INTEREST1);

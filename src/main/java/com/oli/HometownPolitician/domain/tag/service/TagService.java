@@ -13,15 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 public class TagService {
     private final TagRepository tagRepository;
-    public TagsDto queryInterests() {
+    public TagsDto queryTags() {
         return TagsDto
                 .from(tagRepository.findAll());
     }
-    public void queryFollowedMyInterests(TagsInput tagsInput) {
+    public void queryFollowedMyTags(TagsInput tagsInput) {
     }
-    public void followMyInterests(TagsInput tagsInput) {
+    public void followMyTags(TagsInput tagsInput) {
     }
-    public void unfollowMyInterests(TagsInput tagsInput) {
+    public void unfollowMyTags(TagsInput tagsInput) {
     }
 
 }

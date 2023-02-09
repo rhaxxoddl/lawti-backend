@@ -1,5 +1,5 @@
-query queryInterests {
-    queryInterests {
+query queryTags {
+    queryTags {
         list {
             id
             name
