@@ -1,6 +1,5 @@
-package com.oli.HometownPolitician.domain.tag.controller;
+package com.oli.HometownPolitician.domain.user.controller;
 
-import com.oli.HometownPolitician.domain.tag.dto.TagDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,24 +13,21 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 @AutoConfigureGraphQlTester
 @Transactional
-class TagControllerTest {
+class UserControllerTest {
+
     @Autowired
     private GraphQlTester graphQlTester;
 
     @Test
-    @DisplayName("관심분야 리스트 반환됨을 확인")
-    public void tags_well_test() {
-        graphQlTester.documentName("tag")
-                .operationName("queryTags")
+    @DisplayName("queryToken TokenDto가 잘 반환됨을 확인")
+    public void queryAccessToken_well_test() {
+        graphQlTester.documentName("user")
                 .execute()
                 .errors()
                 .verify()
-                .path("queryTags.list")
-                .entityList(TagDto.class)
-                .path("queryTags.list[*].id")
-                .entityList(Long.class)
-                .path("queryTags.list[*].name")
-                .entityList(String.class);
+                .path("queryToken.accessToken")
+                .entity(String.class);
     }
+
 
 }

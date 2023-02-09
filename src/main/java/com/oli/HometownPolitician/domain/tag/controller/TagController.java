@@ -15,19 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class TagController {
     private final TagService tagService;
 
-    @QueryMapping(name = "queryInterests")
-    public TagsDto queryInterests() {
-        return tagService.queryInterests();
+    @QueryMapping(name = "queryTags")
+    public TagsDto queryTags() {
+        return tagService.queryTags();
     }
 
-    @QueryMapping(name = "queryFollowedInterests")
-    public TagsDto queryFollowedInterests() {
+    @QueryMapping(name = "queryFollowedTags")
+    public TagsDto queryFollowedTags() {
         return null;
     }
-    @MutationMapping(name = "followMyInterests")
-    public void followMyInterests(TagsInput tagsInput) {
+    @MutationMapping(name = "followMyTags")
+    public void followMyTags(TagsInput tagsInput) {
     }
-    @MutationMapping(name = "unfollowMyInterests")
-    public void unfollowMyInterests(TagsInput tagsInput) {
+    @MutationMapping(name = "unfollowMyTags")
+    public void unfollowMyTags(TagsInput tagsInput) {
     }
 }

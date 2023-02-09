@@ -1,0 +1,5 @@
+    query queryAccessToken {
+    queryToken {
+        accessToken
+    }
+}

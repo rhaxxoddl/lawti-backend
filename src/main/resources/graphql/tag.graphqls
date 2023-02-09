@@ -1,0 +1,67 @@
+extend type Query {
+    #    전체 관심분야를 반환하는 메서드
+    #    [Usage]
+    #    query queryTags {
+    #    queryTags {
+    #        list {
+    #            id
+    #            name
+    #        }
+    #    }
+    #}
+    queryTags: TagsDto!
+
+    #    사용자가 follow한 관심분야를 반환하는 메서드
+    #    [Usage]
+    #    query queryFollowedTags {
+    #    queryFollowedTags {
+    #        list {
+    #            id
+    #            name
+    #        }
+    #    }
+    #}
+    queryFollowedTags: TagsDto!
+}
+
+extend type Mutation {
+    #    관심분야 추가하는 메서드
+    #    [Usage]
+    #    mutation followMyTags {
+    #       followMyTags($input: InterestsInput!) {
+    #            followMyTags(input: $input)
+    #       }
+    #   }
+    #   [GRAPHQL VARIABLES]
+    #
+    followMyTags(input: TagsInput!): Null
+
+    #    관심분야 제거하는 메서드
+    #    [Usage]
+    #    mutation unfollowMyTags {
+    #       unfollowMyTags($input: InterestsInput!) {
+    #            unfollowMyTags(input: $input)
+    #       }
+    #   }
+    #   [GRAPHQL VARIABLES]
+    #
+    unfollowMyTags(input: TagsInput!): Null
+}
+
+type TagsDto {
+    list: [TagDto]!
+}
+
+type TagDto {
+    id: Long!
+    name: String!
+}
+
+input TagsInput {
+    list: [TagInput]!
+}
+
+input TagInput {
+    id: Long!
+    name: String!
+}

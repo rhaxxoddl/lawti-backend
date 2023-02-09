@@ -46,7 +46,7 @@ class TagServiceTest {
     @Test
     @DisplayName("queryInterest에서 InterestsDto를 잘 반환하는지 확인")
     public void queryinterests_well_test() {
-        TagsDto tagsDto = tagService.queryInterests();
+        TagsDto tagsDto = tagService.queryTags();
         assertThat(tagsDto).isNotNull();
         assertThat(tagsDto.getList()).isNotNull();
         assertThat(tagsDto.getList().size()).isEqualTo(INTERESTS_SIZE);
