@@ -1,0 +1,18 @@
+extend type Query {
+    #    유저가 처음 앱에 접속했을 때 접근용 토큰을 반환하는 메서드
+    #    [Usage]
+    #    query queryAccessToken {
+    #    queryAccessToken {
+    #        token
+    #    }
+    #}
+    queryToken: TokenDto!
+}
+
+#extend type Mutation {
+#    #    해당 기기에 알림을 보내기 위해 message token을 등록, 업데이트하는 메서드
+#}
+
+type TokenDto {
+    accessToken: String!
+}
