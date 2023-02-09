@@ -1,4 +1,4 @@
-package com.oli.HometownPolitician.domain.interest.dto;
+package com.oli.HometownPolitician.domain.tag.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class InterestsInput {
+public class TagsInput {
     @NotEmpty
-    private List<InterestInput> list;
+    private List<TagInput> list;
 }
