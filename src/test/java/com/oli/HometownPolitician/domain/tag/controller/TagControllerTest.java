@@ -1,6 +1,6 @@
-package com.oli.HometownPolitician.domain.interest.controller;
+package com.oli.HometownPolitician.domain.tag.controller;
 
-import com.oli.HometownPolitician.domain.interest.dto.InterestDto;
+import com.oli.HometownPolitician.domain.tag.dto.TagDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 @AutoConfigureGraphQlTester
 @Transactional
-class InterestControllerTest {
+class TagControllerTest {
     @Autowired
     private GraphQlTester graphQlTester;
 
@@ -27,7 +27,7 @@ class InterestControllerTest {
                 .errors()
                 .verify()
                 .path("queryInterests.list")
-                .entityList(InterestDto.class)
+                .entityList(TagDto.class)
                 .path("queryInterests.list[*].id")
                 .entityList(Long.class)
                 .path("queryInterests.list[*].name")

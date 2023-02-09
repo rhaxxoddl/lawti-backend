@@ -1,4 +1,4 @@
-package com.oli.HometownPolitician.domain.interest.entity;
+package com.oli.HometownPolitician.domain.tag.entity;
 
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
 import lombok.AccessLevel;
@@ -15,7 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "tags")
 @EntityListeners(AuditingEntityListener.class)
-public class Interest extends BaseTimeEntity {
+public class Tag extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tag_id", unique = true, nullable = false)
