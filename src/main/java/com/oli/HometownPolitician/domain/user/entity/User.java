@@ -6,13 +6,12 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
@@ -31,6 +30,11 @@ public class User extends BaseTimeEntity {
     private String uuid;
 
     @OneToMany(mappedBy = "user")
-    private List<UserTagRelation> followedTags;
+    private List<UserTagRelation> followedTags = new ArrayList<>();
+
+    @Builder
+    public User(String uuid) {
+        this.uuid = uuid;
+    }
 
 }

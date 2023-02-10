@@ -16,8 +16,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public String createAnonymousUser() {
-        User newAnonymousUser = new User();
-        newAnonymousUser.setUuid(UUID.randomUUID().toString());
+        User newAnonymousUser = new User(UUID.randomUUID().toString());
         userRepository.save(newAnonymousUser);
         return newAnonymousUser.getUuid();
     }
