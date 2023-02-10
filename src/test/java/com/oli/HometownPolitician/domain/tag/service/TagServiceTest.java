@@ -62,6 +62,10 @@ class TagServiceTest {
         assertThat(tagsDto).isNotNull();
         assertThat(tagsDto.getList()).isNotNull();
         assertThat(tagsDto.getList().size()).isEqualTo(INTERESTS_SIZE);
+        tagsDto.getList().forEach(e -> {
+            assertThat(e.getId()).isNotNull();
+            assertThat(e.getName()).isNotBlank();
+        });
     }
 
     @Test
