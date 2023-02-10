@@ -10,8 +10,6 @@ import javax.persistence.*;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "user_tag_relations")
@@ -30,4 +28,10 @@ public class UserTagRelation extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag", referencedColumnName = "tag_id", nullable = false)
     private Tag tag;
+
+    @Builder
+    public UserTagRelation(User user, Tag tag) {
+        this.user = user;
+        this.tag = tag;
+    }
 }
