@@ -22,6 +22,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 class TagServiceTest {
     static private final int INTERESTS_SIZE = 9;
+    static private final String INTEREST1 = "국회, 인권";
+    static private final String INTEREST2 = "형법, 민법, 범죄";
+    static private final String INTEREST3 = "금융, 공정거래, 보훈(국가유공)";
+    static private final String INTEREST4 = "관세, 세금, 통계";
+    static private final String INTEREST5 = "교육, 교육공무원";
+    static private final String INTEREST6 = "과학, 방송, 통신, 인터넷";
+    static private final String INTEREST7 = "외교, 통일, 북한이탈주민, 재외동포, 해외";
+    static private final String INTEREST8 = "병역, 국방";
+    static private final String INTEREST9 = "경찰, 소방, 선거, 공무원, 재난, 운전";
     @Autowired
     private TagRepository tagRepository;
 
@@ -31,15 +40,15 @@ class TagServiceTest {
     @BeforeEach
     private void initialData() {
         List<Tag> tagList = new ArrayList<>();
-        tagList.add(new Tag(1L, "국회, 인권"));
-        tagList.add(new Tag(2L, "형법, 민법, 범죄"));
-        tagList.add(new Tag(3L, "금융, 공정거래, 보훈(국가유공)"));
-        tagList.add(new Tag(4L, "관세, 세금, 통계"));
-        tagList.add(new Tag(5L, "교육, 교육공무원"));
-        tagList.add(new Tag(6L, "과학, 방송, 통신, 인터넷"));
-        tagList.add(new Tag(7L, "외교, 통일, 북한이탈주민, 재외동포, 해외"));
-        tagList.add(new Tag(8L, "병역, 국방"));
-        tagList.add(new Tag(9L, "경찰, 소방, 선거, 공무원, 재난, 운전"));
+        tagList.add(new Tag(INTEREST1));
+        tagList.add(new Tag(INTEREST2));
+        tagList.add(new Tag(INTEREST3));
+        tagList.add(new Tag(INTEREST4));
+        tagList.add(new Tag(INTEREST5));
+        tagList.add(new Tag(INTEREST6));
+        tagList.add(new Tag(INTEREST7));
+        tagList.add(new Tag(INTEREST8));
+        tagList.add(new Tag(INTEREST9));
         tagRepository.saveAll(tagList);
     }
 

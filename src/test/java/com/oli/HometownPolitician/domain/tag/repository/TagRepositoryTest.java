@@ -36,15 +36,15 @@ class TagRepositoryTest {
     private void initialData() {
 
         List<Tag> tagList = new ArrayList<>();
-        tagList.add(new Tag(1L, INTEREST1));
-        tagList.add(new Tag(2L, INTEREST2));
-        tagList.add(new Tag(3L, INTEREST3));
-        tagList.add(new Tag(4L, INTEREST4));
-        tagList.add(new Tag(5L, INTEREST5));
-        tagList.add(new Tag(6L, INTEREST6));
-        tagList.add(new Tag(7L, INTEREST7));
-        tagList.add(new Tag(8L, INTEREST8));
-        tagList.add(new Tag(9L, INTEREST9));
+        tagList.add(new Tag(INTEREST1));
+        tagList.add(new Tag(INTEREST2));
+        tagList.add(new Tag(INTEREST3));
+        tagList.add(new Tag(INTEREST4));
+        tagList.add(new Tag(INTEREST5));
+        tagList.add(new Tag(INTEREST6));
+        tagList.add(new Tag(INTEREST7));
+        tagList.add(new Tag(INTEREST8));
+        tagList.add(new Tag(INTEREST9));
         tagRepository.saveAll(tagList);
     }
 
