@@ -17,7 +17,9 @@ public class TagService {
         return TagsDto
                 .from(tagRepository.findAll());
     }
-    public void queryFollowedMyTags(TagsInput tagsInput) {
+
+    public TagsDto queryFollowedTagsByUserUuid(String userUuid) {
+        return TagsDto.from(tagRepository.qFindFollowedTagsByUserUuid(userUuid));
     }
     public void followMyTags(TagsInput tagsInput) {
     }
