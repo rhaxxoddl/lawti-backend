@@ -1,5 +1,6 @@
 package com.oli.HometownPolitician.domain.tag.entity;
 
+import com.oli.HometownPolitician.domain.entityRelation.entity.UserTagRelation;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Entity
@@ -23,4 +25,7 @@ public class Tag extends BaseTimeEntity {
 
     @Column(name = "name", unique = true, nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "tag")
+    private List<UserTagRelation> followingUsers;
 }

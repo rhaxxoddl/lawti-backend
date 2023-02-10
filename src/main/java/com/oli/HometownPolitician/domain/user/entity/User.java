@@ -1,10 +1,12 @@
 package com.oli.HometownPolitician.domain.user.entity;
 
+import com.oli.HometownPolitician.domain.entityRelation.entity.UserTagRelation;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,5 +29,8 @@ public class User extends BaseTimeEntity {
 
     @Column(name = "uuid", unique = true)
     private String uuid;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserTagRelation> followedTags;
 
 }
