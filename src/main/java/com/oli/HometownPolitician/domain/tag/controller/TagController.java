@@ -23,7 +23,7 @@ public class TagController {
 
     @QueryMapping(name = "queryFollowedTags")
     public TagsDto queryFollowedTags(@ContextValue String authorization) {
-        return tagService.queryFollowedTagsByUserUuid(authorization);
+        return tagService.queryFollowedTagsByAuthorization(authorization);
     }
     @MutationMapping(name = "followMyTags")
     public void followMyTags(TagsInput tagsInput) {

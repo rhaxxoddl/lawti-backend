@@ -19,11 +19,10 @@ public class TagService {
                 .from(tagRepository.findAll());
     }
 
-    public TagsDto queryFollowedTagsByUserUuid(String userUuid) {
+    public TagsDto queryFollowedTagsByAuthorization(String authorization) {
+        String userUuid =  deleteUuidPrefix(authorization);
         return TagsDto.from(
-                tagRepository.qFindFollowedTagsByUserUuid(
-                        deleteUuidPrefix(userUuid)
-                )
+                tagRepository.qFindFollowedTagsByUserUuid(userUuid)
         );
     }
     public void followMyTags(TagsInput tagsInput) {
