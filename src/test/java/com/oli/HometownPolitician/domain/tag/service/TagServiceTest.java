@@ -71,7 +71,7 @@ class TagServiceTest {
     @Test
     @DisplayName("queryFollowedTagsByUserUuid에서 TagsDto를 잘 반환하는지 확인")
     void queryFollowedTagsByUserUuid_well_test() {
-        TagsDto tagsDto = tagService.queryFollowedTagsByUserUuid(USER_UUID);
+        TagsDto tagsDto = tagService.queryFollowedTagsByAuthorization(USER_UUID);
         assertThat(tagsDto).isNotNull();
         assertThat(tagsDto.getList()).isNotNull();
         assertThat(tagsDto.getList().size()).isEqualTo(FOLLOWED_TAGS_SIZE);
@@ -79,6 +79,15 @@ class TagServiceTest {
             assertThat(e.getId()).isNotNull();
             assertThat(e.getName()).isNotBlank();
         });
+    }
+
+    @Test
+    @DisplayName("queryFollowedTagsByUserUuid에서 DB에 없는 UUID일 경우 TagsDto에 list의 길이가 0인지 확인")
+    void queryFollowedTagsByUserUuid_wrong_test() {
+        TagsDto tagsDto = tagService.queryFollowedTagsByAuthorization("nothing");
+        assertThat(tagsDto).isNotNull();
+        assertThat(tagsDto.getList()).isNotNull();
+        assertThat(tagsDto.getList().size()).isEqualTo(0);
     }
 
     private void insertUserData() {
