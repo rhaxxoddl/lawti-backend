@@ -13,17 +13,27 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 public class TagService {
     private final TagRepository tagRepository;
+    private final String UUID_PREFIX = "UUID-";
     public TagsDto queryTags() {
         return TagsDto
                 .from(tagRepository.findAll());
     }
 
     public TagsDto queryFollowedTagsByUserUuid(String userUuid) {
-        return TagsDto.from(tagRepository.qFindFollowedTagsByUserUuid(userUuid));
+        return TagsDto.from(
+                tagRepository.qFindFollowedTagsByUserUuid(
+                        deleteUuidPrefix(userUuid)
+                )
+        );
     }
     public void followMyTags(TagsInput tagsInput) {
     }
     public void unfollowMyTags(TagsInput tagsInput) {
     }
 
+    private String deleteUuidPrefix(String uuid) {
+        if (uuid.contains(UUID_PREFIX))
+            return uuid.substring(UUID_PREFIX.length());
+        return uuid;
+    }
 }
