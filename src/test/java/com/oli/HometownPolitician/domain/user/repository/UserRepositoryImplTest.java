@@ -3,6 +3,7 @@ package com.oli.HometownPolitician.domain.user.repository;
 import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.domain.tag.repository.TagRepository;
 import com.oli.HometownPolitician.domain.user.entity.User;
+import com.oli.HometownPolitician.domain.userTagRelation.entity.UserTagRelation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserRepositoryImplTest {
     private final String USER_UUID = "asfasd-asdfasd-fasdf-qwe";
     private final String NOT_EXIST_USER_UUID = "ThisIs-notExist-user";
-    private final int FOLLOW_TAG_SIZE = 5;
+    private final int FOLLOWED_TAGS_SIZE = 5;
 
     @Autowired
     private UserRepository userRepository;
@@ -56,6 +57,29 @@ class UserRepositoryImplTest {
         assertThat(optionalUser.isEmpty()).isTrue();
     }
 
+    @Test
+    @DisplayName("유저를 팔로우한 태그까지 같이 가져오는지 확인")
+    void qFindByUuidWithFollowedTags_well_test() {
+        userFollowing5Tag();
+
+        Optional<User> optionalUser  = userRepository.qFindByUuidWithFollowedTags(USER_UUID);
+        assertThat(optionalUser.isEmpty()).isFalse();
+        User user = optionalUser.get();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isNotNull();
+        assertThat(user.getUuid()).isNotNull();
+        assertThat(user.getFollowedTags()).isNotNull();
+        assertThat(user.getFollowedTags().size()).isEqualTo(FOLLOWED_TAGS_SIZE);
+        user.getFollowedTags().forEach(followedTag -> {
+            assertThat(followedTag).isNotNull();
+            assertThat(followedTag.getId()).isNotNull();
+            assertThat(followedTag.getUser()).isNotNull();
+            assertThat(followedTag.getTag()).isNotNull();
+            assertThat(followedTag.getTag().getId()).isNotNull();
+            assertThat(followedTag.getTag().getName()).isNotNull();
+        });
+    }
+
     private void insertUserData() {
         User user = new User(USER_UUID);
         userRepository.save(user);
@@ -85,5 +109,19 @@ class UserRepositoryImplTest {
         tagList.add(new Tag(INTEREST8));
         tagList.add(new Tag(INTEREST9));
         tagRepository.saveAll(tagList);
+    }
+
+    private void userFollowing5Tag() {
+        Optional<User> user = userRepository.qFindByUuid(USER_UUID);
+        if (user.isEmpty())
+            throw new ExceptionInInitializerError("UUID에 해당하는 유저가 없습니다");
+        List<Tag> tags = tagRepository.findAll().subList(0, FOLLOWED_TAGS_SIZE);
+        List<UserTagRelation> userTagRelationList = new ArrayList<>();
+        tags.forEach(e -> {
+            UserTagRelation userTagRelation = new UserTagRelation(user.get(), e);
+            em.persist(userTagRelation);
+        });
+        em.flush();
+        em.clear();
     }
 }
