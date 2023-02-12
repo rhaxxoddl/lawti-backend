@@ -1,6 +1,6 @@
 package com.oli.HometownPolitician.domain.tag.entity;
 
-import com.oli.HometownPolitician.domain.entityRelation.entity.UserTagRelation;
+import com.oli.HometownPolitician.domain.UserTagRelation.entity.UserTagRelation;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

@@ -48,7 +48,7 @@ class UserTagRelationRepositoryImplTest {
     void qFindByUuidWithFollowedTags_well_test() {
         userFollowing5Tag();
 
-        List<UserTagRelation> followedTag = userTagRelationRepository.qFindFollowedTagByUuid(USER_UUID);
+        List<UserTagRelation> followedTag = userTagRelationRepository.qFindFollowedTagsByUuid(USER_UUID);
         assertThat(followedTag).isNotNull();
         assertThat(followedTag.size()).isEqualTo(FOLLOW_TAG_SIZE);
         followedTag.forEach(e -> {
@@ -64,7 +64,7 @@ class UserTagRelationRepositoryImplTest {
     @Test
     @DisplayName("저장되어 있지 않은 UUID로 유저정보를 안 가져오는지 확인")
     void qFindByUuidWithFollowedTags_not_found_test() {
-        List<UserTagRelation> followedTag = userTagRelationRepository.qFindFollowedTagByUuid(NOT_EXIST_USER_UUID);
+        List<UserTagRelation> followedTag = userTagRelationRepository.qFindFollowedTagsByUuid(NOT_EXIST_USER_UUID);
         assertThat(followedTag).isNotNull();
         assertThat(followedTag.size()).isEqualTo(0);
     }
@@ -72,7 +72,7 @@ class UserTagRelationRepositoryImplTest {
     @Test
     @DisplayName("올바르지 않은 UUID로 유저정보를 안 가져오는지 확인")
     void qFindByUuidWithFollowedTags_invalid_uuid_test() {
-        List<UserTagRelation> followedTag = userTagRelationRepository.qFindFollowedTagByUuid("NOT_EXIST_USER_UUID");
+        List<UserTagRelation> followedTag = userTagRelationRepository.qFindFollowedTagsByUuid("NOT_EXIST_USER_UUID");
         assertThat(followedTag).isNotNull();
         assertThat(followedTag.size()).isEqualTo(0);
     }
@@ -80,7 +80,7 @@ class UserTagRelationRepositoryImplTest {
     @Test
     @DisplayName("팔로우한 태그가 없는 유저정보 확인")
     void qFindByUuidWithFollowedTags_followed_nothing_test() {
-        List<UserTagRelation> followedTag = userTagRelationRepository.qFindFollowedTagByUuid(USER_UUID);
+        List<UserTagRelation> followedTag = userTagRelationRepository.qFindFollowedTagsByUuid(USER_UUID);
         assertThat(followedTag).isNotNull();
         assertThat(followedTag.size()).isEqualTo(0);
     }

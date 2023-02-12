@@ -1,5 +1,6 @@
 package com.oli.HometownPolitician.domain.tag.service;
 
+import com.oli.HometownPolitician.domain.UserTagRelation.repository.UserTagRelationRepository;
 import com.oli.HometownPolitician.domain.tag.dto.TagsDto;
 import com.oli.HometownPolitician.domain.tag.dto.TagsInput;
 import com.oli.HometownPolitician.domain.tag.repository.TagRepository;
@@ -12,12 +13,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 public class TagService {
     private final TagRepository tagRepository;
+    private final UserTagRelationRepository userTagRelationRepository;
     private final UserRepository userRepository;
     private final String UUID_PREFIX = "UUID-";
     public TagsDto queryTags() {
@@ -28,7 +31,10 @@ public class TagService {
     public TagsDto queryFollowedTagsByAuthorization(String authorization) {
         String userUuid =  deleteUuidPrefix(authorization);
         return TagsDto.from(
-                tagRepository.qFindFollowedTagsByUserUuid(userUuid)
+                userTagRelationRepository.qFindFollowedTagsByUuid(userUuid)
+                        .stream()
+                        .map(userTagRelation -> userTagRelation.getTag())
+                        .collect(Collectors.toList())
         );
     }
     public void followMyTags(TagsInput tagsInput, String authorization) {

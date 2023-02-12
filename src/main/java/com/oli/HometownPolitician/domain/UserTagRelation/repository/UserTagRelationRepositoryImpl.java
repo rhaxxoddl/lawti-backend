@@ -25,7 +25,7 @@ public class UserTagRelationRepositoryImpl implements UserTagRelationRepositoryC
     }
 
     @Override
-    public List<UserTagRelation> qFindFollowedTagByUuid(String uuid) {
+    public List<UserTagRelation> qFindFollowedTagsByUuid(String uuid) {
         return queryFactory
                 .selectFrom(userTagRelation)
                 .where(

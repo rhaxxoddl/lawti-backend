@@ -7,7 +7,7 @@ import com.oli.HometownPolitician.domain.user.entity.User;
 import java.util.List;
 
 public interface UserTagRelationRepositoryCustom {
-    List<UserTagRelation> qFindFollowedTagByUuid(String uuid);
+    List<UserTagRelation> qFindFollowedTagsByUuid(String uuid);
 
     void qFollowingTagByUuid(User user, List<Tag> tags);
 }
