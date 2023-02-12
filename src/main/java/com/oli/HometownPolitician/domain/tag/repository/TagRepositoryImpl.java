@@ -5,7 +5,7 @@ import com.oli.HometownPolitician.domain.user.repository.UserRepositoryCond;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import static com.oli.HometownPolitician.domain.tag.entity.QTag.tag;
 import static com.oli.HometownPolitician.domain.user.entity.QUser.user;
-import static com.oli.HometownPolitician.domain.entityRelation.entity.QUserTagRelation.userTagRelation;
+import static com.oli.HometownPolitician.domain.UserTagRelation.entity.QUserTagRelation.userTagRelation;
 
 import javax.persistence.EntityManager;
 import java.util.List;

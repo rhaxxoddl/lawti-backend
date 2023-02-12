@@ -1,6 +1,6 @@
 package com.oli.HometownPolitician.domain.tag.service;
 
-import com.oli.HometownPolitician.domain.entityRelation.entity.UserTagRelation;
+import com.oli.HometownPolitician.domain.UserTagRelation.entity.UserTagRelation;
 import com.oli.HometownPolitician.domain.tag.dto.TagsDto;
 import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.domain.tag.repository.TagRepository;

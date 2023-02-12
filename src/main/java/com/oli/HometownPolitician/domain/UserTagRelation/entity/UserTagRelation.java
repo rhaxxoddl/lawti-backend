@@ -1,4 +1,4 @@
-package com.oli.HometownPolitician.domain.entityRelation.entity;
+package com.oli.HometownPolitician.domain.UserTagRelation.entity;
 
 import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.domain.user.entity.User;
