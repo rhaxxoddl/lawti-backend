@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface UserRepositoryCustom {
     Optional<User> qFindByUuid(String uuid);
+    Optional<User> qFindByUuidWithFollowedTags(String uuid);
 }
