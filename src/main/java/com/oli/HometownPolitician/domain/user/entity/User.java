@@ -7,10 +7,8 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -33,7 +31,7 @@ public class User extends BaseTimeEntity {
     private String uuid;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserTagRelation> followedTags = new HashSet<>();
+    private List<UserTagRelation> followedTags = new ArrayList<>();
 
     @Builder
     public User(String uuid) {
@@ -41,25 +39,21 @@ public class User extends BaseTimeEntity {
     }
 
     public void followingTags(List<Tag> tags) {
-        followedTags.addAll(tags
-                .stream()
-                .map(
-                        tag -> UserTagRelation
-                                .builder()
-                                .user(this)
-                                .tag(tag)
-                                .build()
-                )
-                .collect(Collectors.toList())
-        );
+        tags.forEach(tag -> {
+            if (followedTags.stream()
+                    .noneMatch(followedTag -> (followedTag.getTag() == tag)))
+                followedTags.add(UserTagRelation
+                        .builder()
+                        .user(this)
+                        .tag(   tag)
+                        .build());
+        });
     }
 
-    public void unfollowingTags(List<Long> tagIds) {
-        tagIds.forEach(tagId -> {
-            followedTags.removeIf(followedTag ->
-                    (followedTag.getTag().getId().equals(tagId))
-            );
-        });
+    public void unfollowingTags(List<Tag> tags) {
+        tags.forEach(tag -> followedTags.removeIf(followedTag ->
+                (followedTag.getTag() == tag)
+        ));
     }
 
 }
