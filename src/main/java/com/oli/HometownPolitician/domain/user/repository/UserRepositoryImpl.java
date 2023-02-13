@@ -1,13 +1,13 @@
 package com.oli.HometownPolitician.domain.user.repository;
 
-import static com.oli.HometownPolitician.domain.user.entity.QUser.user;
-import static com.oli.HometownPolitician.domain.tag.entity.QTag.tag;
-import static com.oli.HometownPolitician.domain.userTagRelation.entity.QUserTagRelation.userTagRelation;
 import com.oli.HometownPolitician.domain.user.entity.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 import java.util.Optional;
+
+import static com.oli.HometownPolitician.domain.user.entity.QUser.user;
+import static com.oli.HometownPolitician.domain.userTagRelation.entity.QUserTagRelation.userTagRelation;
 
 public class UserRepositoryImpl implements UserRepositoryCustom{
     private final JPAQueryFactory queryFactory;
@@ -38,7 +38,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                         userCond.userEqUuid(uuid)
                                 .and(userCond.userNotDeleted())
                 ).leftJoin(user.followedTags, userTagRelation)
-                .leftJoin(userTagRelation.tag, tag)
+                .fetchJoin()
                 .stream().findFirst();
     }
 }
