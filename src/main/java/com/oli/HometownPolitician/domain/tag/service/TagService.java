@@ -1,5 +1,6 @@
 package com.oli.HometownPolitician.domain.tag.service;
 
+import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.domain.userTagRelation.entity.UserTagRelation;
 import com.oli.HometownPolitician.domain.userTagRelation.repository.UserTagRelationRepository;
 import com.oli.HometownPolitician.domain.tag.dto.TagInput;
@@ -43,20 +44,22 @@ public class TagService {
     public void followingTags(TagsInput tagsInput, String authorization) {
         String userUuid = deleteUuidPrefix(authorization);
         User user = userRepository.qFindByUuidWithFollowedTags(userUuid).get();
-        List<UserTagRelation> followedTags = user.getFollowedTags();
-        tagsInput.getList().forEach(tagInput -> {
-            if (!isFollowed(tagInput, followedTags))
-                followedTags.add(new UserTagRelation(user, tagRepository.findById(tagInput.getId()).get()));
-            });
-        userTagRelationRepository.saveAll(followedTags);
+        List<Long> tagIds = tagsInput.getList()
+                .stream()
+                .map(tagInput -> tagInput.getId())
+                .collect(Collectors.toList());
+        List<Tag> tags = tagRepository.queryTagsByIds(tagIds);
+        user.followingTags(tags);
     }
     public void unfollowMyTags(TagsInput tagsInput, String authorization) {
         String userUuid = deleteUuidPrefix(authorization);
         User user = userRepository.qFindByUuidWithFollowedTags(userUuid).get();
-        List<UserTagRelation> followedTags = user.getFollowedTags();
-        tagsInput.getList().forEach(tagInput -> {
-            followedTags.removeIf(followedTag -> followedTag.getId().equals(tagInput.getId()));
-        });
+        user.unfollowingTags(
+                tagsInput.getList()
+                        .stream()
+                        .map(tagInput -> tagInput.getId())
+                        .collect(Collectors.toList())
+        );
     }
 
     private String deleteUuidPrefix(String uuid) {
