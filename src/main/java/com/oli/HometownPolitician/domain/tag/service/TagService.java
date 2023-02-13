@@ -44,22 +44,22 @@ public class TagService {
     public void followingTags(TagsInput tagsInput, String authorization) {
         String userUuid = deleteUuidPrefix(authorization);
         User user = userRepository.qFindByUuidWithFollowedTags(userUuid).get();
-        List<Long> tagIds = tagsInput.getList()
+        List<String> tagNameList = tagsInput.getList()
                 .stream()
-                .map(tagInput -> tagInput.getId())
+                .map(tagInput -> tagInput.getName())
                 .collect(Collectors.toList());
-        List<Tag> tags = tagRepository.queryTagsByIds(tagIds);
+        List<Tag> tags = tagRepository.queryTagsByNameList(tagNameList);
         user.followingTags(tags);
     }
     public void unfollowMyTags(TagsInput tagsInput, String authorization) {
         String userUuid = deleteUuidPrefix(authorization);
         User user = userRepository.qFindByUuidWithFollowedTags(userUuid).get();
-        user.unfollowingTags(
-                tagsInput.getList()
-                        .stream()
-                        .map(tagInput -> tagInput.getId())
-                        .collect(Collectors.toList())
-        );
+        List<String> tagNameList = tagsInput.getList()
+                .stream()
+                .map(tagInput -> tagInput.getName())
+                .collect(Collectors.toList());
+        List<Tag> tags = tagRepository.queryTagsByNameList(tagNameList);
+        user.unfollowingTags(tags);
     }
 
     private String deleteUuidPrefix(String uuid) {

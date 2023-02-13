@@ -19,10 +19,10 @@ public class TagRepositoryImpl implements TagRepositoryCustom {
     }
 
     @Override
-    public List<Tag> queryTagsByIds(List<Long> tagIds) {
+    public List<Tag> queryTagsByNameList(List<String> nameList) {
         return queryFactory
                 .selectFrom(tag)
-                .where(tag.id.in(tagIds))
+                .where(tag.name.in(nameList))
                 .fetch();
     }
 }
