@@ -80,6 +80,19 @@ class UserRepositoryImplTest {
         });
     }
 
+    @Test
+    @DisplayName("팔로우한 태그가 없는 유저의 팔로우한 태그가 없는지 확인")
+    void qFindByUuidWithFollowedTags_followed_nothing_test() {
+        Optional<User> optionalUser  = userRepository.qFindByUuidWithFollowedTags(USER_UUID);
+        assertThat(optionalUser.isEmpty()).isFalse();
+        User user = optionalUser.get();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isNotNull();
+        assertThat(user.getUuid()).isNotNull();
+        assertThat(user.getFollowedTags()).isNotNull();
+        assertThat(user.getFollowedTags().size()).isEqualTo(0);
+    }
+
     private void insertUserData() {
         User user = new User(USER_UUID);
         userRepository.save(user);
