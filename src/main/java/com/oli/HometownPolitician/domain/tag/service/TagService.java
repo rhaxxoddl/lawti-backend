@@ -1,11 +1,13 @@
 package com.oli.HometownPolitician.domain.tag.service;
 
+import com.oli.HometownPolitician.domain.tag.dto.TagInput;
 import com.oli.HometownPolitician.domain.tag.dto.TagsDto;
 import com.oli.HometownPolitician.domain.tag.dto.TagsInput;
 import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.domain.tag.repository.TagRepository;
 import com.oli.HometownPolitician.domain.user.entity.User;
 import com.oli.HometownPolitician.domain.user.repository.UserRepository;
+import com.oli.HometownPolitician.domain.userTagRelation.entity.UserTagRelation;
 import com.oli.HometownPolitician.domain.userTagRelation.repository.UserTagRelationRepository;
 import com.oli.HometownPolitician.global.error.NotFoundError;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +37,7 @@ public class TagService {
         return TagsDto.from(
                 userTagRelationRepository.qFindFollowedTagsByUuid(userUuid)
                         .stream()
-                        .map(userTagRelation -> userTagRelation.getTag())
+                        .map(UserTagRelation::getTag)
                         .collect(Collectors.toList())
         );
     }
@@ -44,7 +46,7 @@ public class TagService {
         User user = userRepository.qFindByUuidWithFollowedTags(userUuid).orElseThrow(() -> new NotFoundError("해당하는 유저가 존재하지 않습니다"));
         List<String> tagNameList = tagsInput.getList()
                 .stream()
-                .map(tagInput -> tagInput.getName())
+                .map(TagInput::getName)
                 .collect(Collectors.toList());
         List<Tag> tags = tagRepository.queryTagsByNameList(tagNameList);
         user.followingTags(tags);
@@ -54,7 +56,7 @@ public class TagService {
         User user = userRepository.qFindByUuidWithFollowedTags(userUuid).orElseThrow(() -> new NotFoundError("해당하는 유저가 존재하지 않습니다"));
         List<String> tagNameList = tagsInput.getList()
                 .stream()
-                .map(tagInput -> tagInput.getName())
+                .map(TagInput::getName)
                 .collect(Collectors.toList());
         List<Tag> tags = tagRepository.queryTagsByNameList(tagNameList);
         user.unfollowingTags(tags);
