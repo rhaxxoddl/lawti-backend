@@ -7,6 +7,7 @@ import com.oli.HometownPolitician.domain.tag.repository.TagRepository;
 import com.oli.HometownPolitician.domain.user.entity.User;
 import com.oli.HometownPolitician.domain.user.repository.UserRepository;
 import com.oli.HometownPolitician.domain.userTagRelation.repository.UserTagRelationRepository;
+import com.oli.HometownPolitician.global.error.NotFoundError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -40,7 +41,7 @@ public class TagService {
     }
     public void followingTags(TagsInput tagsInput, String authorization) {
         String userUuid = deletePrefix(authorization);
-        User user = userRepository.qFindByUuidWithFollowedTags(userUuid).get();
+        User user = userRepository.qFindByUuidWithFollowedTags(userUuid).orElseThrow(() -> new NotFoundError("해당하는 유저가 존재하지 않습니다"));
         List<String> tagNameList = tagsInput.getList()
                 .stream()
                 .map(tagInput -> tagInput.getName())
@@ -50,7 +51,7 @@ public class TagService {
     }
     public void unfollowMyTags(TagsInput tagsInput, String authorization) {
         String userUuid = deletePrefix(authorization);
-        User user = userRepository.qFindByUuidWithFollowedTags(userUuid).get();
+        User user = userRepository.qFindByUuidWithFollowedTags(userUuid).orElseThrow(() -> new NotFoundError("해당하는 유저가 존재하지 않습니다"));
         List<String> tagNameList = tagsInput.getList()
                 .stream()
                 .map(tagInput -> tagInput.getName())
