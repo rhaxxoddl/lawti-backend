@@ -23,7 +23,7 @@ class UserServiceTest {
     void createAnonymousUser_well_test() {
         String userUuid = userService.createAnonymousUser();
         assertThat(userUuid.getClass()).isEqualTo(String.class);
-        assertThat(userUuid.length()).isEqualTo(41);
+        assertThat(userUuid.length()).isEqualTo(36);
     }
 
     @Test
