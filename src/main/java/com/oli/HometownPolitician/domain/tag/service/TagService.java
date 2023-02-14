@@ -23,7 +23,7 @@ public class TagService {
     private final UserTagRelationRepository userTagRelationRepository;
     private final UserRepository userRepository;
     private final String UUID_PREFIX = "UUID-";
-    private final String BEARER_PREFIX = "Bearer";
+    private final String BEARER_PREFIX = "Bearer ";
     public TagsDto queryTags() {
         return TagsDto
                 .from(tagRepository.findAll());
