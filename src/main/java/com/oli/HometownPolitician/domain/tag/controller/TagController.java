@@ -11,6 +11,8 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @Validated
@@ -27,11 +29,11 @@ public class TagController {
         return tagService.queryFollowedTagsByAuthorization(authorization);
     }
     @MutationMapping(name = "followMyTags")
-    public void followMyTags(@Argument TagsInput tagsInput, @ContextValue String authorization) {
+    public void followMyTags(@Argument(name = "input") @Valid TagsInput tagsInput, @ContextValue String authorization) {
         tagService.followingTags(tagsInput, authorization);
     }
     @MutationMapping(name = "unfollowMyTags")
-    public void unfollowMyTags(@Argument TagsInput tagsInput, @ContextValue String authorization) {
+    public void unfollowMyTags(@Argument(name = "input") @Valid TagsInput tagsInput, @ContextValue String authorization) {
         tagService.followingTags(tagsInput, authorization);
     }
 }
