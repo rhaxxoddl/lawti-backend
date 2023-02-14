@@ -4,6 +4,7 @@ import com.oli.HometownPolitician.domain.tag.dto.TagsDto;
 import com.oli.HometownPolitician.domain.tag.dto.TagsInput;
 import com.oli.HometownPolitician.domain.tag.service.TagService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.ContextValue;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -26,9 +27,11 @@ public class TagController {
         return tagService.queryFollowedTagsByAuthorization(authorization);
     }
     @MutationMapping(name = "followMyTags")
-    public void followMyTags(TagsInput tagsInput) {
+    public void followMyTags(@Argument TagsInput tagsInput, @ContextValue String authorization) {
+        tagService.followingTags(tagsInput, authorization);
     }
     @MutationMapping(name = "unfollowMyTags")
-    public void unfollowMyTags(TagsInput tagsInput) {
+    public void unfollowMyTags(@Argument TagsInput tagsInput, @ContextValue String authorization) {
+        tagService.followingTags(tagsInput, authorization);
     }
 }
