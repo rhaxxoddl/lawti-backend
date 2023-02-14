@@ -7,7 +7,6 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -34,13 +33,5 @@ public class UserTagRelation extends BaseTimeEntity {
     public UserTagRelation(User user, Tag tag) {
         this.user = user;
         this.tag = tag;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserTagRelation that = (UserTagRelation) o;
-        return Objects.equals(user, that.user) && Objects.equals(tag, that.tag);
     }
 }
