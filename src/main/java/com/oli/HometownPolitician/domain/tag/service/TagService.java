@@ -1,22 +1,18 @@
 package com.oli.HometownPolitician.domain.tag.service;
 
-import com.oli.HometownPolitician.domain.tag.entity.Tag;
-import com.oli.HometownPolitician.domain.userTagRelation.entity.UserTagRelation;
-import com.oli.HometownPolitician.domain.userTagRelation.repository.UserTagRelationRepository;
-import com.oli.HometownPolitician.domain.tag.dto.TagInput;
 import com.oli.HometownPolitician.domain.tag.dto.TagsDto;
 import com.oli.HometownPolitician.domain.tag.dto.TagsInput;
+import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.domain.tag.repository.TagRepository;
 import com.oli.HometownPolitician.domain.user.entity.User;
 import com.oli.HometownPolitician.domain.user.repository.UserRepository;
-import com.oli.HometownPolitician.global.error.NotFoundError;
+import com.oli.HometownPolitician.domain.userTagRelation.repository.UserTagRelationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,19 +72,5 @@ public class TagService {
         if (bearerToken.contains(BEARER_PREFIX))
             return bearerToken.substring(BEARER_PREFIX.length());
         return bearerToken;
-    }
-
-    private User getUserByUuid(String uuid) {
-        Optional<User> user = userRepository.qFindByUuid(uuid);
-        if (user.isEmpty())
-            throw new NotFoundError("해당하는 사용자를 찾을 수 없습니다.");
-        return user.get();
-    }
-
-    private boolean isFollowed(TagInput tagInput, List<UserTagRelation> followedTags) {
-        return followedTags
-                .stream()
-                .filter(followedTag -> followedTag.getTag().getId().equals(tagInput.getId()))
-                .count() > 0;
     }
 }
