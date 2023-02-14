@@ -17,13 +17,13 @@ public class UserService {
     static public String UUID_PREFIX = "UUID-";
 
     public String createAnonymousUser() {
-        User newAnonymousUser = new User(addPrefixUUID(createUuid()));
+        User newAnonymousUser = new User(createUuid());
         userRepository.save(newAnonymousUser);
         return newAnonymousUser.getUuid();
     }
 
     public TokenDto createTokenDto(String userUuid) {
-        return new TokenDto(userUuid);
+        return new TokenDto(addPrefixUUID(userUuid));
     }
 
 
