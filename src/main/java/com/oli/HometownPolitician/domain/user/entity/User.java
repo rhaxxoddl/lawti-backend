@@ -20,7 +20,7 @@ import java.util.List;
 public class User extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ_GENERATOR")
     @Column(name = "user_id", unique = true, nullable = false)
     private Long id;
 
