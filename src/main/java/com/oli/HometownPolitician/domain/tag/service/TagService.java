@@ -27,13 +27,14 @@ public class TagService {
     private final UserTagRelationRepository userTagRelationRepository;
     private final UserRepository userRepository;
     private final String UUID_PREFIX = "UUID-";
+    private final String BEARER_PREFIX = "Bearer";
     public TagsDto queryTags() {
         return TagsDto
                 .from(tagRepository.findAll());
     }
 
     public TagsDto queryFollowedTagsByAuthorization(String authorization) {
-        String userUuid =  deleteUuidPrefix(authorization);
+        String userUuid =  deletePrefix(authorization);
         return TagsDto.from(
                 userTagRelationRepository.qFindFollowedTagsByUuid(userUuid)
                         .stream()
@@ -42,7 +43,7 @@ public class TagService {
         );
     }
     public void followingTags(TagsInput tagsInput, String authorization) {
-        String userUuid = deleteUuidPrefix(authorization);
+        String userUuid = deletePrefix(authorization);
         User user = userRepository.qFindByUuidWithFollowedTags(userUuid).get();
         List<String> tagNameList = tagsInput.getList()
                 .stream()
@@ -52,7 +53,7 @@ public class TagService {
         user.followingTags(tags);
     }
     public void unfollowMyTags(TagsInput tagsInput, String authorization) {
-        String userUuid = deleteUuidPrefix(authorization);
+        String userUuid = deletePrefix(authorization);
         User user = userRepository.qFindByUuidWithFollowedTags(userUuid).get();
         List<String> tagNameList = tagsInput.getList()
                 .stream()
@@ -61,11 +62,20 @@ public class TagService {
         List<Tag> tags = tagRepository.queryTagsByNameList(tagNameList);
         user.unfollowingTags(tags);
     }
+    private String deletePrefix(String authorization) {
+        return deleteUuidPrefix(deleteBearerPrefix(authorization));
+    }
 
     private String deleteUuidPrefix(String uuid) {
         if (uuid.contains(UUID_PREFIX))
             return uuid.substring(UUID_PREFIX.length());
         return uuid;
+    }
+
+    private String deleteBearerPrefix(String bearerToken) {
+        if (bearerToken.contains(BEARER_PREFIX))
+            return bearerToken.substring(BEARER_PREFIX.length());
+        return bearerToken;
     }
 
     private User getUserByUuid(String uuid) {
