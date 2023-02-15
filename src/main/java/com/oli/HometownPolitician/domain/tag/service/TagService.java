@@ -41,7 +41,7 @@ public class TagService {
                         .collect(Collectors.toList())
         );
     }
-    public void followingTags(TagsInput tagsInput, String authorization) {
+    public TagsDto followingTags(TagsInput tagsInput, String authorization) {
         String userUuid = deletePrefix(authorization);
         User user = userRepository.qFindByUuidWithFollowedTags(userUuid).orElseThrow(() -> new NotFoundError("해당하는 유저가 존재하지 않습니다"));
         List<String> tagNameList = tagsInput.getList()
@@ -50,8 +50,9 @@ public class TagService {
                 .collect(Collectors.toList());
         List<Tag> tags = tagRepository.queryTagsByNameList(tagNameList);
         user.followingTags(tags);
+        return TagsDto.from(user.getFolloedTags());
     }
-    public void unfollowMyTags(TagsInput tagsInput, String authorization) {
+    public TagsDto unfollowMyTags(TagsInput tagsInput, String authorization) {
         String userUuid = deletePrefix(authorization);
         User user = userRepository.qFindByUuidWithFollowedTags(userUuid).orElseThrow(() -> new NotFoundError("해당하는 유저가 존재하지 않습니다"));
         List<String> tagNameList = tagsInput.getList()
@@ -60,6 +61,7 @@ public class TagService {
                 .collect(Collectors.toList());
         List<Tag> tags = tagRepository.queryTagsByNameList(tagNameList);
         user.unfollowingTags(tags);
+        return TagsDto.from(user.getFolloedTags());
     }
     private String deletePrefix(String authorization) {
         return deleteUuidPrefix(deleteBearerPrefix(authorization));

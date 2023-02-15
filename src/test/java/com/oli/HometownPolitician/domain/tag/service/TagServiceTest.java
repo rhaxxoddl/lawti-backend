@@ -109,8 +109,7 @@ class TagServiceTest {
         assertThat(tagsDtoBefore).isNotNull();
         assertThat(tagsDtoBefore.getList()).isNotNull();
         assertThat(tagsDtoBefore.getList().size()).isEqualTo(0);
-        tagService.followingTags(tagsInput, "UUID-" + USER_UUID);
-        TagsDto tagsDtoAfter = tagService.queryFollowedTagsByAuthorization("UUID-" + USER_UUID);
+        TagsDto tagsDtoAfter = tagService.followingTags(tagsInput, "UUID-" + USER_UUID);
         assertThat(tagsDtoAfter).isNotNull();
         assertThat(tagsDtoAfter.getList()).isNotNull();
         assertThat(tagsDtoAfter.getList().size()).isEqualTo(1);
@@ -128,8 +127,7 @@ class TagServiceTest {
         assertThat(tagsDtoBefore).isNotNull();
         assertThat(tagsDtoBefore.getList()).isNotNull();
         assertThat(tagsDtoBefore.getList().size()).isEqualTo(FOLLOWED_TAGS_SIZE);
-        tagService.followingTags(tagsInput, "UUID-" + USER_UUID);
-        TagsDto tagsDtoAfter = tagService.queryFollowedTagsByAuthorization("UUID-" + USER_UUID);
+        TagsDto tagsDtoAfter = tagService.followingTags(tagsInput, "UUID-" + USER_UUID);
         assertThat(tagsDtoAfter).isNotNull();
         assertThat(tagsDtoAfter.getList()).isNotNull();
         assertThat(tagsDtoAfter.getList().size()).isEqualTo(tagsDtoBefore.getList().size());
@@ -147,8 +145,7 @@ class TagServiceTest {
         assertThat(tagsDtoBefore).isNotNull();
         assertThat(tagsDtoBefore.getList()).isNotNull();
         assertThat(tagsDtoBefore.getList().size()).isEqualTo(FOLLOWED_TAGS_SIZE);
-        tagService.unfollowMyTags(tagsInput, "UUID-" + USER_UUID);
-        TagsDto tagsDtoAfter = tagService.queryFollowedTagsByAuthorization("UUID-" + USER_UUID);
+        TagsDto tagsDtoAfter = tagService.unfollowMyTags(tagsInput, "UUID-" + USER_UUID);
         assertThat(tagsDtoAfter).isNotNull();
         assertThat(tagsDtoAfter.getList()).isNotNull();
         assertThat(tagsDtoAfter.getList().size()).isEqualTo(tagsDtoBefore.getList().size() - 1);
@@ -165,8 +162,7 @@ class TagServiceTest {
         assertThat(tagsDtoBefore).isNotNull();
         assertThat(tagsDtoBefore.getList()).isNotNull();
         assertThat(tagsDtoBefore.getList().size()).isEqualTo(0);
-        tagService.unfollowMyTags(tagsInput, "UUID-" + USER_UUID);
-        TagsDto tagsDtoAfter = tagService.queryFollowedTagsByAuthorization("UUID-" + USER_UUID);
+        TagsDto tagsDtoAfter = tagService.unfollowMyTags(tagsInput, "UUID-" + USER_UUID);
         assertThat(tagsDtoAfter).isNotNull();
         assertThat(tagsDtoAfter.getList()).isNotNull();
         assertThat(tagsDtoAfter.getList().size()).isEqualTo(0);

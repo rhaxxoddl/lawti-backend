@@ -29,11 +29,11 @@ public class TagController {
         return tagService.queryFollowedTagsByAuthorization(authorization);
     }
     @MutationMapping(name = "followMyTags")
-    public void followMyTags(@Argument(name = "input") @Valid TagsInput tagsInput, @ContextValue String authorization) {
-        tagService.followingTags(tagsInput, authorization);
+    public TagsDto followMyTags(@Argument(name = "input") @Valid TagsInput tagsInput, @ContextValue String authorization) {
+        return tagService.followingTags(tagsInput, authorization);
     }
     @MutationMapping(name = "unfollowMyTags")
-    public void unfollowMyTags(@Argument(name = "input") @Valid TagsInput tagsInput, @ContextValue String authorization) {
-        tagService.followingTags(tagsInput, authorization);
+    public TagsDto unfollowMyTags(@Argument(name = "input") @Valid TagsInput tagsInput, @ContextValue String authorization) {
+        return tagService.followingTags(tagsInput, authorization);
     }
 }
