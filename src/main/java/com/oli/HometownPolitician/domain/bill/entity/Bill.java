@@ -30,16 +30,16 @@ public class Bill extends BaseTimeEntity {
     private Long externalBillId;
     @Column(name = "number", nullable = false)
     private Long number;
-    @Column(name = "national_assembly_age")
-    private Long nationalAssemblyAge;
     @Column(name = "title", nullable = false)
     private String title;
     @Column(name = "propose_date", nullable = false)
     private LocalDate proposeDate;
+    @Column(name = "propose_assembly")
+    private Long proposeAssembly;
     @Column(name = "summary", nullable = false)
     private String summary;
-    @Column(name = "bill_pdf_url")
-    private String billPdfUrl;
+    @Column(name = "bill_pdf_uri")
+    private String billPdfUri;
     @Column(name = "notice_end_date")
     private LocalDate noticeEndDate;
     @Enumerated(EnumType.STRING)
