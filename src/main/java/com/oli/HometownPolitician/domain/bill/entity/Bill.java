@@ -3,6 +3,7 @@ package com.oli.HometownPolitician.domain.bill.entity;
 
 import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.bill.enumeration.PlenaryResultType;
+import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelation;
 import com.oli.HometownPolitician.domain.committe.entity.Committee;
 import com.oli.HometownPolitician.domain.proposer.entity.Proposer;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
@@ -64,4 +65,7 @@ public class Bill extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "alternative_bill_id", referencedColumnName = "bill_id")
     private Bill alternativeBillId;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bill")
+    private List<BillUserRelation> followedBillUserRelations;
 }
