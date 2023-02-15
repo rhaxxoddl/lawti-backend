@@ -3,6 +3,7 @@ package com.oli.HometownPolitician.domain.bill.entity;
 
 import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.bill.enumeration.PlenaryResultType;
+import com.oli.HometownPolitician.domain.committe.entity.Committee;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,10 +24,10 @@ import java.time.LocalDate;
 public class Bill extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BILL_SEQ")
-    @Column(name = "bill_name", unique = true, nullable = false)
+    @Column(name = "bill_id", unique = true, nullable = false)
     private Long id;
-    @Column(name = "external_id", unique = true, nullable = false)
-    private Long externalId;
+    @Column(name = "external_bill_id", unique = true, nullable = false)
+    private Long externalBillId;
     @Column(name = "number", nullable = false)
     private Long number;
     @Column(name = "national_assembly_age")
@@ -52,8 +53,10 @@ public class Bill extends BaseTimeEntity {
     @Column(name = "plenary_processing_date")
     private LocalDate plenaryProcessingDate;
 
-    @Column(name = "committe")
-    private String committe;
+    @Column(name = "committee_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "committee_id")
+    private Committee committee;
 
     @Column(name = "alternative_bill_id")
     @ManyToOne(fetch = FetchType.LAZY)
