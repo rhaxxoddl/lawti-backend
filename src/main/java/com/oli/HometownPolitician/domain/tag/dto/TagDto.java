@@ -10,7 +10,6 @@ import lombok.Getter;
 public class TagDto {
     private Long id;
     private String name;
-    private boolean isFollowed;
 
     static public TagDto from(Tag tag) {
         return TagDto
