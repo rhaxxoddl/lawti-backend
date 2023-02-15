@@ -34,7 +34,7 @@ public class Bill extends BaseTimeEntity {
     private Long number;
     @Column(name = "title", nullable = false)
     private String title;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bill")
     private List<Proposer> proposers;
     @Column(name = "propose_date", nullable = false)
     private LocalDate proposeDate;
@@ -58,11 +58,10 @@ public class Bill extends BaseTimeEntity {
     private LocalDate plenaryProcessingDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "committee_id")
+    @JoinColumn(name = "committee_id", referencedColumnName = "committee_id")
     private Committee committee;
 
-    @Column(name = "alternative_bill_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BILL_ID")
+    @JoinColumn(name = "alternative_bill_id", referencedColumnName = "bill_id")
     private Bill alternativeBillId;
 }
