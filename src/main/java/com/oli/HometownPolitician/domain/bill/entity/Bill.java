@@ -57,7 +57,6 @@ public class Bill extends BaseTimeEntity {
     @Column(name = "plenary_processing_date")
     private LocalDate plenaryProcessingDate;
 
-    @Column(name = "committee_id")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "committee_id")
     private Committee committee;
