@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -36,6 +37,13 @@ public class User extends BaseTimeEntity {
     @Builder
     public User(String uuid) {
         this.uuid = uuid;
+    }
+
+    public List<Tag> getFolloedTags() {
+        return followedTags
+                .stream()
+                .map(UserTagRelation::getTag)
+                .collect(Collectors.toList());
     }
 
     public void followingTags(List<Tag> tags) {
