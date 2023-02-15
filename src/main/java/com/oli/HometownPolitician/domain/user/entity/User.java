@@ -32,7 +32,7 @@ public class User extends BaseTimeEntity {
     private String uuid;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserTagRelation> followedTags = new ArrayList<>();
+    private List<UserTagRelation> followedUserTagRelations = new ArrayList<>();
 
     @Builder
     public User(String uuid) {
@@ -40,7 +40,7 @@ public class User extends BaseTimeEntity {
     }
 
     public List<Tag> getFolloedTags() {
-        return followedTags
+        return followedUserTagRelations
                 .stream()
                 .map(UserTagRelation::getTag)
                 .collect(Collectors.toList());
@@ -48,9 +48,9 @@ public class User extends BaseTimeEntity {
 
     public void followingTags(List<Tag> tags) {
         tags.forEach(tag -> {
-            if (followedTags.stream()
+            if (followedUserTagRelations.stream()
                     .noneMatch(followedTag -> (followedTag.getTag() == tag)))
-                followedTags.add(UserTagRelation
+                followedUserTagRelations.add(UserTagRelation
                         .builder()
                         .user(this)
                         .tag(   tag)
@@ -59,7 +59,7 @@ public class User extends BaseTimeEntity {
     }
 
     public void unfollowingTags(List<Tag> tags) {
-        tags.forEach(tag -> followedTags.removeIf(followedTag ->
+        tags.forEach(tag -> followedUserTagRelations.removeIf(followedTag ->
                 (followedTag.getTag() == tag)
         ));
     }
