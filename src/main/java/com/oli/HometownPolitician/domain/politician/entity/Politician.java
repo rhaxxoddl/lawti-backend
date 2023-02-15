@@ -1,5 +1,6 @@
 package com.oli.HometownPolitician.domain.politician.entity;
 
+import com.oli.HometownPolitician.domain.proposer.entity.Proposer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,4 +28,6 @@ public class Politician {
     private String chineseName;
     @Column(name = "party", nullable = false)
     private String party;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "politician_id")
+    private List<Proposer> proposeList;
 }

@@ -4,6 +4,7 @@ package com.oli.HometownPolitician.domain.bill.entity;
 import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.bill.enumeration.PlenaryResultType;
 import com.oli.HometownPolitician.domain.committe.entity.Committee;
+import com.oli.HometownPolitician.domain.proposer.entity.Proposer;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,6 +34,8 @@ public class Bill extends BaseTimeEntity {
     private Long number;
     @Column(name = "title", nullable = false)
     private String title;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Proposer> proposers;
     @Column(name = "propose_date", nullable = false)
     private LocalDate proposeDate;
     @Column(name = "propose_assembly")
