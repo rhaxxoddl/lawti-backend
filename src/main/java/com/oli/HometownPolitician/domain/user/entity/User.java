@@ -1,5 +1,6 @@
 package com.oli.HometownPolitician.domain.user.entity;
 
+import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelation;
 import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.domain.userTagRelation.entity.UserTagRelation;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 public class User extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ")
     @Column(name = "user_id", unique = true, nullable = false)
     private Long id;
 
@@ -31,8 +32,11 @@ public class User extends BaseTimeEntity {
     @Column(name = "uuid", unique = true)
     private String uuid;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserTagRelation> followedUserTagRelations = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BillUserRelation> followedBillTagRelations = new ArrayList<>();
 
     @Builder
     public User(String uuid) {
