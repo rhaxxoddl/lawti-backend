@@ -21,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -102,7 +100,7 @@ class TagServiceTest {
     @DisplayName("유저가 태그 1개를 팔로우를 할 때 잘되는지 확인")
     void followingTags_well_test() {
         List<TagInput> tagInputList = new ArrayList<>();
-        tagInputList.add(TagInput.builder().id(1L).name("국회, 인권").build());
+        tagInputList.add(TagInput.builder().name("국회, 인권").build());
         TagsInput tagsInput = TagsInput.builder().list(tagInputList).build();
 
         TagsDto tagsDtoBefore = tagService.queryFollowedTagsByAuthorization("UUID-" + USER_UUID);
@@ -199,13 +197,12 @@ class TagServiceTest {
     }
 
     private void userFollowing5Tag() {
-        Optional<User> user = userRepository.qFindByUuid(USER_UUID);
-        if (user.isEmpty())
-            throw new ExceptionInInitializerError("UUID에 해당하는 유저가 없습니다");
         List<Tag> tags = tagRepository.findAll().subList(0, FOLLOWED_TAGS_SIZE);
         List<UserTagRelation> userTagRelationList = new ArrayList<>();
         tags.forEach(e -> {
-            UserTagRelation userTagRelation = new UserTagRelation(user.get(), e);
+            UserTagRelation userTagRelation = new UserTagRelation(
+                    userRepository.qFindByUuid(USER_UUID).orElseThrow(() -> new ExceptionInInitializerError("UUID에 해당하는 유저가 없습니다"))
+                    , e);
             em.persist(userTagRelation);
         });
         em.flush();

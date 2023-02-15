@@ -14,16 +14,17 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "tags")
 @EntityListeners(AuditingEntityListener.class)
+@SequenceGenerator(name = "TAG_SEQ_GENERATOR", sequenceName = "TAG_SEQ")
 public class Tag extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TAG_SEQ")
     @Column(name = "tag_id", unique = true, nullable = false)
     private Long id;
 
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "tag")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tag")
     private List<UserTagRelation> followingUsers = new ArrayList<>();
 
     @Builder

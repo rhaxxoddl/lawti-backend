@@ -28,6 +28,6 @@ public class Politician {
     private String chineseName;
     @Column(name = "party", nullable = false)
     private String party;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "politician_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "politician")
     private List<Proposer> proposeList;
 }

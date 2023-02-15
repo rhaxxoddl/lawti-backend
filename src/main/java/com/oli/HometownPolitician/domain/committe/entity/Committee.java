@@ -23,6 +23,6 @@ public class Committee {
     private String external_committee_id;
     @Column(name = "name", nullable = false)
     private String name;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "committee_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "committee")
     private List<Bill> bills;
 }

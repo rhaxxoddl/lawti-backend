@@ -24,10 +24,10 @@ public class Proposer {
     @Column(name = "proposer_id", unique = true, nullable = false)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bill_id")
+    @JoinColumn(name = "bill_id", referencedColumnName = "bill_id")
     private Bill bill;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "politician_id")
+    @JoinColumn(name = "politician_id", referencedColumnName = "politician_id")
     private Politician politician;
     @Enumerated(EnumType.STRING)
     private ProposerRole proposerRole;
