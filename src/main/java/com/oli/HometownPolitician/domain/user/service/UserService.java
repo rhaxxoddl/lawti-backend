@@ -14,15 +14,24 @@ import java.util.UUID;
 @Validated
 public class UserService {
     private final UserRepository userRepository;
+    static public String UUID_PREFIX = "UUID-";
 
     public String createAnonymousUser() {
-        User newAnonymousUser = new User();
-        newAnonymousUser.setUuid(UUID.randomUUID().toString());
+        User newAnonymousUser = new User(createUuid());
         userRepository.save(newAnonymousUser);
         return newAnonymousUser.getUuid();
     }
 
     public TokenDto createTokenDto(String userUuid) {
-        return new TokenDto(userUuid);
+        return new TokenDto(addPrefixUUID(userUuid));
+    }
+
+
+    private String addPrefixUUID(String uuid) {
+        return UUID_PREFIX + uuid;
+    }
+
+    private String createUuid() {
+        return UUID.randomUUID().toString();
     }
 }

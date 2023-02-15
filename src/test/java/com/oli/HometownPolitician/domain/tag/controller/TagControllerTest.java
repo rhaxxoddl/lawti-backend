@@ -10,6 +10,11 @@ import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureGraphQlTester
@@ -34,4 +39,50 @@ class TagControllerTest {
                 .entityList(String.class);
     }
 
+    //    TODO 해당 테스트는 현재 제대로 동작하지 않음. 수정필요
+    @Test
+    @DisplayName("following 호출 잘되는지 확인")
+    void followMyTags() {
+        Map<String, Object> tag = new ConcurrentHashMap<>() {{
+            put("id", 1);
+            put("name", "국회, 인권");
+        }};
+        List<Map<String, Object>> tagInputList = new ArrayList<>();
+        tagInputList.add(tag);
+        Map<String, Object> input = new ConcurrentHashMap<>() {{
+            put("list", tagInputList.toArray());
+        }};
+        graphQlTester.documentName("tag")
+                .operationName("followMyTags")
+                .variable("input", input)
+                .execute()
+                .errors()
+                .verify()
+                .path("followMyTags.list")
+                .entityList(TagDto.class);
+    }
+
+
+    //    TODO 해당 테스트는 현재 제대로 동작하지 않음. 수정필요
+    @Test
+    @DisplayName("unfollowing 호출 잘되는지 확인")
+    void unfollowMyTags() {
+        Map<String, Object> tag = new ConcurrentHashMap<>() {{
+            put("id", 1L);
+            put("name", "국회, 인권");
+        }};
+        List<Map<String, Object>> tagInputList = new ArrayList<>();
+        tagInputList.add(tag);
+        Map<String, Object> input = new ConcurrentHashMap<>() {{
+            put("list", tagInputList.toArray());
+        }};
+        graphQlTester.documentName("tag")
+                .operationName("unfollowMyTags")
+                .variable("input", input)
+                .execute()
+                .errors()
+                .verify()
+                .path("unfollowMyTags.list")
+                .entityList(TagDto.class);
+    }
 }

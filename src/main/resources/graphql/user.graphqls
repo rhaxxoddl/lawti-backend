@@ -1,5 +1,6 @@
 extend type Query {
     #    유저가 처음 앱에 접속했을 때 접근용 토큰을 반환하는 메서드
+    #    - 반환된 토큰은 Authorization Header에 추가
     #    [Usage]
     #    query queryAccessToken {
     #    queryAccessToken {

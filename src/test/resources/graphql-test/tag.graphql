@@ -6,3 +6,30 @@ query queryTags {
         }
     }
 }
+
+query queryFollowedTags {
+    queryFollowedTags {
+        list {
+            id
+            name
+        }
+    }
+}
+
+mutation followMyTags($input: TagsInput!) {
+        followMyTags(input: $input) {
+            list {
+                id
+                name
+            }
+        }
+}
+
+mutation unfollowMyTags($input: TagsInput!) {
+    unfollowMyTags(input: $input) {
+        list {
+            id
+            name
+        }
+    }
+}

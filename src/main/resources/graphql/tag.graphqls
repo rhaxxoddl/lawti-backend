@@ -12,6 +12,7 @@ extend type Query {
     queryTags: TagsDto!
 
     #    사용자가 follow한 관심분야를 반환하는 메서드
+    #    - DB에 존재하지 않는 UUID 입력 시 list의 길이가 0. error 반환하지 않음.
     #    [Usage]
     #    query queryFollowedTags {
     #    queryFollowedTags {
@@ -26,26 +27,24 @@ extend type Query {
 
 extend type Mutation {
     #    관심분야 추가하는 메서드
+    #    [Parameter] 유저의 관심분야에 추가할 Tag
+    #    [Return Values] 유저의 관심분야에 추가된 모든 Tag
     #    [Usage]
-    #    mutation followMyTags {
-    #       followMyTags($input: InterestsInput!) {
+    #    mutation followMyTags($input: TagsInput!) {
     #            followMyTags(input: $input)
-    #       }
-    #   }
-    #   [GRAPHQL VARIABLES]
-    #
-    followMyTags(input: TagsInput!): Null
+    #    }
+    followMyTags(input: TagsInput!): TagsDto
 
     #    관심분야 제거하는 메서드
+    #    [Parameter] 유저의 관심분야에서 제거할 Tag
+    #    [Return Values] 유저의 관심분야에 추가된 모든 Tag
     #    [Usage]
     #    mutation unfollowMyTags {
-    #       unfollowMyTags($input: InterestsInput!) {
+    #       unfollowMyTags($input: TagsInput!) {
     #            unfollowMyTags(input: $input)
     #       }
     #   }
-    #   [GRAPHQL VARIABLES]
-    #
-    unfollowMyTags(input: TagsInput!): Null
+    unfollowMyTags(input: TagsInput!): TagsDto
 }
 
 type TagsDto {

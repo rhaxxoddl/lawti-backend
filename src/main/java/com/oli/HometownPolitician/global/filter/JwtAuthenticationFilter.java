@@ -22,13 +22,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     static private final String AUTHORIZATION_HEADER = "Authorization";
 
     static private final String BEARER_PREFIX = "Bearer ";
+    static private final String UUID_PREFIX = "UUID-";
 
     private final AuthenticationManager authenticationManager;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = resolveToken(request);
-        if (StringUtils.hasText(jwt)) {
+        if (StringUtils.hasText(jwt) && !jwt.contains(UUID_PREFIX)) {
             try {
                 Authentication jwtAuthenticationToken = new JwtAuthenticationToken(jwt);
                 Authentication authentication = authenticationManager.authenticate(jwtAuthenticationToken);
