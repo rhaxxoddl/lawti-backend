@@ -40,13 +40,13 @@ public class BillService {
                         .toList()
         );
     }
-    public FollowingBillsDto followBill(BillsInput billsInput, String authorization) {
+    public FollowingBillsDto followBills(BillsInput billsInput, String authorization) {
         User user = userService.getUser(authorization);
         List<Bill> bills = queryBillsByIdList(billsInput);
         List<Bill> followBills = user.followBills(bills);
         return FollowingBillsDto.from(followBills);
     }
-    public FollowingBillsDto unfollowBill(BillsInput billsInput, String authorization) {
+    public FollowingBillsDto unfollowBills(BillsInput billsInput, String authorization) {
         User user = userService.getUser(authorization);
         List<Bill> bills = queryBillsByIdList(billsInput);
         List<Bill> followBills = user.unfollowBills(bills);
