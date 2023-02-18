@@ -91,7 +91,7 @@ type BillPdfUriDto {
 }
 
 type FollowingBillsDto {
-    followingBillIds: [String]!
+    followingBills: [BillDto]!
 }
 
 type PoliticianDto {
