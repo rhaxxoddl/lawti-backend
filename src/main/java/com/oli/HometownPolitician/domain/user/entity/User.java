@@ -96,4 +96,25 @@ public class User extends BaseTimeEntity {
         });
         return getFollowingBills();
     }
+
+    public List<Bill> unfollowBills(List<Bill> bills) {
+        bills.forEach(bill -> {
+            List<BillUserRelation> billUserRelations = followedBillUserRelations.stream()
+                    .filter(billUserRelation -> (billUserRelation.getBill().getId().equals(bill.getId())))
+                    .toList();
+            if (billUserRelations.size() == 0)
+                followedBillUserRelations.add(
+                        BillUserRelation.builder()
+                                .user(this)
+                                .bill(bill)
+                                .isUnfollowed(true)
+                                .build()
+                );
+            else if (billUserRelations.size() > 1)
+                throw new Error("해당 법안과 유저의 관계가 중복되었습니다");
+            else
+                billUserRelations.get(0).setIsUnfollowed(true);
+        });
+        return getFollowingBills();
+    }
 }
