@@ -1,5 +1,6 @@
 package com.oli.HometownPolitician.domain.user.entity;
 
+import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelation;
 import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.domain.userTagRelation.entity.UserTagRelation;
@@ -43,6 +44,7 @@ public class User extends BaseTimeEntity {
         this.uuid = uuid;
     }
 
+    //    메서드명 getFollowingTags로 바꾸기
     public List<Tag> getFolloedTags() {
         return followedUserTagRelations
                 .stream()
@@ -50,6 +52,7 @@ public class User extends BaseTimeEntity {
                 .collect(Collectors.toList());
     }
 
+//    메서드명 followTags로 바꾸기
     public void followingTags(List<Tag> tags) {
         tags.forEach(tag -> {
             if (followedUserTagRelations.stream()
@@ -62,10 +65,17 @@ public class User extends BaseTimeEntity {
         });
     }
 
+    //    메서드명 unfollowTags로 바꾸기
     public void unfollowingTags(List<Tag> tags) {
         tags.forEach(tag -> followedUserTagRelations.removeIf(followedTag ->
                 (followedTag.getTag() == tag)
         ));
     }
 
+    public List<Bill> getFollowingBills() {
+        return followedBillUserRelations.stream()
+                .filter(billUserRelation -> !billUserRelation.getIsUnfollowed())
+                .map(BillUserRelation::getBill)
+                .collect(Collectors.toList());
+    }
 }
