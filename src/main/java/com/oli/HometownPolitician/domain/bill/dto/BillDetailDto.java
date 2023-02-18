@@ -25,7 +25,7 @@ public class BillDetailDto {
     private String billPdfUri;
     private BillDto alternativeBill;
 
-    public BillDetailDto from(Bill bill) {
+    static public BillDetailDto from(Bill bill) {
         return BillDetailDto.builder()
                 .id(bill.getId())
                 .title(bill.getTitle())
