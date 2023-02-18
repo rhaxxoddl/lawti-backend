@@ -1,12 +1,12 @@
 package com.oli.HometownPolitician.domain.bill.dto;
 
+import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.bill.enumeration.PlenaryResultType;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Builder
 @Getter
@@ -15,13 +15,31 @@ public class BillDetailDto {
     private String title;
     private BillStageType currentStage;
     private String summary;
-    private List<PoliticianDto> proposers;
+    private ProposersDto proposers;
     private LocalDate proposerDate;
     private CommitteeDto committee;
-    private LocalDate noticeEndDate;
     private LocalDate committeDate;
+    private LocalDate noticeEndDate;
     private PlenaryResultType plenaryResult;
     private LocalDate plenaryProcessingDage;
     private String billPdfUri;
-    private BillDto alternativeBillId;
+    private BillDto alternativeBill;
+
+    public BillDetailDto from(Bill bill) {
+        return BillDetailDto.builder()
+                .id(bill.getId())
+                .title(bill.getTitle())
+                .currentStage(bill.getCurrentStage())
+                .summary(bill.getSummary())
+                .proposers(ProposersDto.from(bill.getProposers()))
+                .proposerDate(bill.getProposeDate())
+                .committee(CommitteeDto.from(bill.getCommittee()))
+                .committeDate(bill.getCommitteeDate())
+                .noticeEndDate(bill.getNoticeEndDate())
+                .plenaryResult(bill.getPlenaryResult())
+                .plenaryProcessingDage(bill.getPlenaryProcessingDate())
+                .billPdfUri(bill.getBillPdfUri())
+                .alternativeBill(BillDto.from(bill.getAlternativeBill()))
+                .build();
+    }
 }
