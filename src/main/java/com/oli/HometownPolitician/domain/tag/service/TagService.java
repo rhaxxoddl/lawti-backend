@@ -6,10 +6,10 @@ import com.oli.HometownPolitician.domain.tag.dto.TagsInput;
 import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.domain.tag.repository.TagRepository;
 import com.oli.HometownPolitician.domain.user.entity.User;
-import com.oli.HometownPolitician.domain.user.repository.UserRepository;
+import com.oli.HometownPolitician.domain.user.equipment.UserPrefixEquipment;
+import com.oli.HometownPolitician.domain.user.service.UserService;
 import com.oli.HometownPolitician.domain.userTagRelation.entity.UserTagRelation;
 import com.oli.HometownPolitician.domain.userTagRelation.repository.UserTagRelationRepository;
-import com.oli.HometownPolitician.global.error.NotFoundError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,26 +24,22 @@ import java.util.stream.Collectors;
 public class TagService {
     private final TagRepository tagRepository;
     private final UserTagRelationRepository userTagRelationRepository;
-    private final UserRepository userRepository;
-    private final String UUID_PREFIX = "UUID-";
-    private final String BEARER_PREFIX = "Bearer ";
+    private final UserService userService;
     public TagsDto queryTags() {
         return TagsDto
                 .from(tagRepository.findAll());
     }
 
     public TagsDto queryFollowedTagsByAuthorization(String authorization) {
-        String userUuid =  deletePrefix(authorization);
         return TagsDto.from(
-                userTagRelationRepository.qFindFollowedTagsByUuid(userUuid)
+                userTagRelationRepository.qFindFollowedTagsByUuid(UserPrefixEquipment.deletePrefix(authorization))
                         .stream()
                         .map(UserTagRelation::getTag)
                         .collect(Collectors.toList())
         );
     }
     public TagsDto followingTags(TagsInput tagsInput, String authorization) {
-        String userUuid = deletePrefix(authorization);
-        User user = userRepository.qFindByUuidWithFollowedTags(userUuid).orElseThrow(() -> new NotFoundError("해당하는 유저가 존재하지 않습니다"));
+        User user = userService.getUserWithFollowedTags(authorization);
         List<String> tagNameList = tagsInput.getList()
                 .stream()
                 .map(TagInput::getName)
@@ -53,8 +49,7 @@ public class TagService {
         return TagsDto.from(user.getFolloedTags());
     }
     public TagsDto unfollowMyTags(TagsInput tagsInput, String authorization) {
-        String userUuid = deletePrefix(authorization);
-        User user = userRepository.qFindByUuidWithFollowedTags(userUuid).orElseThrow(() -> new NotFoundError("해당하는 유저가 존재하지 않습니다"));
+        User user = userService.getUserWithFollowedTags(authorization);
         List<String> tagNameList = tagsInput.getList()
                 .stream()
                 .map(TagInput::getName)
@@ -62,20 +57,5 @@ public class TagService {
         List<Tag> tags = tagRepository.queryTagsByNameList(tagNameList);
         user.unfollowingTags(tags);
         return TagsDto.from(user.getFolloedTags());
-    }
-    private String deletePrefix(String authorization) {
-        return deleteUuidPrefix(deleteBearerPrefix(authorization));
-    }
-
-    private String deleteUuidPrefix(String uuid) {
-        if (uuid.contains(UUID_PREFIX))
-            return uuid.substring(UUID_PREFIX.length());
-        return uuid;
-    }
-
-    private String deleteBearerPrefix(String bearerToken) {
-        if (bearerToken.contains(BEARER_PREFIX))
-            return bearerToken.substring(BEARER_PREFIX.length());
-        return bearerToken;
     }
 }
