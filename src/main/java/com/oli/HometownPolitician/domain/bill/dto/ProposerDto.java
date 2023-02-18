@@ -12,7 +12,7 @@ public class ProposerDto {
     private String name;
     private ProposerRole role;
 
-    public ProposerDto from(Proposer proposer) {
+    static public ProposerDto from(Proposer proposer) {
         return ProposerDto.builder()
                 .politicianId(proposer.getPolitician().getId())
                 .name(proposer.getPolitician().getName())
