@@ -64,7 +64,7 @@ public class Bill extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "alternative_bill_id", referencedColumnName = "bill_id")
-    private Bill alternativeBillId;
+    private Bill alternativeBill;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "bill")
     private List<BillUserRelation> followedBillUserRelations;
