@@ -10,13 +10,14 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.UUID;
 
+import static com.oli.HometownPolitician.domain.user.equipment.UserPrefixEquipment.addPrefixUUID;
+import static com.oli.HometownPolitician.domain.user.equipment.UserPrefixEquipment.deletePrefix;
+
 @Service
 @RequiredArgsConstructor
 @Validated
 public class UserService {
     private final UserRepository userRepository;
-    private final String UUID_PREFIX = "UUID-";
-    private final String BEARER_PREFIX = "Bearer ";
 
     public String createAnonymousUser() {
         User newAnonymousUser = new User(createUuid());
@@ -36,28 +37,7 @@ public class UserService {
         return new TokenDto(addPrefixUUID(userUuid));
     }
 
-
-    private String addPrefixUUID(String uuid) {
-        return UUID_PREFIX + uuid;
-    }
-
     private String createUuid() {
         return UUID.randomUUID().toString();
-    }
-
-    private String deletePrefix(String authorization) {
-        return deleteUuidPrefix(deleteBearerPrefix(authorization));
-    }
-
-    private String deleteUuidPrefix(String uuid) {
-        if (uuid.contains(UUID_PREFIX))
-            return uuid.substring(UUID_PREFIX.length());
-        return uuid;
-    }
-
-    private String deleteBearerPrefix(String bearerToken) {
-        if (bearerToken.contains(BEARER_PREFIX))
-            return bearerToken.substring(BEARER_PREFIX.length());
-        return bearerToken;
     }
 }
