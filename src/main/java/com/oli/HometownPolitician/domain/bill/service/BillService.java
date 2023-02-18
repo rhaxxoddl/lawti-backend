@@ -3,7 +3,10 @@ package com.oli.HometownPolitician.domain.bill.service;
 import com.oli.HometownPolitician.domain.bill.dto.BillDetailDto;
 import com.oli.HometownPolitician.domain.bill.dto.BillPdfUriDto;
 import com.oli.HometownPolitician.domain.bill.dto.FollowingBillsDto;
+import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.bill.input.BillInput;
+import com.oli.HometownPolitician.domain.bill.repository.BillRepository;
+import com.oli.HometownPolitician.global.error.NotFoundError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -13,9 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 public class BillService {
+    private final BillRepository billRepository;
 
     public BillDetailDto queryBillDetail(BillInput billInput) {
-        return null;
+        Bill bill = billRepository.findById(billInput.getBillId())
+                .orElseThrow(()-> new NotFoundError("해당하는 법안이 존재하지 않습니다"));
+        return BillDetailDto.from(bill);
     }
     public BillPdfUriDto queryBillPdfUri(BillInput billInput) {
         return null;
