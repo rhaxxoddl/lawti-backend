@@ -58,7 +58,7 @@ extend type Mutation {
 
 
 input BillInput{
-    billId: String!
+    billId: Long!
 }
 
 input BillsInput{
