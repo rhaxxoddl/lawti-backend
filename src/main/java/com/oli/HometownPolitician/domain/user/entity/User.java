@@ -78,4 +78,22 @@ public class User extends BaseTimeEntity {
                 .map(BillUserRelation::getBill)
                 .collect(Collectors.toList());
     }
+
+    public List<Bill> followBills(List<Bill> bills) {
+        bills.forEach(bill -> {
+            List<BillUserRelation> unfollowingBillUserRelations = followedBillUserRelations.stream()
+                    .filter(billUserRelation -> (billUserRelation.getBill().getId().equals(bill.getId())))
+                    .toList();
+            if (unfollowingBillUserRelations.size() == 0)
+                followedBillUserRelations.add(BillUserRelation.builder()
+                        .user(this)
+                        .bill(bill)
+                        .build());
+            else if (unfollowingBillUserRelations.size() > 1)
+                throw new Error("해당 법안과 유저의 관계가 중복되었습니다");
+            else
+                unfollowingBillUserRelations.get(0).setIsUnfollowed(false);
+        });
+        return getFollowingBills();
+    }
 }
