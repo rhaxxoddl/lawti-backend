@@ -17,7 +17,7 @@ public class BillDetailDto {
     private String summary;
     private List<PoliticianDto> proposers;
     private LocalDate proposerDate;
-    private CommitteeDto committe;
+    private CommitteeDto committee;
     private LocalDate noticeEndDate;
     private LocalDate committeDate;
     private PlenaryResultType plenaryResult;
