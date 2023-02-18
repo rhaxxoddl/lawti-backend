@@ -32,14 +32,17 @@ public class BillService {
     public BillPdfUriDto queryBillPdfUri(BillInput billInput) {
         return null;
     }
-    public FollowingBillsDto followBill(BillsInput billsInput, String authorization) {
-        User user = userService.getUser(authorization);
-        List<Bill> bills = billRepository.queryBillsByIdList(
+    public List<Bill> queryBillsByIdList(BillsInput billsInput) {
+        return billRepository.queryBillsByIdList(
                 billsInput.getBillInputs()
                         .stream()
                         .map(BillInput::getBillId)
                         .toList()
         );
+    }
+    public FollowingBillsDto followBill(BillsInput billsInput, String authorization) {
+        User user = userService.getUser(authorization);
+        List<Bill> bills = queryBillsByIdList(billsInput);
         List<Bill> followBills = user.followBills(bills);
         return FollowingBillsDto.from(followBills);
     }
