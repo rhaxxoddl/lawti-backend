@@ -83,7 +83,7 @@ type BillDetailDto {
 
 type BillDto {
     billId: Long!
-    name: String!
+    title: String!
 }
 
 type BillPdfUriDto {
