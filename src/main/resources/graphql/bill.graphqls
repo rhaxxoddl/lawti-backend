@@ -70,7 +70,7 @@ type BillDetailDto {
     title: String!
     currentStage: String!
     summary: String!
-    proposers: [PoliticianDto]!
+    proposers: ProposersDto!
     proposerDate: Date!
     committe: CommitteDto
     noticeEndDate: Date
@@ -94,9 +94,15 @@ type FollowingBillsDto {
     followingBills: [BillDto]!
 }
 
-type PoliticianDto {
+type ProposerDto {
     politicianId: Long!
     name: String!
+    role: ProposersDto!
+}
+
+type ProposersDto {
+    representativeProposer: [ProposerDto]!
+    publicProposer: [ProposerDto]!
 }
 
 type CommitteDto{
