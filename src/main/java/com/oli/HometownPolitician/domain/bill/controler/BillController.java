@@ -4,6 +4,7 @@ import com.oli.HometownPolitician.domain.bill.dto.BillDetailDto;
 import com.oli.HometownPolitician.domain.bill.dto.BillPdfUriDto;
 import com.oli.HometownPolitician.domain.bill.dto.FollowingBillsDto;
 import com.oli.HometownPolitician.domain.bill.input.BillInput;
+import com.oli.HometownPolitician.domain.bill.input.BillsInput;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.ContextValue;
@@ -27,12 +28,12 @@ public class BillController {
     public BillPdfUriDto queryBillPdfUri(@Argument(name = "input") @Valid BillInput billInput) {
         return null;
     }
-    @MutationMapping(name = "followBill")
-    public FollowingBillsDto followBill(@Argument(name = "input") @Valid BillInput billInput, @ContextValue String authorization) {
+    @MutationMapping(name = "followBills")
+    public FollowingBillsDto followBills(@Argument(name = "input") @Valid BillsInput billInput, @ContextValue String authorization) {
         return null;
     }
-    @MutationMapping(name = "unfollowBill")
-    public FollowingBillsDto unfollowBill(@Argument(name = "input") @Valid BillInput billInput, @ContextValue String authorization) {
+    @MutationMapping(name = "unfollowBills")
+    public FollowingBillsDto unfollowBills(@Argument(name = "input") @Valid BillsInput billInput, @ContextValue String authorization) {
         return null;
     }
 }

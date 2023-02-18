@@ -37,23 +37,23 @@ extend type Mutation {
     #   - input: 팔로우할 법안들 id의 배열
     #   - return: 팔로우하고 있는 법안들 id의 배열
     #    [Usage]
-    #    mutation followBill(input: BillId!) {
-    #    followBill(input: BillId!) {
+    #    mutation followBills(input: BillsInput!) {
+    #    followBills(input: BillsInput!) {
     #       billPdfUri: String
     #   }
     #}
-    followBill(input: BillsInput!): FollowingBillsDto!
+    followBills(input: BillsInput!): FollowingBillsDto!
 
     #    법안을 unfollow하는 메서드
     #   - input: 언팔로우할 법안들 id의 배열
     #   - return: 팔로우하고 있는 법안들 id의 배열
     #    [Usage]
-    #    mutation unfollowBill(input: BillId!) {
-    #    unfollowBill(input: BillId!) {
+    #    mutation unfollowBills(input: BillsInput!) {
+    #    unfollowBills(input: BillsInput!) {
     #       billPdfUri: String
     #   }
     #}
-    unfollowBill(input: BillsInput!): FollowingBillsDto!
+    unfollowBills(input: BillsInput!): FollowingBillsDto!
 }
 
 
