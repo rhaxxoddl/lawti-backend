@@ -45,8 +45,8 @@ public class TagService {
                 .map(TagInput::getName)
                 .collect(Collectors.toList());
         List<Tag> tags = tagRepository.queryTagsByNameList(tagNameList);
-        user.followingTags(tags);
-        return TagsDto.from(user.getFolloedTags());
+        user.followTags(tags);
+        return TagsDto.from(user.getFollowingTags());
     }
     public TagsDto unfollowMyTags(TagsInput tagsInput, String authorization) {
         User user = userService.getUserWithFollowedTags(authorization);
@@ -55,7 +55,7 @@ public class TagService {
                 .map(TagInput::getName)
                 .collect(Collectors.toList());
         List<Tag> tags = tagRepository.queryTagsByNameList(tagNameList);
-        user.unfollowingTags(tags);
-        return TagsDto.from(user.getFolloedTags());
+        user.unfollowTags(tags);
+        return TagsDto.from(user.getFollowingTags());
     }
 }

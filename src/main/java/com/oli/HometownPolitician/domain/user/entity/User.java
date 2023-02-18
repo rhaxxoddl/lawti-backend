@@ -44,16 +44,14 @@ public class User extends BaseTimeEntity {
         this.uuid = uuid;
     }
 
-    //    메서드명 getFollowingTags로 바꾸기
-    public List<Tag> getFolloedTags() {
+    public List<Tag> getFollowingTags() {
         return followedUserTagRelations
                 .stream()
                 .map(UserTagRelation::getTag)
                 .collect(Collectors.toList());
     }
 
-//    메서드명 followTags로 바꾸기
-    public void followingTags(List<Tag> tags) {
+    public void followTags(List<Tag> tags) {
         tags.forEach(tag -> {
             if (followedUserTagRelations.stream()
                     .noneMatch(followedTag -> (followedTag.getTag() == tag)))
@@ -65,8 +63,7 @@ public class User extends BaseTimeEntity {
         });
     }
 
-    //    메서드명 unfollowTags로 바꾸기
-    public void unfollowingTags(List<Tag> tags) {
+    public void unfollowTags(List<Tag> tags) {
         tags.forEach(tag -> followedUserTagRelations.removeIf(followedTag ->
                 (followedTag.getTag() == tag)
         ));
