@@ -1,0 +1,105 @@
+extend type Query {
+    #    법안 상세정보 페이지에 들어갈 데이터를 반환하는 메서드
+    #    [Usage]
+    #    query queryBillDetail(input: BillId!) {
+    #    queryBillDetail(input: BillId!) {
+    #       id
+    #       title
+    #       currentStage
+    #       summary
+    #       proposers
+    #       proposerDate
+    #       committe
+    #       noticeEndDate
+    #       committeDate
+    #       plenaryResult
+    #       plenaryProcessingDage
+    #       billPdfUri
+    #       alternativeBill
+    #   }
+    #}
+    queryBillDetail(input: BillInput!): BillDetailDto!
+
+    #    법안 원문 pdf파일 uri 반환하는 메서드
+    #   - input: 법안 id
+    #   - return: 해당 법안 원문 pdf파일 uri, 해당 법안에 원문 pdf 파일이 없으면 null
+    #    [Usage]
+    #    query queryBillPdfUri(input: BillId!) {
+    #    queryBillPdfUri(input: BillId!) {
+    #       billPdfUri: String
+    #   }
+    #}
+    queryBillPdfUri(input: BillInput!): BillPdfUriDto!
+}
+
+extend type Mutation {
+    #    법안을 follow하는 메서드
+    #   - input: 팔로우할 법안들 id의 배열
+    #   - return: 팔로우하고 있는 법안들 id의 배열
+    #    [Usage]
+    #    mutation followBill(input: BillId!) {
+    #    followBill(input: BillId!) {
+    #       billPdfUri: String
+    #   }
+    #}
+    followBill(input: BillsInput!): FollowingBillsDto!
+
+    #    법안을 unfollow하는 메서드
+    #   - input: 언팔로우할 법안들 id의 배열
+    #   - return: 팔로우하고 있는 법안들 id의 배열
+    #    [Usage]
+    #    mutation unfollowBill(input: BillId!) {
+    #    unfollowBill(input: BillId!) {
+    #       billPdfUri: String
+    #   }
+    #}
+    unfollowBill(input: BillsInput!): FollowingBillsDto!
+}
+
+
+input BillInput{
+    billId: String!
+}
+
+input BillsInput{
+    bills: [BillInput]!
+}
+
+type BillDetailDto {
+    id: Long!
+    title: String!
+    currentStage: String!
+    summary: String!
+    proposers: [PoliticianDto]!
+    proposerDate: Date!
+    committe: CommitteDto
+    noticeEndDate: Date
+    committeDate: Date
+    plenaryResult: String
+    plenaryProcessingDage: Date
+    billPdfUri: String
+    alternativeBillId: BillDto
+}
+
+type BillDto {
+    billId: Long!
+    name: String!
+}
+
+type BillPdfUriDto {
+    billPdfUri: String
+}
+
+type FollowingBillsDto {
+    followingBillIds: [String]!
+}
+
+type PoliticianDto {
+    politicianId: Long!
+    name: String!
+}
+
+type CommitteDto{
+    committeId: Long!
+    name: String!
+}
