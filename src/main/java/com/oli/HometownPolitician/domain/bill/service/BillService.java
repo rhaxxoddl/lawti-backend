@@ -40,6 +40,11 @@ public class BillService {
                         .toList()
         );
     }
+    public FollowingBillsDto queryFollowingBills(String authorization) {
+        User user = userService.getUser(authorization);
+        List<Bill> followingBills = user.getFollowingBills();
+        return FollowingBillsDto.from(followingBills);
+    }
     public FollowingBillsDto followBills(BillsInput billsInput, String authorization) {
         User user = userService.getUser(authorization);
         List<Bill> bills = queryBillsByBillsInput(billsInput);
