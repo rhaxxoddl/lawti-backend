@@ -29,7 +29,7 @@ public class Bill extends BaseTimeEntity {
     @Column(name = "bill_id", unique = true, nullable = false)
     private Long id;
     @Column(name = "external_bill_id", unique = true, nullable = false)
-    private Long externalBillId;
+    private String externalBillId;
     @Column(name = "number", nullable = false)
     private Long number;
     @Column(name = "title", nullable = false)
