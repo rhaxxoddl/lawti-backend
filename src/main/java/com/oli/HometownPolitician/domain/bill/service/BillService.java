@@ -32,7 +32,7 @@ public class BillService {
     public BillPdfUriDto queryBillPdfUri(BillInput billInput) {
         return null;
     }
-    public List<Bill> queryBillsByIdList(BillsInput billsInput) {
+    public List<Bill> queryBillsByBillsInput(BillsInput billsInput) {
         return billRepository.queryBillsByIdList(
                 billsInput.getBillInputs()
                         .stream()
@@ -42,13 +42,13 @@ public class BillService {
     }
     public FollowingBillsDto followBills(BillsInput billsInput, String authorization) {
         User user = userService.getUser(authorization);
-        List<Bill> bills = queryBillsByIdList(billsInput);
+        List<Bill> bills = queryBillsByBillsInput(billsInput);
         List<Bill> followBills = user.followBills(bills);
         return FollowingBillsDto.from(followBills);
     }
     public FollowingBillsDto unfollowBills(BillsInput billsInput, String authorization) {
         User user = userService.getUser(authorization);
-        List<Bill> bills = queryBillsByIdList(billsInput);
+        List<Bill> bills = queryBillsByBillsInput(billsInput);
         List<Bill> followBills = user.unfollowBills(bills);
         return FollowingBillsDto.from(followBills);
     }
