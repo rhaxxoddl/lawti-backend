@@ -1,10 +1,7 @@
 package com.oli.HometownPolitician.domain.politician.entity;
 
 import com.oli.HometownPolitician.domain.proposer.entity.Proposer;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -12,6 +9,8 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "politicians")
