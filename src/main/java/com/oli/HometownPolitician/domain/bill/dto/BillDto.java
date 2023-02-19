@@ -11,7 +11,7 @@ public class BillDto {
     private String title;
 
     static public BillDto from(Bill billEntity) {
-        return BillDto.builder()
+        return billEntity == null ? null : BillDto.builder()
                 .billId(billEntity.getId())
                 .title(billEntity.getTitle())
                 .build();
