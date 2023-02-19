@@ -7,10 +7,7 @@ import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelatio
 import com.oli.HometownPolitician.domain.committe.entity.Committee;
 import com.oli.HometownPolitician.domain.proposer.entity.Proposer;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -19,6 +16,8 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "bills")
