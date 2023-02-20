@@ -1,0 +1,53 @@
+query queryBillDetail($input: BillInput!) {
+    queryBillDetail(input: $input) {
+       id
+       title
+       currentStage
+       summary
+       proposers {
+           proposers {
+               politicianId
+               name
+               role
+           }
+       }
+       proposerDate
+       committe {
+           committeId
+           name
+       }
+       noticeEndDate
+       committeDate
+       plenaryResult
+       plenaryProcessingDage
+       billPdfUri
+       alternativeBill {
+           billId
+           title
+       }
+   }
+}
+
+query queryBillPdfUri($input: BillInput!) {
+    queryBillPdfUri(input: $input) {
+       billPdfUri
+    }
+}
+
+mutation followBills($input: BillsInput!) {
+    followBills(input: $input) {
+       followingBills {
+           billId
+           title
+       }
+   }
+}
+
+mutation unfollowBills($input: BillsInput!) {
+    unfollowBills(input: $input) {
+        followingBills {
+            billId
+            title
+        }
+    }
+}
