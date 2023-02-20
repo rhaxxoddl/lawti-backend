@@ -97,12 +97,11 @@ type FollowingBillsDto {
 type ProposerDto {
     politicianId: Long!
     name: String!
-    role: ProposersDto!
+    role: String!
 }
 
 type ProposersDto {
-    representativeProposer: [ProposerDto]!
-    publicProposer: [ProposerDto]!
+    proposers: [ProposerDto]!
 }
 
 type CommitteDto{
