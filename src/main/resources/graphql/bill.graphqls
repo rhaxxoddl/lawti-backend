@@ -78,7 +78,7 @@ type BillDetailDto {
     plenaryResult: String
     plenaryProcessingDage: Date
     billPdfUri: String
-    alternativeBillId: BillDto
+    alternativeBill: BillDto
 }
 
 type BillDto {
