@@ -1,0 +1,115 @@
+extend type Query {
+    #    법안 메세지 방 목록을 반환하는 메서드
+    #    - input: 필터 옵션
+    #    - return: 필터링된 팔로우하고 있는 법안 메세지 방 목록
+    #    [Usage]
+    #    query queryBillDetail($input: BillMessageRoomListInput!) {
+    #    queryBillDetail(input: $input) {
+    #       list {
+    #          tag
+    #          title
+    #          numberOfUnreadMessages
+    #          latestMessageContent
+    #       }
+    #       pagination {
+    #           returnedElementSize     #현재 페이지에서 읽은 데이터의 크기
+    #           requestedElementSize    #현재 페이지에서 보여주고자 하는 데이터의 크기
+    #           isFirst                 #첫 페이지인지 여부
+    #           isLast                  #마지막 페이지인지 여부
+    #           isEmpty                 #데이터가 비어있는지 여부
+    #           isAscending             #정렬 방향
+    #       }
+    #   }
+    #}
+    queryBillMessageRoomList(input: BillMessageRoomListInput!): BillMessageRoomListDto!
+
+    #    id에 해당하는 법안의 메세지들을 반환하는 메서드
+    #   - input: 법안 id
+    #   - return: 모든 메세지
+    #    [Usage]
+    #    query queryBillMessageList($input: BillMessageListInput!) {
+    #    queryBillMessageList(input: $input) {
+    #       list {
+    #           messageId
+    #           messageContent
+    #           isRead
+    #       }
+    #       pagination {
+    #           returnedElementSize     #현재 페이지에서 읽은 데이터의 크기
+    #           requestedElementSize    #현재 페이지에서 보여주고자 하는 데이터의 크기
+    #           isFirst                 #첫 페이지인지 여부
+    #           isLast                  #마지막 페이지인지 여부
+    #           isEmpty                 #데이터가 비어있는지 여부
+    #           isAscending             #정렬 방향
+    #       }
+    #   }
+    #}
+    queryBillMessageList(input: BillMessageListInput!): BillMessageListDto!
+}
+
+extend type Mutation {
+    #    법안을 unfollow하고 메세지 방을 나가는 메서드
+    #   - input: 메세지방을 나가고 unfollow할 법안들 id의 배열
+    #   - return: 팔로우하고 있는 법안 메세지방 리스트
+    #    [Usage]
+    #    mutation exitMessageRoom($input: ExitBillMessageRoomListInput!) {
+    #    exitMessageRoom(input: $input) {
+    #       list {
+    #          tag
+    #          title
+    #          numberOfUnreadMessages
+    #          latestMessageContent
+    #       }
+    #       pagination {
+    #           returnedElementSize     #현재 페이지에서 읽은 데이터의 크기
+    #           requestedElementSize    #현재 페이지에서 보여주고자 하는 데이터의 크기
+    #           isFirst                 #첫 페이지인지 여부
+    #           isLast                  #마지막 페이지인지 여부
+    #           isEmpty                 #데이터가 비어있는지 여부
+    #           isAscending             #정렬 방향
+    #       }
+    #   }
+    #}
+    exitMessageRoom(input: ExitBillMessageRoomListInput!): BillMessageRoomListDto!
+}
+
+input BillMessageRoomListInput {
+    filter: BillMessageRoomFilterInput!
+    pagination: TargetSlicePaginationInput!
+}
+
+input BillMessageRoomFilterInput {
+    tagList: [TagInput]!
+}
+
+input BillMessageListInput {
+    billId: Long!
+    pagination: TargetSlicePaginationInput!
+}
+
+input ExitBillMessageRoomListInput {
+    list: [BillInput]!
+}
+
+type BillMessageRoomListDto {
+    list: [BillMessageRoomDto]!
+    pagination: SlicePaginationDto!
+}
+
+type BillMessageRoomDto {
+    tag: TagDto
+    title: String
+    numberOfUnreadMessages: Long
+    latestMessageContent: String
+}
+
+type BillMessageListDto {
+    list: [MessageDto]!
+    pagination: SlicePaginationDto!
+}
+
+type MessageDto {
+    messageId: Long!
+    messageContent: String!
+    isRead: Boolean!
+}
