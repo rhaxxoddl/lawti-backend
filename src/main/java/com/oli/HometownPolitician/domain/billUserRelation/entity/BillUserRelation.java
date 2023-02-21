@@ -1,7 +1,7 @@
 package com.oli.HometownPolitician.domain.billUserRelation.entity;
 
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
-import com.oli.HometownPolitician.domain.message.entity.Message;
+import com.oli.HometownPolitician.domain.billMessage.entity.BillMessage;
 import com.oli.HometownPolitician.domain.user.entity.User;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
 import lombok.*;
@@ -33,8 +33,8 @@ public class BillUserRelation extends BaseTimeEntity {
     @Column(name = "isUnfollowed", nullable = false)
     private Boolean isUnfollowed;
     @OneToOne
-    @JoinColumn(name = "last_read_message_id", referencedColumnName = "message_id")
-    private Message lastReadMessage;
+    @JoinColumn(name = "last_read_bill_message_id", referencedColumnName = "bill_message_id")
+    private BillMessage lastReadBillMessage;
 
     @PrePersist
     public void prePersist(){

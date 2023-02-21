@@ -1,4 +1,4 @@
-package com.oli.HometownPolitician.domain.message.entity;
+package com.oli.HometownPolitician.domain.billMessage.entity;
 
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
@@ -12,14 +12,14 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "messages")
+@Table(name = "bill_messages")
 @EntityListeners(AuditingEntityListener.class)
-@SequenceGenerator(name = "MESSAGE_SEQ_GENERATOR", sequenceName = "MESSAGE_SEQ")
-public class Message extends BaseTimeEntity {
+@SequenceGenerator(name = "BILL_MESSAGE_SEQ_GENERATOR", sequenceName = "BILL_MESSAGE_SEQ")
+public class BillMessage extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MESSAGE_SEQ")
-    @Column(name = "message_id", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BILL_MESSAGE_SEQ")
+    @Column(name = "bill_message_id", unique = true, nullable = false)
     private Long id;
 
     @Column(name = "content", unique = true)
