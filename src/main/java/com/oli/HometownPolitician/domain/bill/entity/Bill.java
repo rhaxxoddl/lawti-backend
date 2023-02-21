@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -34,8 +35,8 @@ public class Bill extends BaseTimeEntity {
     private Long number;
     @Column(name = "title", nullable = false)
     private String title;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bill")
-    private List<Proposer> proposers;
+    @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Proposer> proposers = new ArrayList<>();
     @Column(name = "propose_date", nullable = false)
     private LocalDate proposeDate;
     @Column(name = "propose_assembly")
@@ -65,6 +66,6 @@ public class Bill extends BaseTimeEntity {
     @JoinColumn(name = "alternative_bill_id", referencedColumnName = "bill_id")
     private Bill alternativeBill;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bill")
-    private List<BillUserRelation> followedBillUserRelations;
+    @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY)
+    private List<BillUserRelation> followedBillUserRelations = new ArrayList<>();
 }
