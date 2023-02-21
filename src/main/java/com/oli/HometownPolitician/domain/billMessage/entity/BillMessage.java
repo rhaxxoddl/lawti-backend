@@ -22,10 +22,17 @@ public class BillMessage extends BaseTimeEntity {
     @Column(name = "bill_message_id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "content", unique = true)
+    @Column(name = "content", unique = true, nullable = false)
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "bill_id", referencedColumnName = "bill_id")
+    @JoinColumn(name = "bill_id", referencedColumnName = "bill_id", nullable = false)
     private Bill bill;
+
+    static public BillMessage from(String content, Bill bill) {
+        return BillMessage.builder()
+                .content(content)
+                .bill(bill)
+                .build();
+    }
 }
