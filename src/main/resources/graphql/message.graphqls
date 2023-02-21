@@ -1,0 +1,87 @@
+extend type Query {
+    #    메세지 방 목록을 반환하는 메서드
+    #    - input: 필터 옵션
+    #    [Usage]
+    #    query queryBillDetail(input: BillId!) {
+    #    queryBillDetail(input: BillId!) {
+    #       id
+    #       title
+    #       currentStage
+    #       summary
+    #       proposers
+    #       proposerDate
+    #       committe
+    #       noticeEndDate
+    #       committeDate
+    #       plenaryResult
+    #       plenaryProcessingDage
+    #       billPdfUri
+    #       alternativeBill
+    #   }
+    #}
+    queryMessageRoomList(input: MessageRoomListInput!): MessageRoomListDto!
+
+    #    메세지 방 안의 메세지들을 반환하는 메서드
+    #   - input: 메세지방 id
+    #   - return: 모든 메세지
+    #    [Usage]
+    #    query queryBillPdfUri(input: BillId!) {
+    #    queryBillPdfUri(input: BillId!) {
+    #       billPdfUri: String
+    #   }
+    #}
+    queryMessageList(input: MessageListInput!): MessageListDto!
+}
+
+extend type Mutation {
+    #    법안을 follow하는 메서드
+    #   - input: 팔로우할 법안들 id의 배열
+    #   - return: 팔로우하고 있는 법안들 id의 배열
+    #    [Usage]
+    #    mutation followBills(input: BillsInput!) {
+    #    followBills(input: BillsInput!) {
+    #       billPdfUri: String
+    #   }
+    #}
+    exitMessageRoom(input: MessageRoomsInput!): MessageRoomListDto!
+}
+
+input MessageRoomListInput {
+    pagination: TargetSlicePaginationInput!
+}
+
+input MessageListInput {
+    messageRoomId: Long!
+    pagination: TargetSlicePaginationInput!
+}
+
+input MessageRoomsInput {
+    list: [MessageRoomInput]!
+}
+
+input MessageRoomInput {
+    messageRoomId: Long!
+}
+
+type MessageRoomListDto {
+    list: [MessageRoomDto]
+    pagination: SlicePaginationDto!
+}
+
+type MessageRoomDto {
+    tag: TagDto
+    title: String
+    numberOfUnreadMessages: Long
+    latestMessage: String
+}
+
+type MessageListDto {
+    list: [MessageDto]!
+    pagination: SlicePaginationDto!
+}
+
+type MessageDto {
+    messageId: Long!
+    messageText: String!
+    isRead: Boolean!
+}
