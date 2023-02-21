@@ -9,11 +9,11 @@ import java.util.List;
 @Getter
 @Builder
 public class FollowingBillsDto {
-    private List<BillDto> follwingBills;
+    private List<BillDto> list;
 
     static public FollowingBillsDto from(List<Bill> bills) {
         return FollowingBillsDto.builder()
-                .follwingBills(
+                .list(
                         bills.stream()
                                 .map(BillDto::from)
                                 .toList()

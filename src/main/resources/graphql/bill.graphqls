@@ -62,7 +62,7 @@ input BillInput{
 }
 
 input BillsInput{
-    bills: [BillInput]!
+    list: [BillInput]!
 }
 
 type BillDetailDto {
@@ -91,7 +91,7 @@ type BillPdfUriDto {
 }
 
 type FollowingBillsDto {
-    followingBills: [BillDto]!
+    list: [BillDto]!
 }
 
 type ProposerDto {
@@ -101,7 +101,7 @@ type ProposerDto {
 }
 
 type ProposersDto {
-    proposers: [ProposerDto]!
+    list: [ProposerDto]!
 }
 
 type CommitteDto{

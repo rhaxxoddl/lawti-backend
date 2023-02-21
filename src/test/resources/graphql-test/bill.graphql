@@ -5,7 +5,7 @@ query queryBillDetail($input: BillInput!) {
        currentStage
        summary
        proposers {
-           proposers {
+           list {
                politicianId
                name
                role
@@ -36,7 +36,7 @@ query queryBillPdfUri($input: BillInput!) {
 
 mutation followBills($input: BillsInput!) {
     followBills(input: $input) {
-       followingBills {
+       list {
            billId
            title
        }
@@ -45,7 +45,7 @@ mutation followBills($input: BillsInput!) {
 
 mutation unfollowBills($input: BillsInput!) {
     unfollowBills(input: $input) {
-        followingBills {
+        list {
             billId
             title
         }

@@ -10,5 +10,5 @@ import java.util.List;
 @Getter
 public class BillsInput {
     @NotNull
-    private List<BillInput> billInputs;
+    private List<BillInput> list;
 }

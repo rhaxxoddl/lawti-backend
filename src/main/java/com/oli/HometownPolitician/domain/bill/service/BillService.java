@@ -34,7 +34,7 @@ public class BillService {
     }
     public List<Bill> queryBillsByBillsInput(BillsInput billsInput) {
         return billRepository.queryBillsByIdList(
-                billsInput.getBillInputs()
+                billsInput.getList()
                         .stream()
                         .map(BillInput::getBillId)
                         .toList()
