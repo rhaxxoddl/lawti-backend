@@ -132,11 +132,11 @@ class BillServiceTest {
         FollowingBillsDto followingBillsDto = billService.queryFollowingBills(AUTHORIZATION);
         assertThat(followingBillsDto).isNotNull();
         assertThat(followingBillsDto.getClass()).isEqualTo(FollowingBillsDto.class);
-        assertThat(followingBillsDto.getFollwingBills()).isNotNull();
-        assertThat(followingBillsDto.getFollwingBills().size()).isEqualTo(2);
-        assertThat(followingBillsDto.getFollwingBills().get(0).getClass()).isEqualTo(BillDto.class);
-        assertThat(followingBillsDto.getFollwingBills().get(0).getBillId().getClass()).isEqualTo(Long.class);
-        assertThat(followingBillsDto.getFollwingBills().get(0).getTitle().getClass()).isEqualTo(String.class);
+        assertThat(followingBillsDto.getList()).isNotNull();
+        assertThat(followingBillsDto.getList().size()).isEqualTo(2);
+        assertThat(followingBillsDto.getList().get(0).getClass()).isEqualTo(BillDto.class);
+        assertThat(followingBillsDto.getList().get(0).getBillId().getClass()).isEqualTo(Long.class);
+        assertThat(followingBillsDto.getList().get(0).getTitle().getClass()).isEqualTo(String.class);
     }
 
     @Test
@@ -145,16 +145,16 @@ class BillServiceTest {
         BillsInput billsInput = getBillsInput();
         FollowingBillsDto followingBillsDtoBefore = billService.queryFollowingBills(AUTHORIZATION);
         assertThat(followingBillsDtoBefore).isNotNull();
-        assertThat(followingBillsDtoBefore.getFollwingBills()).isNotNull();
-        assertThat(followingBillsDtoBefore.getFollwingBills().size()).isEqualTo(0);
+        assertThat(followingBillsDtoBefore.getList()).isNotNull();
+        assertThat(followingBillsDtoBefore.getList().size()).isEqualTo(0);
 
         FollowingBillsDto followingBillsDtoAfter = billService.followBills(billsInput, AUTHORIZATION);
         assertThat(followingBillsDtoAfter).isNotNull();
-        assertThat(followingBillsDtoAfter.getFollwingBills()).isNotNull();
-        assertThat(followingBillsDtoAfter.getFollwingBills().size()).isEqualTo(2);
-        assertThat(followingBillsDtoAfter.getFollwingBills().get(0).getClass()).isEqualTo(BillDto.class);
-        assertThat(followingBillsDtoAfter.getFollwingBills().get(0).getBillId().getClass()).isEqualTo(Long.class);
-        assertThat(followingBillsDtoAfter.getFollwingBills().get(0).getTitle().getClass()).isEqualTo(String.class);
+        assertThat(followingBillsDtoAfter.getList()).isNotNull();
+        assertThat(followingBillsDtoAfter.getList().size()).isEqualTo(2);
+        assertThat(followingBillsDtoAfter.getList().get(0).getClass()).isEqualTo(BillDto.class);
+        assertThat(followingBillsDtoAfter.getList().get(0).getBillId().getClass()).isEqualTo(Long.class);
+        assertThat(followingBillsDtoAfter.getList().get(0).getTitle().getClass()).isEqualTo(String.class);
     }
 
     @Test
@@ -182,17 +182,17 @@ class BillServiceTest {
         billUserRelationRepository.saveAll(followedBillUserRelations);
         FollowingBillsDto unfollowingBillsDtoBefore = billService.queryFollowingBills(AUTHORIZATION);
         assertThat(unfollowingBillsDtoBefore).isNotNull();
-        assertThat(unfollowingBillsDtoBefore.getFollwingBills()).isNotNull();
-        assertThat(unfollowingBillsDtoBefore.getFollwingBills().size()).isEqualTo(2);
+        assertThat(unfollowingBillsDtoBefore.getList()).isNotNull();
+        assertThat(unfollowingBillsDtoBefore.getList().size()).isEqualTo(2);
 
-        billsInput.getBillInputs().remove(1);
+        billsInput.getList().remove(1);
         FollowingBillsDto unfollowingBillsDtoAfter = billService.unfollowBills(billsInput, AUTHORIZATION);
         assertThat(unfollowingBillsDtoAfter).isNotNull();
-        assertThat(unfollowingBillsDtoAfter.getFollwingBills()).isNotNull();
-        assertThat(unfollowingBillsDtoAfter.getFollwingBills().size()).isEqualTo(1);
-        assertThat(unfollowingBillsDtoAfter.getFollwingBills().get(0).getClass()).isEqualTo(BillDto.class);
-        assertThat(unfollowingBillsDtoAfter.getFollwingBills().get(0).getBillId().getClass()).isEqualTo(Long.class);
-        assertThat(unfollowingBillsDtoAfter.getFollwingBills().get(0).getTitle().getClass()).isEqualTo(String.class);
+        assertThat(unfollowingBillsDtoAfter.getList()).isNotNull();
+        assertThat(unfollowingBillsDtoAfter.getList().size()).isEqualTo(1);
+        assertThat(unfollowingBillsDtoAfter.getList().get(0).getClass()).isEqualTo(BillDto.class);
+        assertThat(unfollowingBillsDtoAfter.getList().get(0).getBillId().getClass()).isEqualTo(Long.class);
+        assertThat(unfollowingBillsDtoAfter.getList().get(0).getTitle().getClass()).isEqualTo(String.class);
     }
 
 
@@ -308,7 +308,7 @@ class BillServiceTest {
         List<BillInput> billInputs = new ArrayList<>();
         billInputs.add(BillInput.builder().billId(1L).build());
         billInputs.add(BillInput.builder().billId(2L).build());
-        return BillsInput.builder().billInputs(billInputs).build();
+        return BillsInput.builder().list(billInputs).build();
     }
 
     private void initUser() {
