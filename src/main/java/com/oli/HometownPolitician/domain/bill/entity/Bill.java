@@ -3,6 +3,7 @@ package com.oli.HometownPolitician.domain.bill.entity;
 
 import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.bill.enumeration.PlenaryResultType;
+import com.oli.HometownPolitician.domain.billTagRelation.entity.BillTagRelation;
 import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelation;
 import com.oli.HometownPolitician.domain.committe.entity.Committee;
 import com.oli.HometownPolitician.domain.billMessage.entity.BillMessage;
@@ -72,4 +73,7 @@ public class Bill extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY)
     private List<BillMessage> billMessages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY)
+    private List<BillTagRelation> tags = new ArrayList<>();
 }
