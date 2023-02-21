@@ -31,7 +31,12 @@ extend type Mutation {
     #    [Return Values] 유저의 관심분야에 추가된 모든 Tag
     #    [Usage]
     #    mutation followMyTags($input: TagsInput!) {
-    #            followMyTags(input: $input)
+    #            followMyTags(input: $input) {
+    #            list {
+    #                id
+    #                name
+    #            }
+    #        }
     #    }
     followMyTags(input: TagsInput!): TagsDto
 
@@ -39,11 +44,14 @@ extend type Mutation {
     #    [Parameter] 유저의 관심분야에서 제거할 Tag
     #    [Return Values] 유저의 관심분야에 추가된 모든 Tag
     #    [Usage]
-    #    mutation unfollowMyTags {
-    #       unfollowMyTags($input: TagsInput!) {
-    #            unfollowMyTags(input: $input)
-    #       }
-    #   }
+    #    mutation unfollowMyTags($input: TagsInput!) {
+    #            unfollowMyTags(input: $input) {
+    #            list {
+    #                id
+    #                name
+    #            }
+    #        }
+    #    }
     unfollowMyTags(input: TagsInput!): TagsDto
 }
 
