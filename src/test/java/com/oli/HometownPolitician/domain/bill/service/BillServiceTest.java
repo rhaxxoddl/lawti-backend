@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
+// TODO queryBillsByIdList_well_test()를 제외한 나머지 테스트 통합 실행시 에러남
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
