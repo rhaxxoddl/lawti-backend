@@ -29,4 +29,11 @@ public class BillTagRelation extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bill_id", referencedColumnName = "bill_id", nullable = false)
     private Bill bill;
+
+    static public BillTagRelation from(Bill bill, Tag tag) {
+        return BillTagRelation.builder()
+                .bill(bill)
+                .tag(tag)
+                .build();
+    }
 }
