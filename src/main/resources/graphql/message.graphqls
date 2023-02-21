@@ -19,7 +19,7 @@ extend type Query {
     #       alternativeBill
     #   }
     #}
-    queryMessageRoomList(input: BillMessageRoomListInput!): BillMessageRoomListDto!
+    queryBillMessageRoomList(input: BillMessageRoomListInput!): BillMessageRoomListDto!
 
     #    해당 법안의 메세지들을 반환하는 메서드
     #   - input: 법안 id
@@ -30,7 +30,7 @@ extend type Query {
     #       billPdfUri: String
     #   }
     #}
-    queryMessageList(input: BillMessageListInput!): BillMessageListDto!
+    queryBillMessageList(input: BillMessageListInput!): BillMessageListDto!
 }
 
 extend type Mutation {
@@ -78,6 +78,6 @@ type BillMessageListDto {
 
 type MessageDto {
     messageId: Long!
-    messageText: String!
+    messageContent: String!
     isRead: Boolean!
 }
