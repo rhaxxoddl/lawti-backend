@@ -40,6 +40,12 @@ input PaginationInput {
     isAscending: Boolean!   #오름차순 여부
 }
 
+input TargetSlicePaginationInput {
+    target: Long
+    elementSize: Int!
+    isAscending: Boolean!
+}
+
 type PaginationDto {
     totalPageSize: Long             #페이지의 총 크기      !!!Nullable (Sliced 인 경우 Null)
     totalElementSize: Long          #데이터의 총 크기      !!!Nullable (Sliced 인 경우 Null)
@@ -50,4 +56,13 @@ type PaginationDto {
     isLast: Boolean!                #마지막 페이지인지 여부
     isEmpty: Boolean!               #데이터가 비어있는지 여부
     isSliced: Boolean!              #무한 스크롤 방식이라면 true / 페이지 번호가 있다면 false
+}
+
+type SlicePaginationDto {
+    returnedElementSize: Int!       #현재 페이지에서 읽은 데이터의 크기
+    requestedElementSize: Int!      #현재 페이지에서 보여주고자 하는 데이터의 크기
+    isFirst: Boolean!               #첫 페이지인지 여부
+    isLast: Boolean!                #마지막 페이지인지 여부
+    isEmpty: Boolean!               #데이터가 비어있는지 여부
+    isAscending: Boolean!           #데이터 정렬 순서
 }
