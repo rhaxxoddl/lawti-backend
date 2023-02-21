@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -29,5 +30,5 @@ public class Politician extends BaseTimeEntity {
     @Column(name = "party", nullable = false)
     private String party;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "politician")
-    private List<Proposer> proposeList;
+    private List<Proposer> proposeList = new ArrayList<>();
 }
