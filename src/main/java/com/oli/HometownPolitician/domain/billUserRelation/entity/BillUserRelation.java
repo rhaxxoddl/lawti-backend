@@ -30,7 +30,7 @@ public class BillUserRelation extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bill_id", referencedColumnName = "bill_id", nullable = false)
     private Bill bill;
-    @Column(name = "isUnfollowed", nullable = false)
+    @Column(name = "is_unfollowed", nullable = false)
     private Boolean isUnfollowed;
     @OneToOne
     @JoinColumn(name = "last_read_bill_message_id", referencedColumnName = "bill_message_id")
