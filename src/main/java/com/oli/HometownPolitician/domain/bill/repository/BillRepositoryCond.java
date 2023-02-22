@@ -18,6 +18,8 @@ public class BillRepositoryCond {
     }
 
     public BooleanExpression billTagsContaionsOneOfTagIdList(List<Long> tagIdList) {
+        if (tagIdList.size() == 0)
+            return null;
         return bill.tags.any().tag.id.in(tagIdList);
     }
 }
