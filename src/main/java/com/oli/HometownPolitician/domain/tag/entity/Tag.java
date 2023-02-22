@@ -28,10 +28,10 @@ public class Tag extends BaseTimeEntity {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<UserTagRelation> userTagRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<BillTagRelation> billTagRelations = new ArrayList<>();
 
     public void addBill(Bill bill) {
