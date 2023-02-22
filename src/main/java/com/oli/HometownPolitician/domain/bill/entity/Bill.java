@@ -68,12 +68,12 @@ public class Bill extends BaseTimeEntity {
     @JoinColumn(name = "alternative_bill_id", referencedColumnName = "bill_id")
     private Bill alternativeBill;
 
-    @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<BillUserRelation> followedBillUserRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<BillMessage> billMessages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<BillTagRelation> tags = new ArrayList<>();
 }
