@@ -84,13 +84,25 @@ class BillUserRelationRepositoryImplTest {
     @Test
     @DisplayName("input에 tagIdList에 요소가 있을 경우 해당 태그 리스트에 해당하는 billUserRelation만 잘 나오는지 확인")
     void qFindByUserUuidAndFilter_exist_tagIdList_well_test() {
-        BillMessageRoomListInput input = getBillMessageRoomListInput();
+        BillMessageRoomListInput input = getBillMessageRoomListInputExistTag();
         List<Bill> bills = billRepository.findAll();
         List<User> users = userRepository.findAll();
         List<BillUserRelation> billUserRelations = billUserRelationRepository.qFindByUserUuidAndFilter(input, USER1_UUID);
 
         assertThat(billUserRelations).isNotNull();
         assertThat(billUserRelations.size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("input에 tagIdList에 요소가 없을 경우 모든 billUserRelation가 잘 나오는지 확인")
+    void qFindByUserUuidAndFilter_not_exist_tagIdList_well_test() {
+        BillMessageRoomListInput input = getBillMessageRoomListInputNotExistTag();
+        List<Bill> bills = billRepository.findAll();
+        List<User> users = userRepository.findAll();
+        List<BillUserRelation> billUserRelations = billUserRelationRepository.qFindByUserUuidAndFilter(input, USER1_UUID);
+
+        assertThat(billUserRelations).isNotNull();
+        assertThat(billUserRelations.size()).isEqualTo(2);
     }
 
     private List<TagInput> getTagList() {
@@ -102,11 +114,22 @@ class BillUserRelationRepositoryImplTest {
         return tagList;
     }
 
-    private BillMessageRoomListInput getBillMessageRoomListInput() {
+    private BillMessageRoomListInput getBillMessageRoomListInputExistTag() {
         return BillMessageRoomListInput.builder()
                 .filter(
                         BillMessageRoomFilterInput.builder()
                                 .tagList(getTagList())
+                                .build()
+                )
+                .pagination(null)
+                .build();
+    }
+
+    private BillMessageRoomListInput getBillMessageRoomListInputNotExistTag() {
+        return BillMessageRoomListInput.builder()
+                .filter(
+                        BillMessageRoomFilterInput.builder()
+                                .tagList(new ArrayList<>())
                                 .build()
                 )
                 .pagination(null)
@@ -207,6 +230,25 @@ class BillUserRelationRepositoryImplTest {
                 .followedBillUserRelations(new ArrayList<>())
                 .alternativeBill(null)
                 .build());
+        bills.add(Bill.builder()
+                .id(3L)
+                .title("test title middle")
+                .externalBillId("testExternalBillId3")
+                .number(1234568L)
+                .proposeDate(LocalDate.now())
+                .committee(committeeList.get(2))
+                .committeeDate(LocalDate.now())
+                .currentStage(BillStageType.PROMULGATION)
+                .noticeEndDate(LocalDate.now())
+                .plenaryProcessingDate(null)
+                .plenaryResult(null)
+                .proposeAssembly(21L)
+                .summary("test summary")
+                .billPdfUri("test billPdfUri")
+                .tags(new ArrayList<>())
+                .followedBillUserRelations(new ArrayList<>())
+                .alternativeBill(null)
+                .build());
         billRepository.saveAll(bills);
         return bills;
     }
@@ -244,7 +286,8 @@ class BillUserRelationRepositoryImplTest {
 
     private void connectBillTag(List<Bill> billList) {
         billList.forEach(bill ->
-            billTagRelationProvider.matchTagByCommittee(bill.getCommittee()).addBill(bill));
+            billTagRelationProvider.matchTagByCommittee(bill.getCommittee())
+                    .addBill(bill));
     }
 
     private void connectUserBill(List<User> userList, List<Bill> billList) {
