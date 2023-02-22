@@ -1,5 +1,6 @@
 package com.oli.HometownPolitician.domain.tag.entity;
 
+import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.billTagRelation.entity.BillTagRelation;
 import com.oli.HometownPolitician.domain.userTagRelation.entity.UserTagRelation;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
@@ -32,4 +33,13 @@ public class Tag extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
     private List<BillTagRelation> billTagRelations = new ArrayList<>();
+
+    public void addBill(Bill bill) {
+        BillTagRelation billTagRelation = BillTagRelation.builder()
+                .bill(bill)
+                .tag(this)
+                .build();
+        this.billTagRelations.add(billTagRelation);
+        bill.getTags().add(billTagRelation);
+    }
 }
