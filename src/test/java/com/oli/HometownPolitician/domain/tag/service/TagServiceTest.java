@@ -184,15 +184,15 @@ class TagServiceTest {
 
 
         List<Tag> tagList = new ArrayList<>();
-        tagList.add(new Tag(INTEREST1));
-        tagList.add(new Tag(INTEREST2));
-        tagList.add(new Tag(INTEREST3));
-        tagList.add(new Tag(INTEREST4));
-        tagList.add(new Tag(INTEREST5));
-        tagList.add(new Tag(INTEREST6));
-        tagList.add(new Tag(INTEREST7));
-        tagList.add(new Tag(INTEREST8));
-        tagList.add(new Tag(INTEREST9));
+        tagList.add(Tag.builder().name(INTEREST1).build());
+        tagList.add(Tag.builder().name(INTEREST2).build());
+        tagList.add(Tag.builder().name(INTEREST3).build());
+        tagList.add(Tag.builder().name(INTEREST4).build());
+        tagList.add(Tag.builder().name(INTEREST5).build());
+        tagList.add(Tag.builder().name(INTEREST6).build());
+        tagList.add(Tag.builder().name(INTEREST7).build());
+        tagList.add(Tag.builder().name(INTEREST8).build());
+        tagList.add(Tag.builder().name(INTEREST9).build());
         tagRepository.saveAll(tagList);
     }
 
