@@ -1,6 +1,5 @@
 package com.oli.HometownPolitician.domain.bill.repository;
 
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class BillRepositoryCond {
         return bill.deletedAt.isNull();
     }
 
-    public Predicate billMatchTagByTagIdList(List<Long> tagIdList) {
+    public BooleanExpression billTagsContaionsOneOfTagIdList(List<Long> tagIdList) {
         return bill.tags.any().tag.id.in(tagIdList);
     }
 }
