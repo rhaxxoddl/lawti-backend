@@ -81,12 +81,15 @@ public class User extends BaseTimeEntity {
             List<BillUserRelation> billUserRelations = followedBillUserRelations.stream()
                     .filter(billUserRelation -> (billUserRelation.getBill().getId().equals(bill.getId())))
                     .toList();
-            if (billUserRelations.size() == 0)
-                followedBillUserRelations.add(BillUserRelation.builder()
+            if (billUserRelations.size() == 0) {
+                BillUserRelation billUserRelation = BillUserRelation.builder()
                         .user(this)
                         .bill(bill)
                         .isUnfollowed(false)
-                        .build());
+                        .build();
+                followedBillUserRelations.add(billUserRelation);
+                bill.getFollowedBillUserRelations().add(billUserRelation);
+            }
             else if (billUserRelations.size() > 1)
                 throw new Error("해당 법안과 유저의 관계가 중복되었습니다");
             else
