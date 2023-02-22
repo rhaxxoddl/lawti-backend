@@ -6,6 +6,7 @@ import com.oli.HometownPolitician.domain.bill.repository.BillRepository;
 import com.oli.HometownPolitician.domain.billMessage.input.BillMessageRoomFilterInput;
 import com.oli.HometownPolitician.domain.billMessage.input.BillMessageRoomListInput;
 import com.oli.HometownPolitician.domain.billTagRelation.repository.BillTagRelationRepository;
+import com.oli.HometownPolitician.domain.billTagRelation.service.BillTagRelationProvider;
 import com.oli.HometownPolitician.domain.billTagRelation.service.BillTagRelationService;
 import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelation;
 import com.oli.HometownPolitician.domain.committe.entity.Committee;
@@ -17,6 +18,7 @@ import com.oli.HometownPolitician.domain.user.entity.User;
 import com.oli.HometownPolitician.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -53,6 +55,8 @@ class BillUserRelationRepositoryImplTest {
     private BillTagRelationRepository billTagRelationRepository;
     @Autowired
     private BillTagRelationService billTagRelationService;
+    @Autowired
+    private BillTagRelationProvider billTagRelationProvider;
 
     @BeforeEach
     void setUp() {
@@ -62,6 +66,8 @@ class BillUserRelationRepositoryImplTest {
         List<Bill> billList = insertBillData(committeeList);
         connectBillTag(billList);
         connectUserBill(userList, billList);
+        em.flush();
+        em.clear();
     }
 
     @AfterEach
@@ -76,9 +82,15 @@ class BillUserRelationRepositoryImplTest {
     }
 
     @Test
-    void qFindByUserUuidAndFilter_well_test() {
-        List<BillUserRelation> billUserRelations = billUserRelationRepository.qFindByUserUuidAndFilter(getBillMessageRoomListInput(), USER1_UUID);
+    @DisplayName("input에 tagIdList에 요소가 있을 경우 해당 태그 리스트에 해당하는 billUserRelation만 잘 나오는지 확인")
+    void qFindByUserUuidAndFilter_exist_tagIdList_well_test() {
+        BillMessageRoomListInput input = getBillMessageRoomListInput();
+        List<Bill> bills = billRepository.findAll();
+        List<User> users = userRepository.findAll();
+        List<BillUserRelation> billUserRelations = billUserRelationRepository.qFindByUserUuidAndFilter(input, USER1_UUID);
+
         assertThat(billUserRelations).isNotNull();
+        assertThat(billUserRelations.size()).isEqualTo(1);
     }
 
     private List<TagInput> getTagList() {
@@ -132,23 +144,23 @@ class BillUserRelationRepositoryImplTest {
 
 
         List<Tag> tagList = new ArrayList<>();
-        tagList.add(Tag.builder().name(INTEREST1).build());
-        tagList.add(Tag.builder().name(INTEREST2).build());
-        tagList.add(Tag.builder().name(INTEREST3).build());
-        tagList.add(Tag.builder().name(INTEREST4).build());
-        tagList.add(Tag.builder().name(INTEREST5).build());
-        tagList.add(Tag.builder().name(INTEREST6).build());
-        tagList.add(Tag.builder().name(INTEREST7).build());
-        tagList.add(Tag.builder().name(INTEREST8).build());
-        tagList.add(Tag.builder().name(INTEREST9).build());
-        tagList.add(Tag.builder().name(INTEREST10).build());
-        tagList.add(Tag.builder().name(INTEREST11).build());
-        tagList.add(Tag.builder().name(INTEREST12).build());
-        tagList.add(Tag.builder().name(INTEREST13).build());
-        tagList.add(Tag.builder().name(INTEREST14).build());
-        tagList.add(Tag.builder().name(INTEREST15).build());
-        tagList.add(Tag.builder().name(INTEREST16).build());
-        tagList.add(Tag.builder().name(INTEREST17).build());
+        tagList.add(Tag.builder().name(INTEREST1).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST2).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST3).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST4).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST5).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST6).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST7).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST8).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST9).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST10).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST11).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST12).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST13).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST14).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST15).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST16).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
+        tagList.add(Tag.builder().name(INTEREST17).billTagRelations(new ArrayList<>()).userTagRelations(new ArrayList<>()).build());
         tagRepository.saveAll(tagList);
 
         return tagList;
@@ -172,6 +184,8 @@ class BillUserRelationRepositoryImplTest {
                 .proposeAssembly(21L)
                 .summary("test summary")
                 .billPdfUri("test billPdfUri")
+                .tags(new ArrayList<>())
+                .followedBillUserRelations(new ArrayList<>())
                 .alternativeBill(null)
                 .build());
         bills.add(Bill.builder()
@@ -189,6 +203,8 @@ class BillUserRelationRepositoryImplTest {
                 .proposeAssembly(21L)
                 .summary("test summary")
                 .billPdfUri("test billPdfUri")
+                .tags(new ArrayList<>())
+                .followedBillUserRelations(new ArrayList<>())
                 .alternativeBill(null)
                 .build());
         billRepository.saveAll(bills);
@@ -227,30 +243,13 @@ class BillUserRelationRepositoryImplTest {
     }
 
     private void connectBillTag(List<Bill> billList) {
-        billList.forEach(bill -> billTagRelationService.createeBillTagRelationByCommittee(bill));
+        billList.forEach(bill ->
+            billTagRelationProvider.matchTagByCommittee(bill.getCommittee()).addBill(bill));
     }
 
     private void connectUserBill(List<User> userList, List<Bill> billList) {
-        List<BillUserRelation> billUserRelationList = new ArrayList<>();
-        billUserRelationList.add(BillUserRelation.builder()
-                .id(1L)
-                .user(userList.get(0))
-                .bill(billList.get(0))
-                .isUnfollowed(false)
-                .build());
-        billUserRelationList.add(BillUserRelation.builder()
-                .id(2L)
-                .user(userList.get(0))
-                .bill(billList.get(1))
-                .isUnfollowed(true)
-                .build());
-        billUserRelationList.add(BillUserRelation.builder()
-                .id(3L)
-                .user(userList.get(0))
-                .bill(billList.get(1))
-                .isUnfollowed(false)
-                .build());
-
-        billUserRelationRepository.saveAll(billUserRelationList);
+        userList.get(0).followBills(billList);
+        userList.get(0).unfollowBills(billList.subList(1, 2));
+        userList.get(1).followBills(billList.subList(1, 2));
     }
 }
