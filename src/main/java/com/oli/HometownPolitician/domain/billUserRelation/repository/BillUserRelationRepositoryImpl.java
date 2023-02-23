@@ -38,9 +38,9 @@ public class BillUserRelationRepositoryImpl implements BillUserRelationRepositor
     @Override
     public List<BillUserRelation> qFindByUserUuidAndFilter(BillMessageRoomListInput input, String userUuid) {
         return queryFactory.selectFrom(billUserRelation)
-                .join(billUserRelation.bill, bill)
+                .join(billUserRelation.bill, bill).fetchJoin()
                 .join(billUserRelation.user, user).fetchJoin()
-                .join(bill.billMessages, billMessage).on(billMessage.createdAt.max().eq(billMessage.createdAt))
+                .join(bill.billMessages, billMessage).fetchJoin()
                 .where(
                         billUserRelationCond.notDeleted()
                                 .and(billUserRelationCond.notUnfollowed())
