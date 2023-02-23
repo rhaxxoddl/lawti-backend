@@ -29,6 +29,7 @@ public class Politician extends BaseTimeEntity {
     private String chineseName;
     @Column(name = "party", nullable = false)
     private String party;
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "politician")
     private List<Proposer> proposeList = new ArrayList<>();
 }

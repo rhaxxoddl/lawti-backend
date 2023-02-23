@@ -28,9 +28,11 @@ public class Tag extends BaseTimeEntity {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
+    @Builder.Default
     @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<UserTagRelation> userTagRelations = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<BillTagRelation> billTagRelations = new ArrayList<>();
 

@@ -39,6 +39,7 @@ public class Bill extends BaseTimeEntity {
     private Long number;
     @Column(name = "title", nullable = false)
     private String title;
+    @Builder.Default
     @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Proposer> proposers = new ArrayList<>();
     @Column(name = "propose_date", nullable = false)
@@ -70,12 +71,15 @@ public class Bill extends BaseTimeEntity {
     @JoinColumn(name = "alternative_bill_id", referencedColumnName = "bill_id")
     private Bill alternativeBill;
 
+    @Builder.Default
     @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<BillUserRelation> followedBillUserRelations = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<BillMessage> billMessages = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<BillTagRelation> tags = new ArrayList<>();
 
