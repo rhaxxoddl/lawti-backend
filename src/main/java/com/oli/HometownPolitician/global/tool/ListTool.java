@@ -1,9 +1,9 @@
 package com.oli.HometownPolitician.global.tool;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ListTool {
-    public static <E> E getLastElement(ArrayList<E> list)
+    public static <E> E getLastElement(List<E> list)
     {
         if((list != null) && (list.isEmpty() == false))
         {
