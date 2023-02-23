@@ -5,14 +5,14 @@ import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.billMessage.entity.BillMessage;
 
 public class BillMessageGenerator {
-    public BillMessage generateBillMessageByCurrentStage(Bill bill, BillStageType currentStage) {
+    static public BillMessage generateBillMessageByCurrentStage(Bill bill, BillStageType currentStage) {
         return BillMessage.builder()
                 .bill(bill)
                 .content(bill.getTitle() + getMessageByBillStage(currentStage))
                 .build();
     }
 
-    private String getMessageByBillStage(BillStageType stageType) {
+    static private String getMessageByBillStage(BillStageType stageType) {
         return switch (stageType) {
             case RECEIPT -> "이(가) 국회에 접수되었어요";
             case COMMITTEE_RECEIPT -> "이(가) 상임위원회에 접수되었어요";
