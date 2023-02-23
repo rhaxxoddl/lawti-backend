@@ -5,7 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 
 import static com.oli.HometownPolitician.domain.billUserRelation.entity.QBillUserRelation.billUserRelation;
 
-public class BillUserRelationCond {
+public class BillUserRelationRepositoryCond {
     public BooleanExpression notDeleted() {
         return billUserRelation.deletedAt.isNull();
     }

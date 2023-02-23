@@ -25,13 +25,13 @@ import java.util.List;
 public class BillUserRelationRepositoryImpl implements BillUserRelationRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     private final BillRepositoryCond billCond;
-    private final BillUserRelationCond billUserRelationCond;
+    private final BillUserRelationRepositoryCond billUserRelationCond;
     private final UserRepositoryCond userCond;
 
     public BillUserRelationRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
         this.billCond = new BillRepositoryCond();
-        this.billUserRelationCond = new BillUserRelationCond();
+        this.billUserRelationCond = new BillUserRelationRepositoryCond();
         this.userCond = new UserRepositoryCond();
     }
 
