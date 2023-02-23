@@ -51,7 +51,8 @@ public class BillUserRelationRepositoryImpl implements BillUserRelationRepositor
                                 ))
                 )
                 .orderBy(
-                        OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(BillMessage.class, "billMessage"), "createdAt")
+                        OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(BillMessage.class, "billMessage"), "createdAt"),
+                        OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(BillMessage.class, "billMessage"), "id")
                 )
                 .limit(billUserRelationCond.billUserRelationLimit(input.getPagination()))
                 .fetch();
