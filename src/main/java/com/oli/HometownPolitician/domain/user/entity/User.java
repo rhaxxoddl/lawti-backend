@@ -129,4 +129,10 @@ public class User extends BaseTimeEntity {
         ).findFirst().orElseThrow(()->new NotFoundError("해당 법안은 팔로우하고 있지 않습니다"));
         billUserRelation.setLastReadBillMessage(lastReadBillMessage);
     }
+
+    public Long numOfUnreadBillMessage() {
+        // TODO c
+        // 매개변수를 어떤 타입으로 받을지 고민
+        return null;
+    }
 }
