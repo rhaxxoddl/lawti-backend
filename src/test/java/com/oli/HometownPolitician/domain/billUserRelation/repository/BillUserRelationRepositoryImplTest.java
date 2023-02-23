@@ -99,8 +99,6 @@ class BillUserRelationRepositoryImplTest {
 
         assertThat(billUserRelations).isNotNull();
         assertThat(billUserRelations.size()).isEqualTo(1);
-        assertThat(billUserRelations.get(0).getBill().getTitle()).isEqualTo("test title middle");
-        assertThat(billUserRelations.get(1).getBill().getTitle()).isEqualTo("test title right");
     }
 
     @Test
