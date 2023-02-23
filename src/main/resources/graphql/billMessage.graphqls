@@ -103,7 +103,7 @@ type BillMessageRoomListDto {
 type BillMessageRoomDto {
     tag: TagDto
     title: String
-    numberOfUnreadMessages: Long
+    numberOfUnreadMessages: Int
     latestMessageContent: String
 }
 
