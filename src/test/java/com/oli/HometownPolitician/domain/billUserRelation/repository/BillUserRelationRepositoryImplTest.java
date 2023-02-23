@@ -5,6 +5,7 @@ import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.bill.repository.BillRepository;
 import com.oli.HometownPolitician.domain.billMessage.input.BillMessageRoomFilterInput;
 import com.oli.HometownPolitician.domain.billMessage.input.BillMessageRoomListInput;
+import com.oli.HometownPolitician.domain.billMessage.repository.BillMessageRepository;
 import com.oli.HometownPolitician.domain.billTagRelation.repository.BillTagRelationRepository;
 import com.oli.HometownPolitician.domain.billTagRelation.service.BillTagRelationProvider;
 import com.oli.HometownPolitician.domain.billTagRelation.service.BillTagRelationService;
@@ -16,6 +17,7 @@ import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.domain.tag.repository.TagRepository;
 import com.oli.HometownPolitician.domain.user.entity.User;
 import com.oli.HometownPolitician.domain.user.repository.UserRepository;
+import com.oli.HometownPolitician.global.argument.input.TargetSlicePaginationInput;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,27 +59,35 @@ class BillUserRelationRepositoryImplTest {
     private BillTagRelationService billTagRelationService;
     @Autowired
     private BillTagRelationProvider billTagRelationProvider;
+    @Autowired
+    private BillMessageRepository billMessageRepository;
 
+    //TODO 테스트를 파일단위로 실행할 경우 첫번째 테스트 이후 테스트들이 모두 오류
     @BeforeEach
     void setUp() {
+        List<User> users = userRepository.findAll();
         List<User> userList = insertUserData();
         List<Tag> tagList = insertTagData();
         List<Committee> committeeList = insertCommitteeData();
         List<Bill> billList = insertBillData(committeeList);
         connectBillTag(billList);
         connectUserBill(userList, billList);
+        insertBillMessageDataFirst(billList);
         em.flush();
         em.clear();
     }
 
     @AfterEach
     void clear() {
+        em.flush();
         billUserRelationRepository.deleteAll();
         billTagRelationRepository.deleteAll();
+        billMessageRepository.deleteAll();
         billRepository.deleteAll();
         tagRepository.deleteAll();
         committeeRepository.deleteAll();
         userRepository.deleteAll();
+        em.flush();
         em.clear();
     }
 
@@ -85,21 +95,20 @@ class BillUserRelationRepositoryImplTest {
     @DisplayName("input에 tagIdList에 요소가 있을 경우 해당 태그 리스트에 해당하는 billUserRelation만 잘 나오는지 확인")
     void qFindByUserUuidAndFilter_exist_tagIdList_well_test() {
         BillMessageRoomListInput input = getBillMessageRoomListInputExistTag();
-        List<Bill> bills = billRepository.findAll();
-        List<User> users = userRepository.findAll();
         List<BillUserRelation> billUserRelations = billUserRelationRepository.qFindByUserUuidAndFilter(input, USER1_UUID);
 
         assertThat(billUserRelations).isNotNull();
         assertThat(billUserRelations.size()).isEqualTo(1);
+        assertThat(billUserRelations.get(0).getBill().getTitle()).isEqualTo("test title middle");
+        assertThat(billUserRelations.get(1).getBill().getTitle()).isEqualTo("test title right");
     }
 
     @Test
     @DisplayName("input에 tagIdList에 요소가 없을 경우 모든 billUserRelation가 잘 나오는지 확인")
     void qFindByUserUuidAndFilter_not_exist_tagIdList_well_test() {
         BillMessageRoomListInput input = getBillMessageRoomListInputNotExistTag();
-        List<Bill> bills = billRepository.findAll();
-        List<User> users = userRepository.findAll();
         List<BillUserRelation> billUserRelations = billUserRelationRepository.qFindByUserUuidAndFilter(input, USER1_UUID);
+        billUserRelations.forEach(billUserRelation -> System.out.println(billUserRelation));
 
         assertThat(billUserRelations).isNotNull();
         assertThat(billUserRelations.size()).isEqualTo(2);
@@ -121,7 +130,13 @@ class BillUserRelationRepositoryImplTest {
                                 .tagList(getTagList())
                                 .build()
                 )
-                .pagination(null)
+                .pagination(
+                        TargetSlicePaginationInput.from(
+                                null,
+                                5,
+                                true
+                        )
+                )
                 .build();
     }
 
@@ -132,7 +147,13 @@ class BillUserRelationRepositoryImplTest {
                                 .tagList(new ArrayList<>())
                                 .build()
                 )
-                .pagination(null)
+                .pagination(
+                        TargetSlicePaginationInput.from(
+                                null,
+                                5,
+                                true
+                        )
+                )
                 .build();
     }
 
@@ -193,14 +214,13 @@ class BillUserRelationRepositoryImplTest {
     private List<Bill> insertBillData(List<Committee> committeeList) {
         List<Bill> bills = new ArrayList<>();
         bills.add(Bill.builder()
-                .id(1L)
                 .title("test title right")
                 .externalBillId("testExternalBillId")
                 .number(123456L)
                 .proposeDate(LocalDate.now())
                 .committee(committeeList.get(0))
                 .committeeDate(LocalDate.now())
-                .currentStage(BillStageType.COMMITTEE_RECEIPT)
+                .currentStage(BillStageType.RECEIPT)
                 .noticeEndDate(LocalDate.now())
                 .plenaryProcessingDate(null)
                 .plenaryResult(null)
@@ -212,14 +232,13 @@ class BillUserRelationRepositoryImplTest {
                 .alternativeBill(null)
                 .build());
         bills.add(Bill.builder()
-                .id(2L)
                 .title("test title left")
                 .externalBillId("testExternalBillId2")
                 .number(1234567L)
                 .proposeDate(LocalDate.now())
                 .committee(committeeList.get(1))
                 .committeeDate(LocalDate.now())
-                .currentStage(BillStageType.PROMULGATION)
+                .currentStage(BillStageType.RECEIPT)
                 .noticeEndDate(LocalDate.now())
                 .plenaryProcessingDate(null)
                 .plenaryResult(null)
@@ -231,14 +250,13 @@ class BillUserRelationRepositoryImplTest {
                 .alternativeBill(null)
                 .build());
         bills.add(Bill.builder()
-                .id(3L)
                 .title("test title middle")
                 .externalBillId("testExternalBillId3")
                 .number(1234568L)
                 .proposeDate(LocalDate.now())
                 .committee(committeeList.get(2))
                 .committeeDate(LocalDate.now())
-                .currentStage(BillStageType.PROMULGATION)
+                .currentStage(BillStageType.RECEIPT)
                 .noticeEndDate(LocalDate.now())
                 .plenaryProcessingDate(null)
                 .plenaryResult(null)
@@ -286,13 +304,25 @@ class BillUserRelationRepositoryImplTest {
 
     private void connectBillTag(List<Bill> billList) {
         billList.forEach(bill ->
-            billTagRelationProvider.matchTagByCommittee(bill.getCommittee())
-                    .addBill(bill));
+                billTagRelationProvider.matchTagByCommittee(bill.getCommittee())
+                        .addBill(bill));
     }
 
     private void connectUserBill(List<User> userList, List<Bill> billList) {
         userList.get(0).followBills(billList);
         userList.get(0).unfollowBills(billList.subList(1, 2));
         userList.get(1).followBills(billList.subList(1, 2));
+    }
+
+    private void insertBillMessageDataFirst(List<Bill> bills) {
+        bills.forEach(bill -> {
+            bill.updateCurrentStage(BillStageType.COMMITTEE_RECEIPT);
+        });
+        bills.forEach(bill -> {
+            bill.updateCurrentStage(BillStageType.COMMITTEE_REVIEW);
+        });
+        bills.get(0).updateCurrentStage(BillStageType.SYSTEMATIC_REVIEW);
+        bills.get(2).updateCurrentStage(BillStageType.SYSTEMATIC_REVIEW);
+        bills.get(2).updateCurrentStage(BillStageType.DISCARD);
     }
 }
