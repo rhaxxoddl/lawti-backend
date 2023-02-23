@@ -3,14 +3,7 @@ package com.oli.HometownPolitician.domain.billMessage.service;
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.billMessage.entity.BillMessage;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
-@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 public class BillMessageGenerator {
     public BillMessage generateBillMessageByCurrentStage(Bill bill, BillStageType currentStage) {
         return BillMessage.builder()
