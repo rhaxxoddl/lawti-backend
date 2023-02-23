@@ -1,10 +1,12 @@
 package com.oli.HometownPolitician.domain.user.entity;
 
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
+import com.oli.HometownPolitician.domain.billMessage.entity.BillMessage;
 import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelation;
 import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.domain.userTagRelation.entity.UserTagRelation;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
+import com.oli.HometownPolitician.global.error.NotFoundError;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -58,7 +60,7 @@ public class User extends BaseTimeEntity {
                 followedUserTagRelations.add(UserTagRelation
                         .builder()
                         .user(this)
-                        .tag(   tag)
+                        .tag(tag)
                         .build());
         });
     }
@@ -89,8 +91,7 @@ public class User extends BaseTimeEntity {
                         .build();
                 followedBillUserRelations.add(billUserRelation);
                 bill.getFollowedBillUserRelations().add(billUserRelation);
-            }
-            else if (billUserRelations.size() > 1)
+            } else if (billUserRelations.size() > 1)
                 throw new Error("해당 법안과 유저의 관계가 중복되었습니다");
             else
                 billUserRelations.get(0).setIsUnfollowed(false);
@@ -117,5 +118,15 @@ public class User extends BaseTimeEntity {
                 billUserRelations.get(0).setIsUnfollowed(true);
         });
         return getFollowingBills();
+    }
+
+    public void readBillMessage(BillMessage lastReadBillMessage) {
+        if (lastReadBillMessage == null)
+            throw new IllegalArgumentException("lastReadBillMessage로 null이 들어왔습니다");
+        BillUserRelation billUserRelation = this.followedBillUserRelations.stream().filter(followedBillUserRelation ->
+                followedBillUserRelation.getIsUnfollowed().equals(false) &&
+                        followedBillUserRelation.getBill().getId().equals(lastReadBillMessage.getBill().getId())
+        ).findFirst().orElseThrow(()->new NotFoundError("해당 법안은 팔로우하고 있지 않습니다"));
+        billUserRelation.setLastReadBillMessage(lastReadBillMessage);
     }
 }
