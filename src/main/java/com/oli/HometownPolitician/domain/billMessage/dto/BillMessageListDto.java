@@ -11,14 +11,14 @@ import java.util.List;
 @Getter
 @Builder
 public class BillMessageListDto {
-    private List<MessageDto> list;
+    private List<BillMessageDto> list;
     private SlicePaginationDto pagination;
 
     static public BillMessageListDto from(List<BillMessage> billMessageList, TargetSlicePaginationInput paginationInput) {
         return BillMessageListDto.builder()
                 .list(
                         billMessageList.stream()
-                                .map(MessageDto::from)
+                                .map(BillMessageDto::from)
                                 .toList()
                 )
                 .pagination(SlicePaginationDto.from(paginationInput, billMessageList.size()))

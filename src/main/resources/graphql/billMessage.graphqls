@@ -95,13 +95,13 @@ type BillMessageRoomDto {
 }
 
 type BillMessageListDto {
-    list: [MessageDto]!
+    list: [BillMessageDto]!
     pagination: SlicePaginationDto!
 }
 
-type MessageDto {
-    messageId: Long!
-    messageContent: String!
+type BillMessageDto {
+    billMessageId: Long!
+    content: String!
 }
 
 type ExitBillMessageRoomResultDto {
