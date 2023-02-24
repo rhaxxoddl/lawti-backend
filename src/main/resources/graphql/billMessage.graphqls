@@ -60,7 +60,7 @@ extend type Mutation {
     #       isSuccess
     #   }
     #}
-    exitMessageRoom(input: ExitBillMessageRoomListInput!): ExitBillMessageRoomResultDto!
+    exitMessageRooms(input: ExitBillMessageRoomListInput!): ExitBillMessageRoomResultDto!
 }
 
 input BillMessageRoomListInput {

@@ -1,7 +1,6 @@
 package com.oli.HometownPolitician.domain.billMessage.input;
 
 import com.oli.HometownPolitician.domain.bill.input.BillInput;
-import com.oli.HometownPolitician.global.argument.input.TargetSlicePaginationInput;
 import lombok.Builder;
 import lombok.Getter;
 
