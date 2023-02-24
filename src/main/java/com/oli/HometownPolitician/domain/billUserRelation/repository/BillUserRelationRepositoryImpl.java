@@ -40,7 +40,7 @@ public class BillUserRelationRepositoryImpl implements BillUserRelationRepositor
         return queryFactory.selectFrom(billUserRelation)
                 .join(billUserRelation.bill, bill).fetchJoin()
                 .join(billUserRelation.user, user).fetchJoin()
-                .join(bill.billMessages, billMessage).fetchJoin()
+                .leftJoin(bill.billMessages, billMessage).fetchJoin()
                 .where(
                         billUserRelationCond.notDeleted()
                                 .and(billUserRelationCond.notUnfollowed())
