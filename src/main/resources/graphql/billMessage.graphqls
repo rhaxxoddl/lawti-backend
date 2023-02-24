@@ -1,0 +1,111 @@
+extend type Query {
+    #    법안 메세지 방 목록을 반환하는 메서드
+    #    - input: 필터, 페이지네이션 정보
+    #       - 몇개의 태그에 해당하는 법안 메세지방만을 보려면 해당 태그를 BillMessageRoomFilterInput 내의 tagList에 담는다.
+    #       - 모든 법안 메세지방을 보려면 BillMessageRoomFilterInput나 tagList가 없거나 비어있으면 된다.
+    #    - return: 필터링된 팔로우하고 있는 법안 메세지 방 목록, 페이지네이션 정보
+    #    [Usage]
+    #    query queryBillMessageRoomList($input: BillMessageRoomListInput!) {
+    #    queryBillMessageRoomList(input: $input) {
+    #       list {
+    #           billMessageRoomId
+    #           billId
+    #           tag
+    #           title
+    #           numberOfUnreadMessages
+    #           latestMessageContent
+    #       }
+    #       pagination {
+    #           returnedElementSize     #현재 페이지에서 읽은 데이터의 크기
+    #           requestedElementSize    #현재 페이지에서 보여주고자 하는 데이터의 크기
+    #           isFirst                 #첫 페이지인지 여부
+    #           isLast                  #마지막 페이지인지 여부
+    #           isEmpty                 #데이터가 비어있는지 여부
+    #           isAscending             #정렬 방향
+    #       }
+    #   }
+    #}
+    queryBillMessageRoomList(input: BillMessageRoomListInput!): BillMessageRoomListDto!
+
+    #    id에 해당하는 법안의 메세지들을 반환하는 메서드
+    #   - input: 법안 id,페이지네이션 정보
+    #   - return: 모든 메세지, 페이지네이션 정보
+    #    [Usage]
+    #    query queryBillMessageList($input: BillMessageListInput!) {
+    #    queryBillMessageList(input: $input) {
+    #       list {
+    #           billMessageId
+    #           content
+    #       }
+    #       pagination {
+    #           returnedElementSize     #현재 페이지에서 읽은 데이터의 크기
+    #           requestedElementSize    #현재 페이지에서 보여주고자 하는 데이터의 크기
+    #           isFirst                 #첫 페이지인지 여부
+    #           isLast                  #마지막 페이지인지 여부
+    #           isEmpty                 #데이터가 비어있는지 여부
+    #           isAscending             #정렬 방향
+    #       }
+    #   }
+    #}
+    queryBillMessageList(input: BillMessageListInput!): BillMessageListDto!
+}
+
+extend type Mutation {
+    #    법안을 unfollow하고 메세지 방을 나가는 메서드
+    #   - input: 메세지 방을 나가고 unfollow할 법안들 id의 배열
+    #   - return: unfollow 성공여부
+    #       - 실패시 해당 리스트의 모든 법안 unfollow 실패하고 error
+    #    [Usage]
+    #    mutation exitMessageRoom($input: ExitBillMessageRoomResultDto!) {
+    #    exitMessageRoom(input: $input) {
+    #       isSuccess
+    #   }
+    #}
+    exitBillMessageRooms(input: ExitBillMessageRoomListInput!): ExitBillMessageRoomResultDto!
+}
+
+input BillMessageRoomListInput {
+    filter: BillMessageRoomFilterInput
+    pagination: TargetSlicePaginationInput!
+}
+
+input BillMessageRoomFilterInput {
+    tagList: [TagInput]
+}
+
+input BillMessageListInput {
+    billId: Long!
+    pagination: TargetSlicePaginationInput!
+}
+
+input ExitBillMessageRoomListInput {
+    list: [BillInput]!
+}
+
+type BillMessageRoomListDto {
+    list: [BillMessageRoomDto]!
+    pagination: SlicePaginationDto!
+}
+
+type BillMessageRoomDto {
+    billMessageRoomId : Long
+    billId: Long
+    tag: TagDto
+    title: String
+    numberOfUnreadMessages: Int
+    latestMessageContent: String
+}
+
+type BillMessageListDto {
+    list: [BillMessageDto]!
+    pagination: SlicePaginationDto!
+}
+
+type BillMessageDto {
+    billMessageId: Long!
+    content: String!
+}
+
+type ExitBillMessageRoomResultDto {
+    isSuccess: Boolean
+}

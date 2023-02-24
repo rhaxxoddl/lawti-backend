@@ -3,6 +3,8 @@ package com.oli.HometownPolitician.domain.bill.entity;
 
 import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.bill.enumeration.PlenaryResultType;
+import com.oli.HometownPolitician.domain.billMessage.entity.BillMessage;
+import com.oli.HometownPolitician.domain.billTagRelation.entity.BillTagRelation;
 import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelation;
 import com.oli.HometownPolitician.domain.committe.entity.Committee;
 import com.oli.HometownPolitician.domain.proposer.entity.Proposer;
@@ -14,6 +16,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.oli.HometownPolitician.domain.billMessage.service.BillMessageGenerator.generateBillMessageByCurrentStage;
 
 @Getter
 @Setter
@@ -35,6 +39,7 @@ public class Bill extends BaseTimeEntity {
     private Long number;
     @Column(name = "title", nullable = false)
     private String title;
+    @Builder.Default
     @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Proposer> proposers = new ArrayList<>();
     @Column(name = "propose_date", nullable = false)
@@ -66,6 +71,21 @@ public class Bill extends BaseTimeEntity {
     @JoinColumn(name = "alternative_bill_id", referencedColumnName = "bill_id")
     private Bill alternativeBill;
 
-    @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY)
+    @Builder.Default
+    @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<BillUserRelation> followedBillUserRelations = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<BillMessage> billMessages = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<BillTagRelation> tags = new ArrayList<>();
+
+    public void updateCurrentStage(BillStageType updateStage) {
+        this.setCurrentStage(updateStage);
+        BillMessage newBillMessage = generateBillMessageByCurrentStage(this, updateStage);
+        this.billMessages.add(newBillMessage);
+    }
 }

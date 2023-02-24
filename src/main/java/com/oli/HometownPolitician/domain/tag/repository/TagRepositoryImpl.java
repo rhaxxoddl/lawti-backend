@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 import static com.oli.HometownPolitician.domain.tag.entity.QTag.tag;
 
@@ -24,5 +25,11 @@ public class TagRepositoryImpl implements TagRepositoryCustom {
                 .selectFrom(tag)
                 .where(tag.name.in(nameList))
                 .fetch();
+    }
+    public Optional<Tag> qFindTagByName(String name) {
+        return queryFactory
+                .selectFrom(tag)
+                .where(tag.name.eq(name))
+                .stream().findAny();
     }
 }
