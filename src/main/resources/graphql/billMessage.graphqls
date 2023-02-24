@@ -51,29 +51,16 @@ extend type Query {
 
 extend type Mutation {
     #    법안을 unfollow하고 메세지 방을 나가는 메서드
-    #   - input: 메세지 방을 나가고 unfollow할 법안들 id의 배열, 필터
-    #       - 필터가 걸린 상태에서 메세지 방을 나갈 때 다시 필터링된 메세지 방 목록을 반환하기 위해서 필요
-    #   - return: 팔로우하고 있는 법안 메세지방 리스트, 페이지네이션 정보
+    #   - input: 메세지 방을 나가고 unfollow할 법안들 id의 배열
+    #   - return: unfollow 성공여부
+    #       - 실패시 해당 리스트의 모든 법안 unfollow 실패하고 error
     #    [Usage]
-    #    mutation exitMessageRoom($input: ExitBillMessageRoomListInput!) {
+    #    mutation exitMessageRoom($input: ExitBillMessageRoomResultDto!) {
     #    exitMessageRoom(input: $input) {
-    #       list {
-    #          tag
-    #          title
-    #          numberOfUnreadMessages
-    #          latestMessageContent
-    #       }
-    #       pagination {
-    #           returnedElementSize     #현재 페이지에서 읽은 데이터의 크기
-    #           requestedElementSize    #현재 페이지에서 보여주고자 하는 데이터의 크기
-    #           isFirst                 #첫 페이지인지 여부
-    #           isLast                  #마지막 페이지인지 여부
-    #           isEmpty                 #데이터가 비어있는지 여부
-    #           isAscending             #정렬 방향
-    #       }
+    #       isSuccess
     #   }
     #}
-    exitMessageRoom(input: ExitBillMessageRoomListInput!): BillMessageRoomListDto!
+    exitMessageRoom(input: ExitBillMessageRoomListInput!): ExitBillMessageRoomResultDto!
 }
 
 input BillMessageRoomListInput {
@@ -117,4 +104,8 @@ type BillMessageListDto {
 type MessageDto {
     messageId: Long!
     messageContent: String!
+}
+
+type ExitBillMessageRoomResultDto {
+    isSuccess: Boolean
 }
