@@ -10,10 +10,10 @@ public class BillDto {
     private Long billId;
     private String title;
 
-    static public BillDto from(Bill billEntity) {
-        return billEntity == null ? null : BillDto.builder()
-                .billId(billEntity.getId())
-                .title(billEntity.getTitle())
+    static public BillDto from(Bill bill) {
+        return bill == null ? null : BillDto.builder()
+                .billId(bill.getId())
+                .title(bill.getTitle())
                 .build();
     }
 }

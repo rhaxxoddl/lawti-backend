@@ -1,4 +1,4 @@
-package com.oli.HometownPolitician.domain.committe.entity;
+package com.oli.HometownPolitician.domain.committee.entity;
 
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import lombok.*;

@@ -9,9 +9,9 @@ extend type Query {
     #       summary
     #       proposers
     #       proposerDate
-    #       committe
+    #       committee
     #       noticeEndDate
-    #       committeDate
+    #       committeeDate
     #       plenaryResult
     #       plenaryProcessingDage
     #       billPdfUri
@@ -72,9 +72,9 @@ type BillDetailDto {
     summary: String!
     proposers: ProposersDto!
     proposerDate: Date!
-    committe: CommitteDto
+    committee: CommitteeDto
     noticeEndDate: Date
-    committeDate: Date
+    committeeDate: Date
     plenaryResult: String
     plenaryProcessingDage: Date
     billPdfUri: String
@@ -104,7 +104,7 @@ type ProposersDto {
     list: [ProposerDto]!
 }
 
-type CommitteDto{
-    committeId: Long!
+type CommitteeDto{
+    committeeId: Long!
     name: String!
 }

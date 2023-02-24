@@ -12,12 +12,12 @@ query queryBillDetail($input: BillInput!) {
            }
        }
        proposerDate
-       committe {
-           committeId
+       committee {
+           committeeId
            name
        }
        noticeEndDate
-       committeDate
+        committeeDate
        plenaryResult
        plenaryProcessingDage
        billPdfUri

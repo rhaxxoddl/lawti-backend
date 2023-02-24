@@ -34,6 +34,6 @@ public class TagController {
     }
     @MutationMapping(name = "unfollowMyTags")
     public TagsDto unfollowMyTags(@Argument(name = "input") @Valid TagsInput tagsInput, @ContextValue String authorization) {
-        return tagService.followingTags(tagsInput, authorization);
+        return tagService.unfollowMyTags(tagsInput, authorization);
     }
 }
