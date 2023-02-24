@@ -87,6 +87,7 @@ type BillMessageRoomListDto {
 }
 
 type BillMessageRoomDto {
+    billMessageRoomId : Long
     billId: Long
     tag: TagDto
     title: String

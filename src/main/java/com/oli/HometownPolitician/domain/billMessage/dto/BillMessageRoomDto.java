@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @Builder
 public class BillMessageRoomDto {
+    private Long billMessageRoomId;
     private Long billId;
     private TagDto tag;
     private String title;
@@ -22,6 +23,7 @@ public class BillMessageRoomDto {
 
     static public BillMessageRoomDto from(BillUserRelation billUserRelation) {
         return BillMessageRoomDto.builder()
+                .billMessageRoomId(billUserRelation.getId())
                 .billId(billUserRelation.getBill().getId())
                 .tag(getRepresentativeTag(billUserRelation))
                 .title(billUserRelation.getBill().getTitle())
