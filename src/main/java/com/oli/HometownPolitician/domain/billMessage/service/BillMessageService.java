@@ -2,6 +2,7 @@ package com.oli.HometownPolitician.domain.billMessage.service;
 
 import com.oli.HometownPolitician.domain.billMessage.dto.BillMessageListDto;
 import com.oli.HometownPolitician.domain.billMessage.dto.BillMessageRoomListDto;
+import com.oli.HometownPolitician.domain.billMessage.entity.BillMessage;
 import com.oli.HometownPolitician.domain.billMessage.input.BillMessageListInput;
 import com.oli.HometownPolitician.domain.billMessage.input.BillMessageRoomListInput;
 import com.oli.HometownPolitician.domain.billMessage.input.ExitBillMessageRoomListInput;
@@ -32,8 +33,9 @@ public class BillMessageService {
         return BillMessageRoomListDto.from(billUserRelations, billMessageRoomListInput.getPagination());
     }
 
-    public BillMessageListDto queryBillMessageList(BillMessageListInput billMessageListInput, String authorization) {
-        return null;
+    public BillMessageListDto queryBillMessageList(BillMessageListInput billMessageListInput) {
+        List<BillMessage> billMessageList = billMessageRepository.qFindByBillId(billMessageListInput);
+        return BillMessageListDto.from(billMessageList,billMessageListInput.getPagination());
     }
 
     public BillMessageRoomListDto exitMessageRoom(ExitBillMessageRoomListInput exitBillMessageRoomListInput, String authorization) {
