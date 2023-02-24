@@ -26,19 +26,20 @@ public class BillMessageRepositoryImpl implements BillMessageRepositoryCustom {
     }
 
     @Override
-    public List<BillMessage> qFindByBillId(BillMessageListInput billMessageListInput) {
+    public List<BillMessage> qFindByBillId(BillMessageListInput input) {
         return queryFactory.selectFrom(billMessage)
                 .join(billMessage.bill, bill).fetchJoin()
                 .where(
                         billMessageCond.notDeleted()
-                                .and(billCond.billEqId(billMessageListInput.getBillId()))
+                                .and(billCond.billEqId(input.getBillId()))
                                 .and(billCond.billNotDeleted())
+                                .and(billMessageCond.billMessageDirection(input.getPagination()))
                 )
                 .orderBy(
-                        OrderSpecifierFactory.from(billMessageListInput.getPagination(), new PathBuilder(BillMessage.class, "billMessage"), "createdAt"),
-                        OrderSpecifierFactory.from(billMessageListInput.getPagination(), new PathBuilder(BillMessage.class, "billMessage"), "id")
+                        OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(BillMessage.class, "billMessage"), "createdAt"),
+                        OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(BillMessage.class, "billMessage"), "id")
                 )
-                .limit(billMessageCond.billMessageLimit(billMessageListInput.getPagination()))
+                .limit(billMessageCond.billMessageLimit(input.getPagination()))
                 .fetch();
     }
 }
