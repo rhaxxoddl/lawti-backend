@@ -93,6 +93,7 @@ class BillMessageRepositoryImplTest {
         List<BillMessage> billMessageList = billMessageRepository.qFindByBillId(getBillMessageListInput());
         assertThat(billMessageList).isNotNull();
         assertThat(billMessageList.size()).isGreaterThan(0);
+        assertThat(billMessageList.size()).isEqualTo(3);
     }
 
     private BillMessageListInput getBillMessageListInput() {
