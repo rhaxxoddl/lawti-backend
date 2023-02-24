@@ -2,7 +2,7 @@ extend type Query {
     #    법안 메세지 방 목록을 반환하는 메서드
     #    - input: 필터, 페이지네이션 정보
     #       - 몇개의 태그에 해당하는 법안 메세지방만을 보려면 해당 태그를 BillMessageRoomFilterInput 내의 tagList에 담는다.
-    #       - 모든 법안 메세지방을 보려면 BillMessageRoomFilterInput 내의 tagList 내에 요소가 없으면 된다
+    #       - 모든 법안 메세지방을 보려면 BillMessageRoomFilterInput나 tagList가 없거나 비어있으면 된다.
     #    - return: 필터링된 팔로우하고 있는 법안 메세지 방 목록, 페이지네이션 정보
     #    [Usage]
     #    query queryBillMessageRoomList($input: BillMessageRoomListInput!) {
@@ -65,12 +65,12 @@ extend type Mutation {
 }
 
 input BillMessageRoomListInput {
-    filter: BillMessageRoomFilterInput!
+    filter: BillMessageRoomFilterInput
     pagination: TargetSlicePaginationInput!
 }
 
 input BillMessageRoomFilterInput {
-    tagList: [TagInput]!
+    tagList: [TagInput]
 }
 
 input BillMessageListInput {
