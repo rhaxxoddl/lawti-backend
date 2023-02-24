@@ -43,9 +43,12 @@ public class BillMessageRoomDto {
     }
 
     static private String getLatestMessageContent(BillUserRelation billUserRelation) {
-        return ListTool.getLastElement(
+        BillMessage billMessage = ListTool.getLastElement(
                 billUserRelation.getBill().getBillMessages()
-        ).getContent();
+        );
+        if (billMessage == null)
+            return null;
+        return billMessage.getContent();
     }
 
     // TODO 아직 대표태그가 아니라 첫번째 태그만 보냄. 추후에 대표태그만 보내는 로직 짜기
