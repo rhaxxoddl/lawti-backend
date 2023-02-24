@@ -9,13 +9,11 @@ import lombok.Getter;
 public class MessageDto {
     private Long messageId;
     private String messageContent;
-    private boolean isRead;
 
-    static public MessageDto from(BillMessage billMessage, boolean isRead) {
+    static public MessageDto from(BillMessage billMessage) {
         return MessageDto.builder()
                 .messageId(billMessage.getId())
                 .messageContent(billMessage.getContent())
-                .isRead(isRead)
                 .build();
     }
 }

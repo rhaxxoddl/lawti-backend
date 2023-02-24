@@ -115,5 +115,4 @@ type BillMessageListDto {
 type MessageDto {
     messageId: Long!
     messageContent: String!
-    isRead: Boolean!
 }
