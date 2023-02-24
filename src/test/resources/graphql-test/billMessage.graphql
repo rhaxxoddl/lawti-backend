@@ -1,0 +1,45 @@
+query queryBillMessageRoomList($input: BillMessageRoomListInput!) {
+    queryBillMessageRoomList(input: $input) {
+        list {
+            billMessageRoomId
+            billId
+            tag {
+                id
+                name
+            }
+            title
+            numberOfUnreadMessages
+            latestMessageContent
+        }
+        pagination {
+            returnedElementSize     #현재 페이지에서 읽은 데이터의 크기
+            requestedElementSize    #현재 페이지에서 보여주고자 하는 데이터의 크기
+            isFirst                 #첫 페이지인지 여부
+            isLast                  #마지막 페이지인지 여부
+            isEmpty                 #데이터가 비어있는지 여부
+            isAscending             #정렬 방향
+        }
+    }
+}
+
+query queryBillMessageList($input: BillMessageListInput!) {
+    queryBillMessageList(input: $input) {
+        list {
+            billMessageId
+            content
+        }
+        pagination {
+            returnedElementSize     #현재 페이지에서 읽은 데이터의 크기
+            requestedElementSize    #현재 페이지에서 보여주고자 하는 데이터의 크기
+            isFirst                 #첫 페이지인지 여부
+            isLast                  #마지막 페이지인지 여부
+            isEmpty                 #데이터가 비어있는지 여부
+            isAscending             #정렬 방향
+        }
+    }
+}
+mutation exitBillMessageRooms($input: ExitBillMessageRoomListInput!) {
+    exitBillMessageRooms(input: $input) {
+        isSuccess
+    }
+}
