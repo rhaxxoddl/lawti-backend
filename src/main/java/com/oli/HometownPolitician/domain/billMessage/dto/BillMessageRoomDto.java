@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @Builder
 public class BillMessageRoomDto {
+    private Long billId;
     private TagDto tag;
     private String title;
     private int numberOfUnreadMessages;
@@ -21,6 +22,7 @@ public class BillMessageRoomDto {
 
     static public BillMessageRoomDto from(BillUserRelation billUserRelation) {
         return BillMessageRoomDto.builder()
+                .billId(billUserRelation.getBill().getId())
                 .tag(getRepresentativeTag(billUserRelation))
                 .title(billUserRelation.getBill().getTitle())
                 .numberOfUnreadMessages(countUnreadMessages(billUserRelation))

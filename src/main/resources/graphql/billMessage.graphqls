@@ -101,6 +101,7 @@ type BillMessageRoomListDto {
 }
 
 type BillMessageRoomDto {
+    billId: Long
     tag: TagDto
     title: String
     numberOfUnreadMessages: Int
