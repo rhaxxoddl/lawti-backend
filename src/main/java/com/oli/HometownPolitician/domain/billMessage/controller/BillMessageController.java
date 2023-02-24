@@ -30,8 +30,8 @@ public class BillMessageController {
     public BillMessageListDto queryBillMessageList(@Argument(name = "input") @Valid BillMessageListInput billMessageListInput, @ContextValue String authorization) {
         return billMessageService.queryBillMessageList(billMessageListInput);
     }
-    @MutationMapping("exitMessageRooms")
-    public ExitMessageRoomResultDto exitMessageRooms(@Argument(name = "input") @Valid ExitBillMessageRoomListInput exitBillMessageRoomListInput, @ContextValue String authorization) {
+    @MutationMapping("exitBillMessageRooms")
+    public ExitMessageRoomResultDto exitBillMessageRooms(@Argument(name = "input") @Valid ExitBillMessageRoomListInput exitBillMessageRoomListInput, @ContextValue String authorization) {
         return billMessageService.exitMessageRooms(exitBillMessageRoomListInput, authorization);
     }
 }

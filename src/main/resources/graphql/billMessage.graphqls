@@ -5,13 +5,15 @@ extend type Query {
     #       - 모든 법안 메세지방을 보려면 BillMessageRoomFilterInput 내의 tagList 내에 요소가 없으면 된다
     #    - return: 필터링된 팔로우하고 있는 법안 메세지 방 목록, 페이지네이션 정보
     #    [Usage]
-    #    query queryBillDetail($input: BillMessageRoomListInput!) {
-    #    queryBillDetail(input: $input) {
+    #    query queryBillMessageRoomList($input: BillMessageRoomListInput!) {
+    #    queryBillMessageRoomList(input: $input) {
     #       list {
-    #          tag
-    #          title
-    #          numberOfUnreadMessages
-    #          latestMessageContent
+    #           billMessageRoomId
+    #           billId
+    #           tag
+    #           title
+    #           numberOfUnreadMessages
+    #           latestMessageContent
     #       }
     #       pagination {
     #           returnedElementSize     #현재 페이지에서 읽은 데이터의 크기
@@ -32,9 +34,8 @@ extend type Query {
     #    query queryBillMessageList($input: BillMessageListInput!) {
     #    queryBillMessageList(input: $input) {
     #       list {
-    #           messageId
-    #           messageContent
-    #           isRead
+    #           billMessageId
+    #           content
     #       }
     #       pagination {
     #           returnedElementSize     #현재 페이지에서 읽은 데이터의 크기
@@ -60,7 +61,7 @@ extend type Mutation {
     #       isSuccess
     #   }
     #}
-    exitMessageRooms(input: ExitBillMessageRoomListInput!): ExitBillMessageRoomResultDto!
+    exitBillMessageRooms(input: ExitBillMessageRoomListInput!): ExitBillMessageRoomResultDto!
 }
 
 input BillMessageRoomListInput {
