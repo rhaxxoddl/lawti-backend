@@ -1,6 +1,6 @@
 package com.oli.HometownPolitician.domain.billTagRelation.service;
 
-import com.oli.HometownPolitician.domain.committe.entity.Committee;
+import com.oli.HometownPolitician.domain.committee.entity.Committee;
 import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.domain.tag.repository.TagRepository;
 import com.oli.HometownPolitician.global.error.NotFoundError;

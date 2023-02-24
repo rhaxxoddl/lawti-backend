@@ -6,7 +6,7 @@ import com.oli.HometownPolitician.domain.bill.enumeration.PlenaryResultType;
 import com.oli.HometownPolitician.domain.billMessage.entity.BillMessage;
 import com.oli.HometownPolitician.domain.billTagRelation.entity.BillTagRelation;
 import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelation;
-import com.oli.HometownPolitician.domain.committe.entity.Committee;
+import com.oli.HometownPolitician.domain.committee.entity.Committee;
 import com.oli.HometownPolitician.domain.proposer.entity.Proposer;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
 import lombok.*;

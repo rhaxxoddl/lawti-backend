@@ -10,8 +10,8 @@ import com.oli.HometownPolitician.domain.billTagRelation.repository.BillTagRelat
 import com.oli.HometownPolitician.domain.billTagRelation.service.BillTagRelationProvider;
 import com.oli.HometownPolitician.domain.billTagRelation.service.BillTagRelationService;
 import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelation;
-import com.oli.HometownPolitician.domain.committe.entity.Committee;
-import com.oli.HometownPolitician.domain.committe.repository.CommitteeRepository;
+import com.oli.HometownPolitician.domain.committee.entity.Committee;
+import com.oli.HometownPolitician.domain.committee.repository.CommitteeRepository;
 import com.oli.HometownPolitician.domain.tag.dto.TagInput;
 import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.domain.tag.repository.TagRepository;
