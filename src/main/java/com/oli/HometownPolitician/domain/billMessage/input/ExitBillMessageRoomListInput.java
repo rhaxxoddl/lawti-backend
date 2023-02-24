@@ -15,10 +15,4 @@ public class ExitBillMessageRoomListInput {
     @NotNull(message = "NULL이 들어올 수 없습니다")
     @Min(value = 1, message = "최소 1개 이상의 요소가 포함되어 있어야 합니다")
     private List<BillInput> list;
-
-    @NotNull(message = "NULL이 들어올 수 없습니다")
-    private BillMessageRoomFilterInput filter;
-
-    @NotNull(message = "NULL이 들어올 수 없습니다")
-    private TargetSlicePaginationInput pagination;
 }

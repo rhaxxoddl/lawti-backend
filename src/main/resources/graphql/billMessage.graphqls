@@ -79,8 +79,6 @@ input BillMessageListInput {
 
 input ExitBillMessageRoomListInput {
     list: [BillInput]!
-    filter: BillMessageRoomFilterInput!
-    pagination: TargetSlicePaginationInput!
 }
 
 type BillMessageRoomListDto {
