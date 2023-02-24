@@ -27,7 +27,7 @@ public class BillMessageController {
     }
     @QueryMapping("queryBillMessageList")
     public BillMessageListDto queryBillMessageList(@Argument(name = "input") @Valid BillMessageListInput billMessageListInput, @ContextValue String authorization) {
-        return null;
+        return billMessageService.queryBillMessageList(billMessageListInput);
     }
     @MutationMapping("exitMessageRoom")
     public BillMessageRoomListDto exitMessageRoom(@Argument(name = "input") @Valid ExitBillMessageRoomListInput exitBillMessageRoomListInput, @ContextValue String authorization) {
