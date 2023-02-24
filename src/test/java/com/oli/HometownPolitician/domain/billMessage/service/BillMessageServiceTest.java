@@ -3,7 +3,9 @@ package com.oli.HometownPolitician.domain.billMessage.service;
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.bill.repository.BillRepository;
+import com.oli.HometownPolitician.domain.billMessage.dto.BillMessageRoomDto;
 import com.oli.HometownPolitician.domain.billMessage.dto.BillMessageRoomListDto;
+import com.oli.HometownPolitician.domain.billMessage.entity.BillMessage;
 import com.oli.HometownPolitician.domain.billMessage.input.BillMessageRoomFilterInput;
 import com.oli.HometownPolitician.domain.billMessage.input.BillMessageRoomListInput;
 import com.oli.HometownPolitician.domain.billMessage.repository.BillMessageRepository;
@@ -18,6 +20,7 @@ import com.oli.HometownPolitician.domain.tag.repository.TagRepository;
 import com.oli.HometownPolitician.domain.user.entity.User;
 import com.oli.HometownPolitician.domain.user.repository.UserRepository;
 import com.oli.HometownPolitician.global.argument.input.TargetSlicePaginationInput;
+import com.oli.HometownPolitician.global.tool.ListTool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -72,6 +75,7 @@ class BillMessageServiceTest {
         List<Tag> tagList = insertTagData();
         List<Committee> committeeList = insertCommitteeData();
         List<Bill> billList = insertBillData(committeeList);
+        insertTestBillMessages100(billList);
         connectBillTag(billList);
         connectUserBill(userList, billList);
         insertBillMessageDataFirst(billList);
@@ -99,7 +103,7 @@ class BillMessageServiceTest {
         BillMessageRoomListDto billMessageRoomListDto = billMessageService.queryBillMessageRoomList(getBillMessageRoomListInputNotExistTag(), USER1_AUTH);
         assertThat(billMessageRoomListDto).isNotNull();
         assertThat(billMessageRoomListDto.getList()).isNotNull();
-        assertThat(billMessageRoomListDto.getList().size()).isEqualTo(2);
+        assertThat(billMessageRoomListDto.getList().size()).isEqualTo(99);
     }
 
     @Test
@@ -108,7 +112,7 @@ class BillMessageServiceTest {
         BillMessageRoomListDto billMessageRoomListDto = billMessageService.queryBillMessageRoomList(getBillMessageRoomListInputExistTag(), USER1_AUTH);
         assertThat(billMessageRoomListDto).isNotNull();
         assertThat(billMessageRoomListDto.getList()).isNotNull();
-        assertThat(billMessageRoomListDto.getList().size()).isEqualTo(1);
+        assertThat(billMessageRoomListDto.getList().size()).isEqualTo(7);
     }
 
     @Test
@@ -117,6 +121,57 @@ class BillMessageServiceTest {
         assertThrows(NullPointerException.class, () -> {
             billMessageService.queryBillMessageRoomList(getBillMessageRoomListInputExistTag(), null);
         });
+    }
+
+    @Test
+    @DisplayName("유저가 팔로우한 전체 법안 메세지 방 리스트가 pagination대로 잘 나오는지 확인")
+    void queryBillMessageRoomList_pagination_well_test() {
+        Long target = null;
+        BillMessageRoomFilterInput billMessageRoomFilterInput = BillMessageRoomFilterInput.builder()
+                .tagList(new ArrayList<>())
+                .build();
+        TargetSlicePaginationInput paginationInput = TargetSlicePaginationInput.from(target, 20, true);
+        BillMessageRoomListInput billMessageRoomListInput = BillMessageRoomListInput
+                .builder()
+                .pagination(paginationInput)
+                .filter(billMessageRoomFilterInput)
+                .build();
+        List<BillMessageRoomDto> billMessageRoomDtoListAll = new ArrayList<>();
+
+        while (true) {
+            BillMessageRoomListDto billMessageRoomListDto = billMessageService.queryBillMessageRoomList(billMessageRoomListInput, USER1_AUTH);
+            assertThat(billMessageRoomListDto).isNotNull();
+            assertThat(billMessageRoomListDto.getList()).isNotNull();
+            assertThat(billMessageRoomListDto.getPagination()).isNotNull();
+            assertThat(billMessageRoomListDto.getList().size()).isLessThanOrEqualTo(20);
+            List<BillMessageRoomDto> billMessageRoomDtos = billMessageRoomListDto.getList();
+
+            if (billMessageRoomListDto.getList().isEmpty())
+                break;
+            if (target != null)
+                assertThat(billMessageRoomDtos.get(0).getBillId()).isGreaterThan(target);
+
+            target = ListTool.getLastElement(billMessageRoomListDto.getList()).getBillMessageRoomId();
+            paginationInput = TargetSlicePaginationInput.from(target, 20, true);
+            billMessageRoomListInput = BillMessageRoomListInput
+                    .builder()
+                    .pagination(paginationInput)
+                    .filter(billMessageRoomFilterInput)
+                    .build();
+            billMessageRoomDtoListAll.addAll(billMessageRoomDtos);
+        }
+        assertThat(billMessageRoomDtoListAll.size()).isEqualTo(99);
+    }
+
+    private void insertTestBillMessages100(List<Bill> billList) {
+        for (Bill bill : billList) {
+            List<BillMessage> billMessageList = new ArrayList<>();
+            for (int i = 0; i < 100; i++) {
+                billMessageList.add(
+                        BillMessage.from("content " + i, bill)
+                );
+            }
+        }
     }
 
     @Test
@@ -146,7 +201,7 @@ class BillMessageServiceTest {
                 .pagination(
                         TargetSlicePaginationInput.from(
                                 null,
-                                5,
+                                100,
                                 true
                         )
                 )
@@ -163,6 +218,23 @@ class BillMessageServiceTest {
                 .pagination(
                         TargetSlicePaginationInput.from(
                                 null,
+                                100,
+                                true
+                        )
+                )
+                .build();
+    }
+
+    private BillMessageRoomListInput getBillMessageRoomListInputNotExistTagByTarget(Long target) {
+        return BillMessageRoomListInput.builder()
+                .filter(
+                        BillMessageRoomFilterInput.builder()
+                                .tagList(new ArrayList<>())
+                                .build()
+                )
+                .pagination(
+                        TargetSlicePaginationInput.from(
+                                target,
                                 5,
                                 true
                         )
@@ -223,63 +295,28 @@ class BillMessageServiceTest {
         return tagList;
     }
 
-
     private List<Bill> insertBillData(List<Committee> committeeList) {
         List<Bill> bills = new ArrayList<>();
-        bills.add(Bill.builder()
-                .title("test title right")
-                .externalBillId("testExternalBillId")
-                .number(123456L)
-                .proposeDate(LocalDate.now())
-                .committee(committeeList.get(0))
-                .committeeDate(LocalDate.now())
-                .currentStage(BillStageType.RECEIPT)
-                .noticeEndDate(LocalDate.now())
-                .plenaryProcessingDate(null)
-                .plenaryResult(null)
-                .proposeAssembly(21L)
-                .summary("test summary")
-                .billPdfUri("test billPdfUri")
-                .tags(new ArrayList<>())
-                .followedBillUserRelations(new ArrayList<>())
-                .alternativeBill(null)
-                .build());
-        bills.add(Bill.builder()
-                .title("test title left")
-                .externalBillId("testExternalBillId2")
-                .number(1234567L)
-                .proposeDate(LocalDate.now())
-                .committee(committeeList.get(1))
-                .committeeDate(LocalDate.now())
-                .currentStage(BillStageType.RECEIPT)
-                .noticeEndDate(LocalDate.now())
-                .plenaryProcessingDate(null)
-                .plenaryResult(null)
-                .proposeAssembly(21L)
-                .summary("test summary")
-                .billPdfUri("test billPdfUri")
-                .tags(new ArrayList<>())
-                .followedBillUserRelations(new ArrayList<>())
-                .alternativeBill(null)
-                .build());
-        bills.add(Bill.builder()
-                .title("test title middle")
-                .externalBillId("testExternalBillId3")
-                .number(1234568L)
-                .proposeDate(LocalDate.now())
-                .committee(committeeList.get(2))
-                .committeeDate(LocalDate.now())
-                .currentStage(BillStageType.RECEIPT)
-                .noticeEndDate(LocalDate.now())
-                .plenaryProcessingDate(null)
-                .plenaryResult(null)
-                .proposeAssembly(21L)
-                .summary("test summary")
-                .billPdfUri("test billPdfUri")
-                .tags(new ArrayList<>())
-                .followedBillUserRelations(new ArrayList<>())
-                .alternativeBill(null)
-                .build());
+        for (int i = 0; i < 100; i++) {
+            bills.add(Bill.builder()
+                    .title("test title " + i)
+                    .externalBillId("testExternalBillIds" + i)
+                    .number(12341568L + i)
+                    .proposeDate(LocalDate.now())
+                    .committee(committeeList.get(i % committeeList.size()))
+                    .committeeDate(LocalDate.now())
+                    .currentStage(BillStageType.RECEIPT)
+                    .noticeEndDate(LocalDate.now())
+                    .plenaryProcessingDate(null)
+                    .plenaryResult(null)
+                    .proposeAssembly(21L)
+                    .summary("test summary")
+                    .billPdfUri("test billPdfUri")
+                    .tags(new ArrayList<>())
+                    .followedBillUserRelations(new ArrayList<>())
+                    .alternativeBill(null)
+                    .build());
+        }
         billRepository.saveAll(bills);
         return bills;
     }
