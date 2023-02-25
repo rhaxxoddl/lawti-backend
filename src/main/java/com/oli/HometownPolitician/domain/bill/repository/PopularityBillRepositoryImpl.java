@@ -34,6 +34,7 @@ public class PopularityBillRepositoryImpl implements PopularityBillRepositoryCus
                 .where(
                         popularityBillCond.notDeleted()
                                 .and(popularityBillCond.popularityBillDirection(input.getPagination()))
+                                .and(popularityBillCond.popularityBillDirection(input.getPagination()))
                 )
                 .orderBy(
                         OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "id")
