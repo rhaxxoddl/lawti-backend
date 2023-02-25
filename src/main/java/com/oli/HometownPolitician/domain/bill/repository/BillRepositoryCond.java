@@ -19,7 +19,7 @@ public class BillRepositoryCond {
         return bill.deletedAt.isNull();
     }
 
-    public BooleanExpression filter(BillMessageRoomFilterInput filterInput) {
+    public BooleanExpression billMessageRoomFilter(BillMessageRoomFilterInput filterInput) {
         if (filterInput == null
                 || filterInput.getTagList() == null
                 || filterInput.getTagList().isEmpty())

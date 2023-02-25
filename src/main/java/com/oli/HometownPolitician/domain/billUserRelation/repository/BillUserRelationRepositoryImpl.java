@@ -41,7 +41,7 @@ public class BillUserRelationRepositoryImpl implements BillUserRelationRepositor
                                 .and(billUserRelationCond.notUnfollowed())
                                 .and(userCond.userEqUuid(userUuid))
                                 .and(userCond.userNotDeleted())
-                                .and(billCond.filter(input.getFilter()))
+                                .and(billCond.billMessageRoomFilter(input.getFilter()))
                                 .and(billUserRelationCond.billUserRelationDirection(input.getPagination()))
                 )
                 .orderBy(
