@@ -44,7 +44,8 @@ public class BillRepositoryImpl implements BillRepositoryCustom {
                 .where(
                         billCond.billNotDeleted()
                                 .and(billCond.searchFilter(input.getFilter()))
-                                .and(billCond.billDirection(input.getPagination()))
+                                .and(billCond.searchBillDirection(input))
+                                .and(billCond.getMatchedKeyword(input.getSearchText()))
 
                 )
                 .orderBy(

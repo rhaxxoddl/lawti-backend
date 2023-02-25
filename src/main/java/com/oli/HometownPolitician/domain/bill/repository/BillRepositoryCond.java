@@ -1,31 +1,48 @@
 package com.oli.HometownPolitician.domain.bill.repository;
 
+import com.oli.HometownPolitician.domain.bill.entity.QBill;
 import com.oli.HometownPolitician.domain.billMessage.input.BillMessageRoomFilterInput;
+import com.oli.HometownPolitician.domain.billUserRelation.repository.BillUserRelationRepositoryCond;
 import com.oli.HometownPolitician.domain.committee.repository.CommitteeRepositoryCond;
+import com.oli.HometownPolitician.domain.search.enumeration.SearchResultOrderBy;
 import com.oli.HometownPolitician.domain.search.input.SearchFilterInput;
+import com.oli.HometownPolitician.domain.search.input.SearchInput;
 import com.oli.HometownPolitician.domain.tag.dto.TagInput;
 import com.oli.HometownPolitician.domain.tag.repository.TagRepositoryCond;
 import com.oli.HometownPolitician.global.argument.input.TargetSlicePaginationInput;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 
 import java.util.List;
 
 import static com.oli.HometownPolitician.domain.bill.entity.QBill.bill;
+import static com.oli.HometownPolitician.domain.billUserRelation.entity.QBillUserRelation.billUserRelation;
 
 public class BillRepositoryCond {
     private final CommitteeRepositoryCond committeeCond;
+    private final BillUserRelationRepositoryCond billUserRelationCond;
     private final TagRepositoryCond tagCond;
+    private QBill targetBill;
 
     public BillRepositoryCond() {
         this.committeeCond = new CommitteeRepositoryCond();
+        this.billUserRelationCond = new BillUserRelationRepositoryCond();
         this.tagCond = new TagRepositoryCond();
+        this.targetBill = new QBill("targetBill");
     }
 
     public BooleanExpression billEqId(Long id) {
         if (id == null)
             return null;
         return bill.id.eq(id);
+    }
+
+    public BooleanExpression targetBillEqId(Long id) {
+        if (id == null)
+            return null;
+        return targetBill.id.eq(id);
     }
 
     public BooleanExpression billNotDeleted() {
@@ -41,6 +58,12 @@ public class BillRepositoryCond {
         return billTagsContaionsOneOfTagIdList(tagIds);
     }
 
+    public BooleanBuilder searchBillDirection(SearchInput input) {
+        if (input.getOrderBy() == null || input.getOrderBy() == SearchResultOrderBy.RECENTLY)
+            return billDirection(input.getPagination());
+        return popularityBillDirection(input.getPagination());
+    }
+
     public BooleanBuilder billDirection(TargetSlicePaginationInput pagination) {
         BooleanBuilder builder = new BooleanBuilder();
         if (pagination == null || pagination.getTarget() == null) {
@@ -50,6 +73,32 @@ public class BillRepositoryCond {
         } else {
             return builder.and(bill.id.lt(pagination.getTarget()));
         }
+    }
+
+    public BooleanBuilder popularityBillDirection(TargetSlicePaginationInput pagination) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (pagination == null || pagination.getTarget() == null) {
+            return builder.and(null);
+        } else if (pagination.getIsAscending()) {
+            return builder.and(bill.followedBillUserRelations.size().gt(getTargetBillFollower(pagination)));
+        } else {
+            return builder.and(bill.followedBillUserRelations.size().lt(getTargetBillFollower(pagination)));
+        }
+    }
+
+    private JPQLQuery<Long> getTargetBillFollower(TargetSlicePaginationInput pagination) {
+        return JPAExpressions.select(billUserRelation.count())
+                .from(targetBill)
+                .where(targetBillEqId(pagination.getTarget()));
+    }
+
+    public BooleanBuilder getMatchedKeyword(String keyword) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (keyword == null || keyword.isEmpty())
+            return null;
+        return builder.and(bill.title.contains(keyword))
+                .and(bill.proposers.any().politician.name.contains(keyword))
+                .and(bill.committee.name.contains(keyword));
     }
 
 
