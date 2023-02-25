@@ -6,7 +6,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 
 public class CommitteeRepositoryCond {
 
-    static public BooleanExpression eqCommitteeInput(CommitteeInput input) {
+    public BooleanExpression eqCommitteeInput(CommitteeInput input) {
         if (input == null || input.getCommitteeId() == null)
             return null;
         return QCommittee.committee.id.eq(input.getCommitteeId());
