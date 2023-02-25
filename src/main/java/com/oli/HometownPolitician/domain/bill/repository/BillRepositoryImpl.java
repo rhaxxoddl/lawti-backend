@@ -49,6 +49,7 @@ public class BillRepositoryImpl implements BillRepositoryCustom {
 
                 )
                 .orderBy(
+                        billCond.searchOrderBy(input),
                         OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "updatedAt"),
                         OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "id")
                 )

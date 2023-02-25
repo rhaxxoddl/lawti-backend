@@ -11,9 +11,12 @@ import com.oli.HometownPolitician.domain.search.input.SearchInput;
 import com.oli.HometownPolitician.domain.tag.dto.TagInput;
 import com.oli.HometownPolitician.domain.tag.repository.TagRepositoryCond;
 import com.oli.HometownPolitician.global.argument.input.TargetSlicePaginationInput;
+import com.oli.HometownPolitician.global.factory.OrderSpecifierFactory;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 
@@ -129,5 +132,12 @@ public class BillRepositoryCond {
         return builder
                 .and(committeeCond.eqCommitteeInput(input.getCommittee()))
                 .and(tagCond.tagEqTagInput(input.getTag()));
+    }
+
+    public OrderSpecifier<?> searchOrderBy(SearchInput input) {
+        if (input.getOrderBy() == null || input.getOrderBy() != SearchResultOrderBy.RECENTLY)
+            return null;
+        return OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "followedBillUserRelations.size");
+
     }
 }
