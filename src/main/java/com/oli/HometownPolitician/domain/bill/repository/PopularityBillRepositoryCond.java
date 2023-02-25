@@ -8,12 +8,6 @@ import static com.oli.HometownPolitician.domain.bill.entity.QPopularityBill.popu
 
 public class PopularityBillRepositoryCond {
 
-    public BooleanExpression eqId(Long id) {
-        if (id == null)
-            return null;
-        return popularityBill.id.eq(id);
-    }
-
     public BooleanExpression notDeleted() {
         return popularityBill.deletedAt.isNull();
     }
@@ -27,5 +21,13 @@ public class PopularityBillRepositoryCond {
         } else {
             return builder.and(popularityBill.id.lt(pagination.getTarget()));
         }
+    }
+
+
+    public Long popularityBillLimit(TargetSlicePaginationInput pagination) {
+        if (pagination == null) {
+            return null;
+        }
+        return Long.valueOf(pagination.getElementSize());
     }
 }
