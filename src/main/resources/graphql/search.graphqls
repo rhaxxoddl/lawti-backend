@@ -9,8 +9,8 @@ input SearchInput {
 }
 
 input SearchFilterInput {
-    committeeId: CommitteeInput
-    tagId: TagInput
+    committee: CommitteeInput
+    tag: TagInput
     orderBy: BillOrderByEnum
 }
 
