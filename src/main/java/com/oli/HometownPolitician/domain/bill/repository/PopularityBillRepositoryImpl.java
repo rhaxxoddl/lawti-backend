@@ -1,6 +1,5 @@
 package com.oli.HometownPolitician.domain.bill.repository;
 
-import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.bill.entity.PopularityBill;
 import com.oli.HometownPolitician.domain.search.input.SearchInput;
 import com.oli.HometownPolitician.global.factory.OrderSpecifierFactory;
@@ -37,7 +36,7 @@ public class PopularityBillRepositoryImpl implements PopularityBillRepositoryCus
                                 .and(popularityBillCond.popularityBillDirection(input.getPagination()))
                 )
                 .orderBy(
-                        OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "id")
+                        OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(PopularityBill.class, "popularityBill"), "id")
                 )
                 .limit(popularityBillCond.popularityBillLimit(input.getPagination()))
                 .fetch();
