@@ -1,6 +1,7 @@
 package com.oli.HometownPolitician.domain.search.service;
 
 import com.oli.HometownPolitician.domain.bill.repository.BillRepository;
+import com.oli.HometownPolitician.domain.bill.repository.PopularityBillRepository;
 import com.oli.HometownPolitician.domain.search.dto.SearchResultsDto;
 import com.oli.HometownPolitician.domain.search.enumeration.SearchResultOrderBy;
 import com.oli.HometownPolitician.domain.search.input.SearchInput;
@@ -14,10 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 public class SearchService {
     private final BillRepository billRepository;
+    private final PopularityBillRepository popularityBillRepository;
 
     public SearchResultsDto search(SearchInput input) {
         if (input.getOrderBy() == null || input.getOrderBy() == SearchResultOrderBy.RECENTLY)
             return SearchResultsDto.fromByBills(billRepository.queryBillsBySearchInput(input), input.getPagination());
-        return SearchResultsDto.fromByPopularityBills(billRepository.queryPopularityBillsBySearchInput(input), input.getPagination());
+        return SearchResultsDto.fromByPopularityBills(popularityBillRepository.queryPopularityBillsBySearchInput(input), input.getPagination());
     }
 }
