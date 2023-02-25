@@ -1,0 +1,31 @@
+extend type Query {
+    search(input: SearchInput!): SearchResultsDto!
+}
+
+input SearchInput {
+    searchText: String
+    filter: SearchFilterInput
+    pagination: TargetSlicePaginationInput!
+}
+
+input SearchFilterInput {
+    committeeId: CommitteeInput
+    tagId: TagInput
+    orderBy: BillOrderByEnum
+}
+
+enum BillOrderByEnum {
+    RECENTLY_CREATED
+    POPULARITY
+}
+
+type SearchResultsDto {
+    result: [SearchResultDto]
+    pagination: SlicePaginationDto
+}
+
+type SearchResultDto {
+    title: String!
+    committee: CommitteeDto!
+    proposers: ProposersDto!
+}
