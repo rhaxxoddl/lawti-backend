@@ -11,11 +11,11 @@ input SearchInput {
 input SearchFilterInput {
     committee: CommitteeInput
     tag: TagInput
-    orderBy: SearchOrderByEnum
+    orderBy: SearchResultOrderBy
 }
 
-enum SearchOrderByEnum {
-    RECENTLY_CREATED
+enum SearchResultOrderBy {
+    RECENTLY
     POPULARITY
 }
 
