@@ -5,7 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 
 import static com.oli.HometownPolitician.domain.bill.entity.QBill.bill;
 
-public class TagRepositorycond {
+public class TagRepositoryCond {
     static public BooleanExpression tagEqTagInput(TagInput input) {
         if (input == null || input.getId() == null)
             return null;
