@@ -1,7 +1,11 @@
 package com.oli.HometownPolitician.domain.bill.repository;
 
 import com.oli.HometownPolitician.domain.billMessage.input.BillMessageRoomFilterInput;
+import com.oli.HometownPolitician.domain.committee.repository.CommitteeRepositoryCond;
+import com.oli.HometownPolitician.domain.search.input.SearchFilterInput;
 import com.oli.HometownPolitician.domain.tag.dto.TagInput;
+import com.oli.HometownPolitician.domain.tag.repository.TagRepositoryCond;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
 import java.util.List;
@@ -9,6 +13,14 @@ import java.util.List;
 import static com.oli.HometownPolitician.domain.bill.entity.QBill.bill;
 
 public class BillRepositoryCond {
+    private final CommitteeRepositoryCond committeeCond;
+    private final TagRepositoryCond tagCond;
+
+    public BillRepositoryCond() {
+        this.committeeCond = new CommitteeRepositoryCond();
+        this.tagCond = new TagRepositoryCond();
+    }
+
     public BooleanExpression billEqId(Long id) {
         if (id == null)
             return null;
@@ -32,5 +44,14 @@ public class BillRepositoryCond {
         if (tagIdList.size() == 0)
             return null;
         return bill.tags.any().tag.id.in(tagIdList);
+    }
+
+    public BooleanBuilder searchFilter(SearchFilterInput input) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (input == null)
+            return null;
+        return builder
+                .and(committeeCond.eqCommitteeInput(input.getCommittee()))
+                .and(tagCond.tagEqTagInput(input.getTag()));
     }
 }
