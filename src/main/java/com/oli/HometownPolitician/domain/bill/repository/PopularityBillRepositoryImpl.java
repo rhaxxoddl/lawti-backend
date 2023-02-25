@@ -26,7 +26,7 @@ public class PopularityBillRepositoryImpl implements PopularityBillRepositoryCus
     }
 
     @Override
-    public List<PopularityBill> queryPopularityBills(SearchInput input) {
+    public List<PopularityBill> queryPopularityBillsBySearchInput(SearchInput input) {
         return queryFactory
                 .selectFrom(popularityBill)
                 .join(popularityBill.bill, bill).fetchJoin()

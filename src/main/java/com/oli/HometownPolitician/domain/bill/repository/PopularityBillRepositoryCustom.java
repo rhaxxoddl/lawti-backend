@@ -6,5 +6,5 @@ import com.oli.HometownPolitician.domain.search.input.SearchInput;
 import java.util.List;
 
 public interface PopularityBillRepositoryCustom {
-    List<PopularityBill> queryPopularityBills(SearchInput input);
+    List<PopularityBill> queryPopularityBillsBySearchInput(SearchInput input);
 }
