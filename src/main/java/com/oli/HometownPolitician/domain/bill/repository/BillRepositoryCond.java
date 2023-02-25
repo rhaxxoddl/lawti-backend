@@ -5,6 +5,7 @@ import com.oli.HometownPolitician.domain.committee.repository.CommitteeRepositor
 import com.oli.HometownPolitician.domain.search.input.SearchFilterInput;
 import com.oli.HometownPolitician.domain.tag.dto.TagInput;
 import com.oli.HometownPolitician.domain.tag.repository.TagRepositoryCond;
+import com.oli.HometownPolitician.global.argument.input.TargetSlicePaginationInput;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
@@ -38,6 +39,25 @@ public class BillRepositoryCond {
             return null;
         List<Long> tagIds = filterInput.getTagList().stream().map(TagInput::getId).toList();
         return billTagsContaionsOneOfTagIdList(tagIds);
+    }
+
+    public BooleanBuilder billDirection(TargetSlicePaginationInput pagination) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (pagination == null || pagination.getTarget() == null) {
+            return builder.and(null);
+        } else if (pagination.getIsAscending()) {
+            return builder.and(bill.id.gt(pagination.getTarget()));
+        } else {
+            return builder.and(bill.id.lt(pagination.getTarget()));
+        }
+    }
+
+
+    public Long billLimit(TargetSlicePaginationInput pagination) {
+        if (pagination == null) {
+            return null;
+        }
+        return Long.valueOf(pagination.getElementSize());
     }
 
     public BooleanExpression billTagsContaionsOneOfTagIdList(List<Long> tagIdList) {
