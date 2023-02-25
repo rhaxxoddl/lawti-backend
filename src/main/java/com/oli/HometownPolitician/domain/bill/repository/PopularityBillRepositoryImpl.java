@@ -38,6 +38,7 @@ public class PopularityBillRepositoryImpl implements PopularityBillRepositoryCus
                 .orderBy(
                         OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "id")
                 )
+                .limit(popularityBillCond.popularityBillLimit(input.getPagination()))
                 .fetch();
     }
 }
