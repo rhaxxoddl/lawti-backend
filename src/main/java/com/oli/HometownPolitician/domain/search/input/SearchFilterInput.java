@@ -1,7 +1,6 @@
 package com.oli.HometownPolitician.domain.search.input;
 
 import com.oli.HometownPolitician.domain.committee.input.CommitteeInput;
-import com.oli.HometownPolitician.domain.search.enumeration.SearchResultOrderBy;
 import com.oli.HometownPolitician.domain.tag.dto.TagInput;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,5 +10,4 @@ import lombok.Getter;
 public class SearchFilterInput {
     private CommitteeInput committee;
     private TagInput tag;
-    private SearchResultOrderBy orderBy;
 }

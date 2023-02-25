@@ -5,13 +5,13 @@ extend type Query {
 input SearchInput {
     searchText: String
     filter: SearchFilterInput
+    orderBy: SearchResultOrderBy = LATEST
     pagination: TargetSlicePaginationInput!
 }
 
 input SearchFilterInput {
     committee: CommitteeInput
     tag: TagInput
-    orderBy: SearchResultOrderBy = LATEST
 }
 
 enum SearchResultOrderBy {
