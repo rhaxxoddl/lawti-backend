@@ -84,16 +84,20 @@ public class BillRepositoryCond {
         if (pagination == null || pagination.getTarget() == null) {
             return builder.and(null);
         } else if (pagination.getIsAscending()) {
-            return builder.and(followerCount(bill).goe(followerCount((QBill) getTargetBill(pagination.getTarget()))))
-                    .and(bill.id.gt(targetBill.id));
+            return builder.and(followerCount(bill)
+                            .loe(followerCount((QBill) getTargetBill(pagination.getTarget()))))
+                    .and(followerCount(bill).lt(followerCount((QBill) getTargetBill(pagination.getTarget()))).or(bill.updatedAt.after(targetBill.updatedAt)))
+                    .and(followerCount(bill).lt(followerCount((QBill) getTargetBill(pagination.getTarget()))).or(bill.updatedAt.eq(targetBill.updatedAt)).or(bill.id.lt(targetBill.id)));
         } else {
-            return builder.and(followerCount(bill).loe((followerCount((QBill) getTargetBill(pagination.getTarget())))))
-                    .and(bill.id.lt(targetBill.id));
-        }
+            return builder.and(followerCount(bill)
+                            .goe(followerCount((QBill) getTargetBill(pagination.getTarget()))))
+                    .and(followerCount(bill).gt(followerCount((QBill) getTargetBill(pagination.getTarget()))).or(bill.updatedAt.before(targetBill.updatedAt)))
+                    .and(followerCount(bill).gt(followerCount((QBill) getTargetBill(pagination.getTarget()))).or(bill.updatedAt.eq(targetBill.updatedAt)).or(bill.id.gt(targetBill.id)));
     }
+}
 
     public NumberExpression followerCount(QBill bill) {
-        return bill.id.add(bill.followedBillUserRelations.size());
+        return bill.followedBillUserRelations.size();
     }
 
     private JPQLQuery<Bill> getTargetBill(Long target) {
