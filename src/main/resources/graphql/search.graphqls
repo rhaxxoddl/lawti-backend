@@ -20,7 +20,7 @@ enum BillOrderByEnum {
 }
 
 type SearchResultsDto {
-    result: [SearchResultDto]
+    list: [SearchResultDto]
     pagination: SlicePaginationDto
 }
 
