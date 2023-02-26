@@ -111,9 +111,11 @@ public class BillRepositoryCond {
         BooleanBuilder builder = new BooleanBuilder();
         if (keyword == null || keyword.isEmpty())
             return null;
-        return builder.and(bill.title.contains(keyword))
-                .and(bill.proposers.any().politician.name.contains(keyword))
-                .and(bill.committee.name.contains(keyword));
+        return builder.and(
+                bill.title.contains(keyword)
+                .or(bill.proposers.any().politician.name.contains(keyword))
+                .or(bill.committee.name.contains(keyword))
+        );
     }
 
 
