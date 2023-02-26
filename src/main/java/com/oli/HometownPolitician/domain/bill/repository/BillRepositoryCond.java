@@ -20,6 +20,7 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.oli.HometownPolitician.domain.bill.entity.QBill.bill;
@@ -138,10 +139,15 @@ public class BillRepositoryCond {
                 .and(tagCond.tagEqTagInput(input.getTag()));
     }
 
-    public OrderSpecifier<?> searchOrderBy(SearchInput input) {
+    public List<OrderSpecifier> searchOrderByList(SearchInput input) {
+        List<OrderSpecifier> orderSpecifiers = new ArrayList<>();
         if (input.getOrderBy() == null || input.getOrderBy() != SearchResultOrderBy.RECENTLY)
-            return null;
-        return OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "followedBillUserRelations.size");
+            return orderSpecifiers;
+        else
+            orderSpecifiers.add(OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "followedBillUserRelations.size"));
 
+        orderSpecifiers.add(OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "updatedAt"));
+        orderSpecifiers.add(OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "id"));
+        return orderSpecifiers;
     }
 }

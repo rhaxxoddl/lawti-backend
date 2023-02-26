@@ -1,22 +1,17 @@
 package com.oli.HometownPolitician.domain.bill.repository;
 
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
-
-import static com.oli.HometownPolitician.domain.bill.entity.QBill.bill;
-
-import static com.oli.HometownPolitician.domain.committee.entity.QCommittee.committee;
-
-import static com.oli.HometownPolitician.domain.billUserRelation.entity.QBillUserRelation.billUserRelation;
-
 import com.oli.HometownPolitician.domain.search.input.SearchInput;
-import com.oli.HometownPolitician.global.factory.OrderSpecifierFactory;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+
+import static com.oli.HometownPolitician.domain.bill.entity.QBill.bill;
+import static com.oli.HometownPolitician.domain.billUserRelation.entity.QBillUserRelation.billUserRelation;
+import static com.oli.HometownPolitician.domain.committee.entity.QCommittee.committee;
 
 public class BillRepositoryImpl implements BillRepositoryCustom {
     private final JPAQueryFactory queryFactory;
@@ -49,9 +44,7 @@ public class BillRepositoryImpl implements BillRepositoryCustom {
 
                 )
                 .orderBy(
-                        billCond.searchOrderBy(input),
-                        OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "updatedAt"),
-                        OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "id")
+                        billCond.searchOrderByList(input).stream().toArray(OrderSpecifier[]::new)
                 )
                 .limit(billCond.billLimit(input.getPagination()))
                 .fetch();
