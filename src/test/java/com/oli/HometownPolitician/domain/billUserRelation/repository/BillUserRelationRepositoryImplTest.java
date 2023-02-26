@@ -18,6 +18,7 @@ import com.oli.HometownPolitician.domain.tag.repository.TagRepository;
 import com.oli.HometownPolitician.domain.user.entity.User;
 import com.oli.HometownPolitician.domain.user.repository.UserRepository;
 import com.oli.HometownPolitician.global.argument.input.TargetSlicePaginationInput;
+import com.oli.HometownPolitician.global.tool.ListTool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -110,6 +111,9 @@ class BillUserRelationRepositoryImplTest {
 
         assertThat(billUserRelations).isNotNull();
         assertThat(billUserRelations.size()).isEqualTo(2);
+        assertThat(
+                ListTool.getLastElement(billUserRelations.get(0).getBill().getBillMessages()).getCreatedAt())
+                .isBeforeOrEqualTo(ListTool.getLastElement(billUserRelations.get(1).getBill().getBillMessages()).getCreatedAt());
     }
 
     private List<TagInput> getTagList() {
