@@ -6,6 +6,7 @@ import com.oli.HometownPolitician.domain.billTagRelation.service.BillTagRelation
 import com.oli.HometownPolitician.domain.committee.entity.Committee;
 import com.oli.HometownPolitician.domain.committee.input.CommitteeInput;
 import com.oli.HometownPolitician.domain.committee.repository.CommitteeRepository;
+import com.oli.HometownPolitician.domain.search.enumeration.SearchResultOrderBy;
 import com.oli.HometownPolitician.domain.search.input.SearchFilterInput;
 import com.oli.HometownPolitician.domain.search.input.SearchInput;
 import com.oli.HometownPolitician.domain.tag.dto.TagInput;
@@ -68,17 +69,17 @@ class BillRepositoryImplTest {
     @Test
     @DisplayName("SearchInput이 filter, orderBy, 검색 키워드 없이 잘 조회되는지 확인")
     void queryBillsBySearchInput_not_exist_filter_orderBy_keyword_well_test() {
-        SearchInput searchInput = getSearchInput(null);
+        SearchInput searchInput = getSearchInput(null, null, null, null, 10, true, SearchResultOrderBy.RECENTLY);
         List<Bill> bills = billRepository.queryBillsBySearchInput(searchInput);
         assertThat(bills).isNotNull();
         assertThat(bills.size()).isEqualTo(5);
     }
 
     @Test
-    @DisplayName("SearchInput에 committee 조건을 걸었을 때 검색이 잘 되는지 확인")
+    @DisplayName("SearchInput에 committee필터와 인기순 정렬조건을 걸었을 때 검색이 잘 되는지 확인")
     void queryBillsBySearchInput_exist_committee_well_test() {
         Committee committee = committeeRepository.findById(10L).orElseThrow(() -> new NotFoundError(""));
-        SearchInput searchInput = getSearchInput(committee);
+        SearchInput searchInput = getSearchInput(null, committee, null, null, 10, true, SearchResultOrderBy.POPULARITY);
         List<Bill> bills = billRepository.queryBillsBySearchInput(searchInput);
         assertThat(bills).isNotNull();
         assertThat(bills.size()).isGreaterThan(5);
@@ -86,36 +87,59 @@ class BillRepositoryImplTest {
             if (i != bills.size() - 1)
                 assertThat(
                         bills.get(i).getFollowedBillUserRelations().size())
-                        .isLessThanOrEqualTo(bills.get(i).getFollowedBillUserRelations().size());
+                        .isLessThanOrEqualTo(bills.get(i + 1).getFollowedBillUserRelations().size());
         }
     }
 
-    private SearchInput getSearchInput(Committee committee) {
+
+
+    @Test
+    @DisplayName("SearchInput의 keyword에 국회운영위원회를 넣었을 때 검색이 잘 되는지 확인")
+    void queryBillsBySearchInput_exist_keyword_well_test() {
+        SearchInput searchInput = getSearchInput("국회운영위원회", null, null, null, 10, true, SearchResultOrderBy.RECENTLY);
+        List<Bill> bills = billRepository.queryBillsBySearchInput(searchInput);
+        assertThat(bills).isNotNull();
+        for (int i = 0 ; i < bills.size(); i++) {
+            assertThat(bills.get(i).getCommittee().getName()).isEqualTo("국회운영위원회");
+            if (i != bills.size() - 1)
+                assertThat(
+                        bills.get(i).getCreatedAt())
+                        .isBeforeOrEqualTo(bills.get(i + 1).getCreatedAt());
+        }
+    }
+
+    private SearchInput getSearchInput(String keyword, Committee committee, Tag tag, Long target, int elementSize, boolean isAscending, SearchResultOrderBy orderBy) {
         return SearchInput.builder()
+                .searchText(keyword)
                 .filter(
-                        SearchFilterInput
-                                .builder()
-                                .committee(
-                                        committee == null ? null : CommitteeInput
-                                                .builder()
-                                                .committeeId(committee.getId())
-                                                .build()
-                                )
-                                .tag(
-                                        committee == null ? null : TagInput
-                                                .builder()
-                                                .id(billTagRelationProvider.matchTagByCommittee(committee).getId())
-                                                .name(billTagRelationProvider.matchTagByCommittee(committee).getName())
-                                                .build()
-                                )
-                                .build()
+                        getSearchFilterInput(committee, tag)
                 )
                 .pagination(
                         TargetSlicePaginationInput
                                 .builder()
-                                .target(null)
-                                .elementSize(10)
-                                .isAscending(true)
+                                .target(target)
+                                .elementSize(elementSize)
+                                .isAscending(isAscending)
+                                .build()
+                )
+                .orderBy(orderBy)
+                .build();
+    }
+
+    private SearchFilterInput getSearchFilterInput(Committee committee, Tag tag) {
+        return SearchFilterInput
+                .builder()
+                .committee(
+                        committee == null ? null : CommitteeInput
+                                .builder()
+                                .committeeId(committee.getId())
+                                .build()
+                )
+                .tag(
+                        tag == null ? null : TagInput
+                                .builder()
+                                .id(tag.getId())
+                                .name(tag.getName())
                                 .build()
                 )
                 .build();
