@@ -134,9 +134,11 @@ public class BillRepositoryCond {
         BooleanBuilder builder = new BooleanBuilder();
         if (input == null)
             return null;
-        return builder
-                .and(committeeCond.eqCommitteeInput(input.getCommittee()))
-                .and(tagCond.tagEqTagInput(input.getTag()));
+        if (input.getCommittee() != null)
+            builder.and(bill.committee.id.eq(input.getCommittee().getCommitteeId()));
+        if (input.getTag() != null)
+            builder.and(bill.tags.any().tag.id.eq(input.getTag().getId()));
+        return builder;
     }
 
     public List<OrderSpecifier> searchOrderByList(SearchInput input) {
