@@ -88,26 +88,26 @@ public class BillRepositoryCond {
         if (pagination == null || pagination.getTarget() == null) {
             return builder.and(null);
         } else if (pagination.getIsAscending()) {
-            return builder.and(getFollowerCountOfBill()
-                            .loe(getFollowerCountOfTargetBill(pagination.getTarget())))
-                    .and(getFollowerCountOfBill().lt(getFollowerCountOfTargetBill(pagination.getTarget())).or(bill.updatedAt.after(getUpdatedAtOfTargetBill(pagination.getTarget())).or(bill.updatedAt.eq(getUpdatedAtOfTargetBill(pagination.getTarget())))))
-                    .and(getFollowerCountOfBill().lt(getFollowerCountOfTargetBill(pagination.getTarget())).or(bill.updatedAt.after(getUpdatedAtOfTargetBill(pagination.getTarget()))).or(bill.id.lt(pagination.getTarget())));
+            return builder.and(getBillFollowerCount()
+                            .loe(getTargetBillFollowerCount(pagination.getTarget())))
+                    .and(getBillFollowerCount().lt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.after(getTargetBillUpdatedAt(pagination.getTarget())).or(bill.updatedAt.eq(getTargetBillUpdatedAt(pagination.getTarget())))))
+                    .and(getBillFollowerCount().lt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.after(getTargetBillUpdatedAt(pagination.getTarget()))).or(bill.id.lt(pagination.getTarget())));
         } else {
-            return builder.and(getFollowerCountOfBill()
-                            .goe(getFollowerCountOfTargetBill(pagination.getTarget())))
-                    .and(getFollowerCountOfBill().gt(getFollowerCountOfTargetBill(pagination.getTarget())).or(bill.updatedAt.before(targetBill.updatedAt)))
-                    .and(getFollowerCountOfBill().gt(getFollowerCountOfTargetBill(pagination.getTarget())).or(bill.updatedAt.eq(targetBill.updatedAt)).or(bill.id.gt(targetBill.id)));
+            return builder.and(getBillFollowerCount()
+                            .goe(getTargetBillFollowerCount(pagination.getTarget())))
+                    .and(getBillFollowerCount().gt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.before(targetBill.updatedAt)))
+                    .and(getBillFollowerCount().gt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.eq(targetBill.updatedAt)).or(bill.id.gt(targetBill.id)));
         }
     }
 
-    public JPQLQuery<Long> getFollowerCountOfBill() {
+    public JPQLQuery<Long> getBillFollowerCount() {
         return JPAExpressions.select(billUserRelation.count())
                 .from(billUserRelation)
                 .where(billUserRelationCond.notUnfollowed());
     }
 
 
-    public JPQLQuery<Long> getFollowerCountOfTargetBill(Long target) {
+    public JPQLQuery<Long> getTargetBillFollowerCount(Long target) {
         QBill targetBill = new QBill("targetBill");
         QBillUserRelation targetBillUserRelation = new QBillUserRelation("targetBillUserRelation");
         return JPAExpressions.select(targetBillUserRelation.count())
@@ -118,7 +118,7 @@ public class BillRepositoryCond {
                 );
     }
 
-    public JPQLQuery<LocalDateTime> getUpdatedAtOfTargetBill(Long target) {
+    public JPQLQuery<LocalDateTime> getTargetBillUpdatedAt(Long target) {
         QBill targetBill = new QBill("targetBill");
         return JPAExpressions.select(targetBill.updatedAt)
                 .from(targetBill)
