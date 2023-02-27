@@ -3,10 +3,6 @@ package com.oli.HometownPolitician.domain.bill.repository;
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.bill.entity.QBill;
 import com.oli.HometownPolitician.domain.billMessage.input.BillMessageRoomFilterInput;
-
-import static com.oli.HometownPolitician.domain.billUserRelation.entity.QBillUserRelation.billUserRelation;
-
-import com.oli.HometownPolitician.domain.billUserRelation.entity.QBillUserRelation;
 import com.oli.HometownPolitician.domain.billUserRelation.repository.BillUserRelationRepositoryCond;
 import com.oli.HometownPolitician.domain.committee.repository.CommitteeRepositoryCond;
 import com.oli.HometownPolitician.domain.search.enumeration.SearchResultOrderBy;
@@ -18,7 +14,8 @@ import com.oli.HometownPolitician.global.argument.input.TargetSlicePaginationInp
 import com.oli.HometownPolitician.global.factory.OrderSpecifierFactory;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 
@@ -88,34 +85,23 @@ public class BillRepositoryCond {
         if (pagination == null || pagination.getTarget() == null) {
             return builder.and(null);
         } else if (pagination.getIsAscending()) {
-            return builder.and(getBillFollowerCount()
+            return builder.and(bill.followerCount
                             .loe(getTargetBillFollowerCount(pagination.getTarget())))
-                    .and(getBillFollowerCount().lt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.after(getTargetBillUpdatedAt(pagination.getTarget())).or(bill.updatedAt.eq(getTargetBillUpdatedAt(pagination.getTarget())))))
-                    .and(getBillFollowerCount().lt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.after(getTargetBillUpdatedAt(pagination.getTarget()))).or(bill.id.lt(pagination.getTarget())));
+                    .and(bill.followerCount.lt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.after(getTargetBillUpdatedAt(pagination.getTarget())).or(bill.updatedAt.eq(getTargetBillUpdatedAt(pagination.getTarget())))))
+                    .and(bill.followerCount.lt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.after(getTargetBillUpdatedAt(pagination.getTarget()))).or(bill.id.lt(pagination.getTarget())));
         } else {
-            return builder.and(getBillFollowerCount()
+            return builder.and(bill.followerCount
                             .goe(getTargetBillFollowerCount(pagination.getTarget())))
-                    .and(getBillFollowerCount().gt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.before(targetBill.updatedAt)))
-                    .and(getBillFollowerCount().gt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.eq(targetBill.updatedAt)).or(bill.id.gt(targetBill.id)));
+                    .and(bill.followerCount.gt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.before(targetBill.updatedAt)))
+                    .and(bill.followerCount.gt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.eq(targetBill.updatedAt)).or(bill.id.gt(targetBill.id)));
         }
     }
 
-    public JPQLQuery<Long> getBillFollowerCount() {
-        return JPAExpressions.select(billUserRelation.count())
-                .from(billUserRelation)
-                .where(billUserRelationCond.notUnfollowed());
-    }
-
-
     public JPQLQuery<Long> getTargetBillFollowerCount(Long target) {
         QBill targetBill = new QBill("targetBill");
-        QBillUserRelation targetBillUserRelation = new QBillUserRelation("targetBillUserRelation");
-        return JPAExpressions.select(targetBillUserRelation.count())
-                .from(targetBillUserRelation)
-                .where(
-                        targetBillUserRelation.bill.id.eq(target)
-                                .and(targetBillUserRelation.isUnfollowed.isFalse())
-                );
+        return JPAExpressions.select(targetBill.followerCount)
+                .from(targetBill)
+                .where(targetBill.id.eq(target));
     }
 
     public JPQLQuery<LocalDateTime> getTargetBillUpdatedAt(Long target) {
@@ -166,7 +152,7 @@ public class BillRepositoryCond {
         if (input.getOrderBy() == null || input.getOrderBy() != SearchResultOrderBy.RECENTLY)
             return orderSpecifiers;
         else
-            orderSpecifiers.add(OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "followedBillUserRelations.size"));
+            orderSpecifiers.add(OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "followerCount"));
 
         orderSpecifiers.add(OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "updatedAt"));
         orderSpecifiers.add(OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "id"));

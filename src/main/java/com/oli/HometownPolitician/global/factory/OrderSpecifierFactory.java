@@ -35,7 +35,7 @@ public class OrderSpecifierFactory {
                 return path.get(property, LocalDateTime.class);
             case "proposeDate":
                 return path.get(property, LocalDate.class);
-            case "followedBillUserRelations.size":
+            case "followerCount":
                 return path.get(property, Integer.class);
         }
         return null;
