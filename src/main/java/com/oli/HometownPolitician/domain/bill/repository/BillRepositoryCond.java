@@ -3,6 +3,10 @@ package com.oli.HometownPolitician.domain.bill.repository;
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.bill.entity.QBill;
 import com.oli.HometownPolitician.domain.billMessage.input.BillMessageRoomFilterInput;
+
+import static com.oli.HometownPolitician.domain.billUserRelation.entity.QBillUserRelation.billUserRelation;
+
+import com.oli.HometownPolitician.domain.billUserRelation.entity.QBillUserRelation;
 import com.oli.HometownPolitician.domain.billUserRelation.repository.BillUserRelationRepositoryCond;
 import com.oli.HometownPolitician.domain.committee.repository.CommitteeRepositoryCond;
 import com.oli.HometownPolitician.domain.search.enumeration.SearchResultOrderBy;
@@ -14,12 +18,11 @@ import com.oli.HometownPolitician.global.argument.input.TargetSlicePaginationInp
 import com.oli.HometownPolitician.global.factory.OrderSpecifierFactory;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.NumberExpression;
-import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,13 +32,11 @@ public class BillRepositoryCond {
     private final CommitteeRepositoryCond committeeCond;
     private final BillUserRelationRepositoryCond billUserRelationCond;
     private final TagRepositoryCond tagCond;
-    private QBill targetBill;
 
     public BillRepositoryCond() {
         this.committeeCond = new CommitteeRepositoryCond();
         this.billUserRelationCond = new BillUserRelationRepositoryCond();
         this.tagCond = new TagRepositoryCond();
-        this.targetBill = new QBill("targetBill");
     }
 
     public BooleanExpression billEqId(Long id) {
@@ -45,6 +46,7 @@ public class BillRepositoryCond {
     }
 
     public BooleanExpression targetBillEqId(Long id) {
+        QBill targetBill = new QBill("targetBill");
         if (id == null)
             return null;
         return targetBill.id.eq(id);
@@ -81,30 +83,46 @@ public class BillRepositoryCond {
     }
 
     public BooleanBuilder popularityBillDirection(TargetSlicePaginationInput pagination) {
+        QBill targetBill = new QBill("targetBill");
         BooleanBuilder builder = new BooleanBuilder();
         if (pagination == null || pagination.getTarget() == null) {
             return builder.and(null);
         } else if (pagination.getIsAscending()) {
-            return builder.and(followerCount(bill)
-                            .loe(followerCount((QBill) getTargetBill(pagination.getTarget()))))
-                    .and(followerCount(bill).lt(followerCount((QBill) getTargetBill(pagination.getTarget()))).or(bill.updatedAt.after(targetBill.updatedAt)))
-                    .and(followerCount(bill).lt(followerCount((QBill) getTargetBill(pagination.getTarget()))).or(bill.updatedAt.eq(targetBill.updatedAt)).or(bill.id.lt(targetBill.id)));
+            return builder.and(getFollowerCountOfBill()
+                            .loe(getFollowerCountOfTargetBill(pagination.getTarget())))
+                    .and(getFollowerCountOfBill().lt(getFollowerCountOfTargetBill(pagination.getTarget())).or(bill.updatedAt.after(getUpdatedAtOfTargetBill(pagination.getTarget())).or(bill.updatedAt.eq(getUpdatedAtOfTargetBill(pagination.getTarget())))))
+                    .and(getFollowerCountOfBill().lt(getFollowerCountOfTargetBill(pagination.getTarget())).or(bill.updatedAt.after(getUpdatedAtOfTargetBill(pagination.getTarget()))).or(bill.id.lt(pagination.getTarget())));
         } else {
-            return builder.and(followerCount(bill)
-                            .goe(followerCount((QBill) getTargetBill(pagination.getTarget()))))
-                    .and(followerCount(bill).gt(followerCount((QBill) getTargetBill(pagination.getTarget()))).or(bill.updatedAt.before(targetBill.updatedAt)))
-                    .and(followerCount(bill).gt(followerCount((QBill) getTargetBill(pagination.getTarget()))).or(bill.updatedAt.eq(targetBill.updatedAt)).or(bill.id.gt(targetBill.id)));
-    }
-}
-
-    public NumberExpression followerCount(QBill bill) {
-        return bill.followedBillUserRelations.size();
+            return builder.and(getFollowerCountOfBill()
+                            .goe(getFollowerCountOfTargetBill(pagination.getTarget())))
+                    .and(getFollowerCountOfBill().gt(getFollowerCountOfTargetBill(pagination.getTarget())).or(bill.updatedAt.before(targetBill.updatedAt)))
+                    .and(getFollowerCountOfBill().gt(getFollowerCountOfTargetBill(pagination.getTarget())).or(bill.updatedAt.eq(targetBill.updatedAt)).or(bill.id.gt(targetBill.id)));
+        }
     }
 
-    private JPQLQuery<Bill> getTargetBill(Long target) {
-        return JPAExpressions.select(targetBill)
+    public JPQLQuery<Long> getFollowerCountOfBill() {
+        return JPAExpressions.select(billUserRelation.count())
+                .from(billUserRelation)
+                .where(billUserRelationCond.notUnfollowed());
+    }
+
+
+    public JPQLQuery<Long> getFollowerCountOfTargetBill(Long target) {
+        QBill targetBill = new QBill("targetBill");
+        QBillUserRelation targetBillUserRelation = new QBillUserRelation("targetBillUserRelation");
+        return JPAExpressions.select(targetBillUserRelation.count())
+                .from(targetBillUserRelation)
+                .where(
+                        targetBillUserRelation.bill.id.eq(target)
+                                .and(targetBillUserRelation.isUnfollowed.isFalse())
+                );
+    }
+
+    public JPQLQuery<LocalDateTime> getUpdatedAtOfTargetBill(Long target) {
+        QBill targetBill = new QBill("targetBill");
+        return JPAExpressions.select(targetBill.updatedAt)
                 .from(targetBill)
-                .where(targetBillEqId(target));
+                .where(targetBill.id.eq(target));
     }
 
     public BooleanBuilder getMatchedKeyword(String keyword) {
@@ -113,8 +131,8 @@ public class BillRepositoryCond {
             return null;
         return builder.and(
                 bill.title.contains(keyword)
-                .or(bill.proposers.any().politician.name.contains(keyword))
-                .or(bill.committee.name.contains(keyword))
+                        .or(bill.proposers.any().politician.name.contains(keyword))
+                        .or(bill.committee.name.contains(keyword))
         );
     }
 
