@@ -62,7 +62,7 @@ public class BillRepositoryCond {
                 || filterInput.getTagList().isEmpty())
             return null;
         List<Long> tagIds = filterInput.getTagList().stream().map(TagInput::getId).toList();
-        return billTagsContaionsOneOfTagIdList(tagIds);
+        return tagsInTagIdList(tagIds);
     }
 
     public BooleanBuilder searchBillDirection(SearchInput input) {
@@ -144,7 +144,7 @@ public class BillRepositoryCond {
         return Long.valueOf(pagination.getElementSize());
     }
 
-    public BooleanExpression billTagsContaionsOneOfTagIdList(List<Long> tagIdList) {
+    public BooleanExpression tagsInTagIdList(List<Long> tagIdList) {
         if (tagIdList.size() == 0)
             return null;
         return bill.tags.any().tag.id.in(tagIdList);
