@@ -74,6 +74,9 @@ public class Bill extends BaseTimeEntity {
     @Builder.Default
     @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<BillUserRelation> followedBillUserRelations = new ArrayList<>();
+    @Builder.Default
+    @Column(name = "follower_count")
+    private Long followerCount = 0L;
 
     @Builder.Default
     @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
@@ -87,5 +90,13 @@ public class Bill extends BaseTimeEntity {
         this.setCurrentStage(updateStage);
         BillMessage newBillMessage = generateBillMessageByCurrentStage(this, updateStage);
         this.billMessages.add(newBillMessage);
+    }
+
+    public void increaseFollowerCount() {
+        this.followerCount++;
+    }
+
+    public void decreaseFollowerCount() {
+        this.followerCount--;
     }
 }
