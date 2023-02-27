@@ -95,6 +95,7 @@ public class User extends BaseTimeEntity {
                 throw new Error("해당 법안과 유저의 관계가 중복되었습니다");
             else
                 billUserRelations.get(0).setIsUnfollowed(false);
+            bill.increaseFollowerCount();
         });
         return getFollowingBills();
     }
@@ -116,6 +117,7 @@ public class User extends BaseTimeEntity {
                 throw new Error("해당 법안과 유저의 관계가 중복되었습니다");
             else
                 billUserRelations.get(0).setIsUnfollowed(true);
+            bill.decreaseFollowerCount();
         });
         return getFollowingBills();
     }
