@@ -65,6 +65,7 @@ class BillRepositoryImplTest {
         List<User> users = insertUserData();
         connectBillUser(bills, users);
         List<Politician> politicians = insertPolitician();
+        connectBillPolitician(bills, politicians);
         em.flush();
         em.clear();
     }
@@ -335,5 +336,16 @@ class BillRepositoryImplTest {
         }
         politicianRepository.saveAll(politicians);
         return politicians;
+    }
+
+    private void connectBillPolitician(List<Bill> bills, List<Politician> politicians) {
+        for (Bill bill : bills) {
+            List<Integer> startIdxAndEndIdx = getRandomIndex();
+            int startIdx = startIdxAndEndIdx.get(0);
+            int endIdx = startIdxAndEndIdx.get(1);
+            List<Politician> representativePoliticians = politicians.subList(startIdx, startIdx + 1);
+            List<Politician> publicPolitician = politicians.subList(startIdx + 1, endIdx);
+            bill.addProposers(representativePoliticians, publicPolitician);
+        }
     }
 }
