@@ -116,8 +116,23 @@ class BillRepositoryImplTest {
         for (int i = 0; i < bills.size(); i++) {
             if (i != bills.size() - 1)
                 assertThat(
-                        bills.get(i).getFollowedBillUserRelations().size())
-                        .isLessThanOrEqualTo(bills.get(i + 1).getFollowedBillUserRelations().size());
+                        bills.get(i).getFollowerCount())
+                        .isLessThanOrEqualTo(bills.get(i + 1).getFollowerCount());
+        }
+    }
+
+    @Test
+    @DisplayName("인기순 정렬조건을 내림차순으로 걸었을 때 검색이 잘 되는지 확인")
+    void queryBillsBySearchInput_popularity_desc_well_test() {
+        SearchInput searchInput = getSearchInput(null, null, null, null, 10, false, SearchResultOrderBy.POPULARITY);
+        List<Bill> bills = billRepository.queryBillsBySearchInput(searchInput);
+        assertThat(bills).isNotNull();
+        assertThat(bills.size()).isGreaterThan(5);
+        for (int i = 0; i < bills.size(); i++) {
+            if (i != bills.size() - 1)
+                assertThat(
+                        bills.get(i).getFollowerCount())
+                        .isGreaterThanOrEqualTo(bills.get(i + 1).getFollowerCount());
         }
     }
 
