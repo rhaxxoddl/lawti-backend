@@ -2,12 +2,16 @@ package com.oli.HometownPolitician.domain.bill.repository;
 
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
+import com.oli.HometownPolitician.domain.billTagRelation.repository.BillTagRelationRepository;
 import com.oli.HometownPolitician.domain.billTagRelation.service.BillTagRelationProvider;
+import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelation;
+import com.oli.HometownPolitician.domain.billUserRelation.repository.BillUserRelationRepository;
 import com.oli.HometownPolitician.domain.committee.entity.Committee;
 import com.oli.HometownPolitician.domain.committee.input.CommitteeInput;
 import com.oli.HometownPolitician.domain.committee.repository.CommitteeRepository;
 import com.oli.HometownPolitician.domain.politician.entity.Politician;
 import com.oli.HometownPolitician.domain.politician.repository.PoliticianRepository;
+import com.oli.HometownPolitician.domain.proposer.repository.ProposerRepository;
 import com.oli.HometownPolitician.domain.search.enumeration.SearchResultOrderBy;
 import com.oli.HometownPolitician.domain.search.input.SearchFilterInput;
 import com.oli.HometownPolitician.domain.search.input.SearchInput;
@@ -45,13 +49,19 @@ class BillRepositoryImplTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private BillUserRelationRepository billUserRelationRepository;
+    @Autowired
     private CommitteeRepository committeeRepository;
     @Autowired
     private BillTagRelationProvider billTagRelationProvider;
     @Autowired
+    private BillTagRelationRepository billTagRelationRepository;
+    @Autowired
     private TagRepository tagRepository;
     @Autowired
     private PoliticianRepository politicianRepository;
+    @Autowired
+    private ProposerRepository proposerRepository;
     @Autowired
     private EntityManager em;
     private final String UUID_PREFIX = "UUID-";
@@ -72,6 +82,16 @@ class BillRepositoryImplTest {
 
     @AfterEach
     void clear() {
+        proposerRepository.deleteAll();
+        politicianRepository.deleteAll();
+        billUserRelationRepository.deleteAll();
+        userRepository.deleteAll();
+        billTagRelationRepository.deleteAll();
+        billRepository.deleteAll();
+        tagRepository.deleteAll();
+        committeeRepository.deleteAll();
+        em.flush();
+        em.clear();
     }
 
     @Test
@@ -140,7 +160,6 @@ class BillRepositoryImplTest {
         allBill.removeAll(results);
         assertThat(allBill.size()).isEqualTo(0);
         assertThat(results.size()).isEqualTo(100);
-
     }
 
     private SearchInput getSearchInput(String keyword, Committee committee, Tag tag, Long target, int elementSize, boolean isAscending, SearchResultOrderBy orderBy) {
