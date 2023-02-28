@@ -80,20 +80,27 @@ public class BillRepositoryCond {
     }
 
     public BooleanBuilder popularityBillDirection(TargetSlicePaginationInput pagination) {
-        QBill targetBill = new QBill("targetBill");
         BooleanBuilder builder = new BooleanBuilder();
         if (pagination == null || pagination.getTarget() == null) {
             return builder.and(null);
         } else if (pagination.getIsAscending()) {
             return builder.and(bill.followerCount
-                            .loe(getTargetBillFollowerCount(pagination.getTarget())))
-                    .and(bill.followerCount.lt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.after(getTargetBillUpdatedAt(pagination.getTarget())).or(bill.updatedAt.eq(getTargetBillUpdatedAt(pagination.getTarget())))))
-                    .and(bill.followerCount.lt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.after(getTargetBillUpdatedAt(pagination.getTarget()))).or(bill.id.lt(pagination.getTarget())));
+                            .goe(getTargetBillFollowerCount(pagination.getTarget())))
+                    .and(bill.followerCount.gt(getTargetBillFollowerCount(pagination.getTarget()))
+                            .or(bill.updatedAt.after(getTargetBillUpdatedAt(pagination.getTarget()))
+                                    .or(bill.updatedAt.eq(getTargetBillUpdatedAt(pagination.getTarget())))))
+                    .and(bill.followerCount.gt(getTargetBillFollowerCount(pagination.getTarget()))
+                            .or(bill.updatedAt.after(getTargetBillUpdatedAt(pagination.getTarget())))
+                            .or(bill.id.gt(pagination.getTarget())));
         } else {
             return builder.and(bill.followerCount
-                            .goe(getTargetBillFollowerCount(pagination.getTarget())))
-                    .and(bill.followerCount.gt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.before(targetBill.updatedAt)))
-                    .and(bill.followerCount.gt(getTargetBillFollowerCount(pagination.getTarget())).or(bill.updatedAt.eq(targetBill.updatedAt)).or(bill.id.gt(targetBill.id)));
+                            .loe(getTargetBillFollowerCount(pagination.getTarget())))
+                    .and(bill.followerCount.lt(getTargetBillFollowerCount(pagination.getTarget()))
+                            .or(bill.updatedAt.before(getTargetBillUpdatedAt(pagination.getTarget()))
+                                    .or(bill.updatedAt.eq(getTargetBillUpdatedAt(pagination.getTarget())))))
+                    .and(bill.followerCount.lt(getTargetBillFollowerCount(pagination.getTarget()))
+                            .or(bill.updatedAt.before(getTargetBillUpdatedAt(pagination.getTarget())))
+                            .or(bill.id.lt(pagination.getTarget())));
         }
     }
 
@@ -149,9 +156,7 @@ public class BillRepositoryCond {
 
     public List<OrderSpecifier> searchOrderByList(SearchInput input) {
         List<OrderSpecifier> orderSpecifiers = new ArrayList<>();
-        if (input.getOrderBy() == null || input.getOrderBy() != SearchResultOrderBy.RECENTLY)
-            return orderSpecifiers;
-        else
+        if (input.getOrderBy() != null && input.getOrderBy() == SearchResultOrderBy.POPULARITY)
             orderSpecifiers.add(OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "followerCount"));
 
         orderSpecifiers.add(OrderSpecifierFactory.from(input.getPagination(), new PathBuilder(Bill.class, "bill"), "updatedAt"));
