@@ -4,7 +4,6 @@ import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.billTagRelation.repository.BillTagRelationRepository;
 import com.oli.HometownPolitician.domain.billTagRelation.service.BillTagRelationProvider;
-import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelation;
 import com.oli.HometownPolitician.domain.billUserRelation.repository.BillUserRelationRepository;
 import com.oli.HometownPolitician.domain.committee.entity.Committee;
 import com.oli.HometownPolitician.domain.committee.input.CommitteeInput;
@@ -96,7 +95,7 @@ class BillRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("SearchInput이 filter, orderBy, 검색 키워드 없이 잘 조회되는지 확인")
+    @DisplayName("filter, orderBy, 검색 키워드 없이 잘 조회되는지 확인")
     void queryBillsBySearchInput_not_exist_filter_orderBy_keyword_well_test() {
         SearchInput searchInput = getSearchInput(null, null, null, null, 10, true, SearchResultOrderBy.RECENTLY);
         List<Bill> bills = billRepository.queryBillsBySearchInput(searchInput);
@@ -105,7 +104,7 @@ class BillRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("SearchInput에 committee필터와 인기순 정렬조건을 걸었을 때 검색이 잘 되는지 확인")
+    @DisplayName("committee필터와 인기순 정렬조건을 걸었을 때 검색이 잘 되는지 확인")
     void queryBillsBySearchInput_exist_committee_well_test() {
         Committee committee = committeeRepository.findById(10L).orElseThrow(() -> new NotFoundError(""));
         SearchInput searchInput = getSearchInput(null, committee, null, null, 10, true, SearchResultOrderBy.POPULARITY);
@@ -121,7 +120,7 @@ class BillRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("SearchInput의 keyword에 국회운영위원회를 넣었을 때 검색이 잘 되는지 확인")
+    @DisplayName("keyword에 국회운영위원회를 넣었을 때 검색이 잘 되는지 확인")
     void queryBillsBySearchInput_exist_keyword_committee_well_test() {
         SearchInput searchInput = getSearchInput("국회운영위원회", null, null, null, 10, true, SearchResultOrderBy.RECENTLY);
         List<Bill> bills = billRepository.queryBillsBySearchInput(searchInput);
@@ -136,7 +135,7 @@ class BillRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("SearchInput의 keyword에 국회의원 이름을 넣었을 때 검색이 잘 되는지 확인")
+    @DisplayName("keyword에 국회의원 이름을 넣었을 때 검색이 잘 되는지 확인")
     void queryBillsBySearchInput_exist_keyword_politician_well_test() {
         SearchInput searchInput = getSearchInput("politician name10", null, null, null, 10, true, SearchResultOrderBy.RECENTLY);
         List<Bill> bills = billRepository.queryBillsBySearchInput(searchInput);
@@ -151,7 +150,7 @@ class BillRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("SearchInput이 인기순으로 페이지네이션이 잘 되는지 확인")
+    @DisplayName("인기순으로 페이지네이션이 잘 되는지 확인")
     void queryBillsBySearchInput_popularity_pagination_well_test() {
         SearchInput searchInput = getSearchInput(null, null, null, null, 10, true, SearchResultOrderBy.POPULARITY);
         List<Bill> results = new ArrayList<>();
@@ -176,6 +175,34 @@ class BillRepositoryImplTest {
         allBill.removeAll(results);
         assertThat(allBill.size()).isEqualTo(0);
         assertThat(results.size()).isEqualTo(100);
+    }
+
+    @Test
+    @DisplayName("국회의원 이름을 키워드로 검색했을 때 인기순으로 페이지네이션이 잘 되는지 확인")
+    void queryBillsBySearchInput_exist_politician_name_popularity_pagination_well_test() {
+        SearchInput searchInput = getSearchInput("politician name1", null, null, null, 10, true, SearchResultOrderBy.POPULARITY);
+        List<Bill> results = new ArrayList<>();
+
+        for (int i = 0; i < 20; i++) {
+            List<Bill> bills = billRepository.queryBillsBySearchInput(searchInput);
+            if (bills.isEmpty())
+                break;
+            results.addAll(bills);
+            assertThat(bills).isNotNull();
+            assertThat(bills.size()).isEqualTo(10);
+            for (int j = 0; j < bills.size(); j++) {
+                if (j != bills.size() - 1) {
+                    Long count = bills.get(j).getFollowerCount();
+                    Long afterCount = bills.get(j + 1).getFollowerCount();
+                    assertThat(count).isLessThanOrEqualTo(afterCount);
+                }
+                assertThat(bills.get(j).getProposers().stream().anyMatch(proposer -> proposer.getPolitician().getName().contains("politician name10")));
+            }
+            searchInput = getSearchInput(null, null, null, ListTool.getLastElement(bills).getId(), 10, true, SearchResultOrderBy.POPULARITY);
+        }
+        List<Bill> allBill = billRepository.findAll();
+        allBill.removeAll(results);
+        assertThat(allBill.size() + results.size()).isEqualTo(100);
     }
 
     private SearchInput getSearchInput(String keyword, Committee committee, Tag tag, Long target, int elementSize, boolean isAscending, SearchResultOrderBy orderBy) {
