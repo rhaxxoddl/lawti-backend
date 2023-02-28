@@ -36,6 +36,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -121,12 +122,27 @@ class BillRepositoryImplTest {
 
     @Test
     @DisplayName("SearchInput의 keyword에 국회운영위원회를 넣었을 때 검색이 잘 되는지 확인")
-    void queryBillsBySearchInput_exist_keyword_well_test() {
+    void queryBillsBySearchInput_exist_keyword_committee_well_test() {
         SearchInput searchInput = getSearchInput("국회운영위원회", null, null, null, 10, true, SearchResultOrderBy.RECENTLY);
         List<Bill> bills = billRepository.queryBillsBySearchInput(searchInput);
         assertThat(bills).isNotNull();
         for (int i = 0; i < bills.size(); i++) {
             assertThat(bills.get(i).getCommittee().getName()).isEqualTo("국회운영위원회");
+            if (i != bills.size() - 1)
+                assertThat(
+                        bills.get(i).getCreatedAt())
+                        .isBeforeOrEqualTo(bills.get(i + 1).getCreatedAt());
+        }
+    }
+
+    @Test
+    @DisplayName("SearchInput의 keyword에 국회의원 이름을 넣었을 때 검색이 잘 되는지 확인")
+    void queryBillsBySearchInput_exist_keyword_politician_well_test() {
+        SearchInput searchInput = getSearchInput("politician name10", null, null, null, 10, true, SearchResultOrderBy.RECENTLY);
+        List<Bill> bills = billRepository.queryBillsBySearchInput(searchInput);
+        assertThat(bills).isNotNull();
+        for (int i = 0; i < bills.size(); i++) {
+            assertThat(bills.get(i).getProposers().stream().anyMatch(proposer -> proposer.getPolitician().getName().contains("politician name10")));
             if (i != bills.size() - 1)
                 assertThat(
                         bills.get(i).getCreatedAt())
@@ -201,11 +217,10 @@ class BillRepositoryImplTest {
 
     private void connectBillUser(List<Bill> bills, List<User> users) {
         for (int i = 0; i < 100; i++) {
-            int randomNum = (int) (Math.random() * 100);
-            int startIdx = (int) (Math.random() * 100);
-            int endIdx = startIdx < randomNum ? randomNum : 100;
+            List<Integer> startIdxAndEndIdx = getRandomIndex();
+            int startIdx = startIdxAndEndIdx.get(0);
+            int endIdx = startIdxAndEndIdx.get(1);
             List<Bill> subBillList = bills.subList(startIdx, endIdx);
-            System.out.println("bill size: " + subBillList.size());
             users.get(i).followBills(subBillList);
         }
     }
@@ -329,16 +344,12 @@ class BillRepositoryImplTest {
     }
 
     private List<Integer> getRandomIndex() {
+        Random random = new Random();
         List<Integer> startIdxAndEndIdx = new ArrayList<>();
-        int randomIdx1 = (int)(Math.random() * 100);
-        int randomIdx2 = (int)(Math.random() * 100);
-        if (randomIdx1 < randomIdx2) {
-            startIdxAndEndIdx.add(randomIdx1);
-            startIdxAndEndIdx.add(randomIdx2);
-        } else {
-            startIdxAndEndIdx.add(randomIdx2);
-            startIdxAndEndIdx.add(randomIdx1);
-        }
+        int randomIdx1 = random.nextInt(100);
+        int randomIdx2 = random.nextInt(randomIdx1, 100);
+        startIdxAndEndIdx.add(randomIdx1);
+        startIdxAndEndIdx.add(randomIdx2);
         return startIdxAndEndIdx;
     }
 
@@ -362,8 +373,8 @@ class BillRepositoryImplTest {
             List<Integer> startIdxAndEndIdx = getRandomIndex();
             int startIdx = startIdxAndEndIdx.get(0);
             int endIdx = startIdxAndEndIdx.get(1);
-            List<Politician> representativePoliticians = politicians.subList(startIdx, startIdx + 1);
-            List<Politician> publicPolitician = politicians.subList(startIdx + 1, endIdx);
+            List<Politician> representativePoliticians = politicians.subList(1, 2);
+            List<Politician> publicPolitician = politicians.subList(startIdx, endIdx);
             bill.addProposers(representativePoliticians, publicPolitician);
         }
     }
