@@ -308,6 +308,20 @@ class BillRepositoryImplTest {
                         .addBill(bill));
     }
 
+    private List<Integer> getRandomIndex() {
+        List<Integer> startIdxAndEndIdx = new ArrayList<>();
+        int randomIdx1 = (int)(Math.random() * 100);
+        int randomIdx2 = (int)(Math.random() * 100);
+        if (randomIdx1 < randomIdx2) {
+            startIdxAndEndIdx.add(randomIdx1);
+            startIdxAndEndIdx.add(randomIdx2);
+        } else {
+            startIdxAndEndIdx.add(randomIdx2);
+            startIdxAndEndIdx.add(randomIdx1);
+        }
+        return startIdxAndEndIdx;
+    }
+
     private List<Politician> insertPolitician() {
         List<Politician> politicians = new ArrayList<>();
         for(int i = 0; i < 100; i++) {
