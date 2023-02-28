@@ -5,7 +5,7 @@ extend type Query {
 input SearchInput {
     keyword: String
     filter: SearchFilterInput
-    orderBy: SearchResultOrderBy = LATEST
+    orderBy: SearchResultOrderBy = RECENTLY
     pagination: TargetSlicePaginationInput!
 }
 
@@ -15,7 +15,7 @@ input SearchFilterInput {
 }
 
 enum SearchResultOrderBy {
-    LATEST
+    RECENTLY
     POPULARITY
 }
 
@@ -26,6 +26,6 @@ type SearchResultsDto {
 
 type SearchResultDto {
     title: String!
-    committee: CommitteeDto!
+    committee: CommitteeDto
     proposers: ProposersDto!
 }
