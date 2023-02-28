@@ -6,6 +6,8 @@ import com.oli.HometownPolitician.domain.billTagRelation.service.BillTagRelation
 import com.oli.HometownPolitician.domain.committee.entity.Committee;
 import com.oli.HometownPolitician.domain.committee.input.CommitteeInput;
 import com.oli.HometownPolitician.domain.committee.repository.CommitteeRepository;
+import com.oli.HometownPolitician.domain.politician.entity.Politician;
+import com.oli.HometownPolitician.domain.politician.repository.PoliticianRepository;
 import com.oli.HometownPolitician.domain.search.enumeration.SearchResultOrderBy;
 import com.oli.HometownPolitician.domain.search.input.SearchFilterInput;
 import com.oli.HometownPolitician.domain.search.input.SearchInput;
@@ -16,6 +18,7 @@ import com.oli.HometownPolitician.domain.user.entity.User;
 import com.oli.HometownPolitician.domain.user.repository.UserRepository;
 import com.oli.HometownPolitician.global.argument.input.TargetSlicePaginationInput;
 import com.oli.HometownPolitician.global.error.NotFoundError;
+import com.oli.HometownPolitician.global.tool.ListTool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +35,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
@@ -47,6 +51,8 @@ class BillRepositoryImplTest {
     @Autowired
     private TagRepository tagRepository;
     @Autowired
+    private PoliticianRepository politicianRepository;
+    @Autowired
     private EntityManager em;
     private final String UUID_PREFIX = "UUID-";
 
@@ -58,6 +64,7 @@ class BillRepositoryImplTest {
         connectBillTag(bills);
         List<User> users = insertUserData();
         connectBillUser(bills, users);
+        List<Politician> politicians = insertPolitician();
         em.flush();
         em.clear();
     }
@@ -83,7 +90,7 @@ class BillRepositoryImplTest {
         List<Bill> bills = billRepository.queryBillsBySearchInput(searchInput);
         assertThat(bills).isNotNull();
         assertThat(bills.size()).isGreaterThan(5);
-        for (int i = 0 ; i < bills.size(); i++) {
+        for (int i = 0; i < bills.size(); i++) {
             if (i != bills.size() - 1)
                 assertThat(
                         bills.get(i).getFollowedBillUserRelations().size())
@@ -91,21 +98,48 @@ class BillRepositoryImplTest {
         }
     }
 
-
-
     @Test
     @DisplayName("SearchInput의 keyword에 국회운영위원회를 넣었을 때 검색이 잘 되는지 확인")
     void queryBillsBySearchInput_exist_keyword_well_test() {
         SearchInput searchInput = getSearchInput("국회운영위원회", null, null, null, 10, true, SearchResultOrderBy.RECENTLY);
         List<Bill> bills = billRepository.queryBillsBySearchInput(searchInput);
         assertThat(bills).isNotNull();
-        for (int i = 0 ; i < bills.size(); i++) {
+        for (int i = 0; i < bills.size(); i++) {
             assertThat(bills.get(i).getCommittee().getName()).isEqualTo("국회운영위원회");
             if (i != bills.size() - 1)
                 assertThat(
                         bills.get(i).getCreatedAt())
                         .isBeforeOrEqualTo(bills.get(i + 1).getCreatedAt());
         }
+    }
+
+    @Test
+    @DisplayName("SearchInput이 인기순으로 페이지네이션이 잘 되는지 확인")
+    void queryBillsBySearchInput_popularity_pagination_well_test() {
+        SearchInput searchInput = getSearchInput(null, null, null, null, 10, true, SearchResultOrderBy.POPULARITY);
+        List<Bill> results = new ArrayList<>();
+
+        for (int i = 0; i < 20; i++) {
+            List<Bill> bills = billRepository.queryBillsBySearchInput(searchInput);
+            if (bills.isEmpty())
+                break;
+            results.addAll(bills);
+            assertThat(bills).isNotNull();
+            assertThat(bills.size()).isEqualTo(10);
+            for (int j = 0; j < bills.size(); j++) {
+                if (j != bills.size() - 1) {
+                    Long count = bills.get(j).getFollowerCount();
+                    Long afterCount = bills.get(j + 1).getFollowerCount();
+                    assertThat(count).isLessThanOrEqualTo(afterCount);
+                }
+            }
+            searchInput = getSearchInput(null, null, null, ListTool.getLastElement(bills).getId(), 10, true, SearchResultOrderBy.POPULARITY);
+        }
+        List<Bill> allBill = billRepository.findAll();
+        allBill.removeAll(results);
+        assertThat(allBill.size()).isEqualTo(0);
+        assertThat(results.size()).isEqualTo(100);
+
     }
 
     private SearchInput getSearchInput(String keyword, Committee committee, Tag tag, Long target, int elementSize, boolean isAscending, SearchResultOrderBy orderBy) {
@@ -147,10 +181,12 @@ class BillRepositoryImplTest {
 
     private void connectBillUser(List<Bill> bills, List<User> users) {
         for (int i = 0; i < 100; i++) {
-            int randomNum = (int)(Math.random() * 100);
-            int startIdx = (int)(Math.random() * 100);
+            int randomNum = (int) (Math.random() * 100);
+            int startIdx = (int) (Math.random() * 100);
             int endIdx = startIdx < randomNum ? randomNum : 100;
-            users.get(i).followBills(bills.subList(startIdx, endIdx));
+            List<Bill> subBillList = bills.subList(startIdx, endIdx);
+            System.out.println("bill size: " + subBillList.size());
+            users.get(i).followBills(subBillList);
         }
     }
 
@@ -190,6 +226,7 @@ class BillRepositoryImplTest {
         billRepository.saveAll(bills);
         return bills;
     }
+
     private List<Committee> insertCommitteeData() {
         List<String> committeeNameList = new ArrayList<>();
         committeeNameList.add("국회운영위원회");
@@ -269,5 +306,20 @@ class BillRepositoryImplTest {
         billList.forEach(bill ->
                 billTagRelationProvider.matchTagByCommittee(bill.getCommittee())
                         .addBill(bill));
+    }
+
+    private List<Politician> insertPolitician() {
+        List<Politician> politicians = new ArrayList<>();
+        for(int i = 0; i < 100; i++) {
+            politicians.add(
+                    Politician.builder()
+                            .name("politician name" + i)
+                            .chineseName("politician chinese name" + i)
+                            .party("party name" + i)
+                            .build()
+            );
+        }
+        politicianRepository.saveAll(politicians);
+        return politicians;
     }
 }
