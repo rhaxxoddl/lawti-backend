@@ -66,6 +66,8 @@ class BillRepositoryImplTest {
     private EntityManager em;
     private final String UUID_PREFIX = "UUID-";
 
+//    TODO 테스트 메서드 간에 분리가 되지 않아 DB 제약조건 오류가 남
+
     @BeforeEach
     void setUp() {
         List<Committee> committees = insertCommitteeData();
@@ -144,8 +146,8 @@ class BillRepositoryImplTest {
             assertThat(bills.get(i).getProposers().stream().anyMatch(proposer -> proposer.getPolitician().getName().contains("politician name10")));
             if (i != bills.size() - 1)
                 assertThat(
-                        bills.get(i).getCreatedAt())
-                        .isBeforeOrEqualTo(bills.get(i + 1).getCreatedAt());
+                        bills.get(i).getUpdatedAt())
+                        .isBeforeOrEqualTo(bills.get(i + 1).getUpdatedAt());
         }
     }
 
