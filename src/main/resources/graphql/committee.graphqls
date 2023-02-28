@@ -1,0 +1,15 @@
+extend type Query {
+    queryCommittees: CommitteesDto!
+}
+
+input CommitteeInput {
+    committeId: Long!
+}
+type CommitteesDto {
+    list: [CommitteeDto]!
+}
+
+type CommitteeDto {
+    committeeId: Long!
+    name: String!
+}
