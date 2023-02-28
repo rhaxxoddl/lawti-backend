@@ -209,7 +209,7 @@ class BillRepositoryImplTest {
 
     private SearchInput getSearchInput(String keyword, Committee committee, Tag tag, Long target, int elementSize, boolean isAscending, SearchResultOrderBy orderBy) {
         return SearchInput.builder()
-                .searchText(keyword)
+                .keyword(keyword)
                 .filter(
                         getSearchFilterInput(committee, tag)
                 )

@@ -3,7 +3,7 @@ extend type Query {
 }
 
 input SearchInput {
-    searchText: String
+    keyword: String
     filter: SearchFilterInput
     orderBy: SearchResultOrderBy = LATEST
     pagination: TargetSlicePaginationInput!

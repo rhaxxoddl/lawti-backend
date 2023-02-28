@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Builder
 public class SearchInput {
-    private String searchText;
+    private String keyword;
     private SearchFilterInput filter;
     private SearchResultOrderBy orderBy;
     @NotNull(message = "pagination로 NULL이 들어올 수 없습니다")

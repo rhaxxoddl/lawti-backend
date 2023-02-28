@@ -49,7 +49,7 @@ public class BillRepositoryImpl implements BillRepositoryCustom {
                         billCond.billNotDeleted()
                                 .and(billCond.searchFilter(input.getFilter()))
                                 .and(billCond.searchBillDirection(input))
-                                .and(billCond.getMatchedKeyword(input.getSearchText()))
+                                .and(billCond.getMatchedKeyword(input.getKeyword()))
 
                 )
                 .orderBy(
