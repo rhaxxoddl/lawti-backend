@@ -40,7 +40,7 @@ public class BillRepositoryImpl implements BillRepositoryCustom {
     @Override
     public List<Bill> queryBillsBySearchInput(SearchInput input) {
         return queryFactory
-                .select(bill)
+                .selectDistinct(bill)
                 .from(bill)
                 .leftJoin(bill.committee, committee).fetchJoin()
                 .leftJoin(bill.tags, billTagRelation).leftJoin(billTagRelation.tag, tag)
