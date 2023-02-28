@@ -7,7 +7,9 @@ import com.oli.HometownPolitician.domain.billMessage.entity.BillMessage;
 import com.oli.HometownPolitician.domain.billTagRelation.entity.BillTagRelation;
 import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelation;
 import com.oli.HometownPolitician.domain.committee.entity.Committee;
+import com.oli.HometownPolitician.domain.politician.entity.Politician;
 import com.oli.HometownPolitician.domain.proposer.entity.Proposer;
+import com.oli.HometownPolitician.domain.proposer.enumeration.ProposerRole;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -98,5 +100,21 @@ public class Bill extends BaseTimeEntity {
 
     public void decreaseFollowerCount() {
         this.followerCount--;
+    }
+
+    public void addProposers(List<Politician> representativeProposers, List<Politician> publicProposers) {
+        List<Proposer> proposers = new ArrayList<>();
+        for (Politician politician : representativeProposers) {
+            Proposer proposer = Proposer.from(this, politician, ProposerRole.REPRESENTATIVE);
+            politician.getProposeList().add(proposer);
+            proposers.add(proposer);
+        }
+        for (Politician politician : publicProposers) {
+            proposers.add(Proposer.from(this, politician, ProposerRole.PUBLIC));
+            Proposer proposer = Proposer.from(this, politician, ProposerRole.REPRESENTATIVE);
+            politician.getProposeList().add(proposer);
+        }
+        this.getProposers().addAll(proposers);
+
     }
 }
