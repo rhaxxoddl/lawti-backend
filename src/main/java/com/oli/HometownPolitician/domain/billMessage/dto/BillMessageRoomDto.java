@@ -9,6 +9,7 @@ import com.oli.HometownPolitician.global.tool.ListTool;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -20,6 +21,7 @@ public class BillMessageRoomDto {
     private String title;
     private int numberOfUnreadMessages;
     private String latestMessageContent;
+    private LocalDateTime latestMessageCreatedAt;
 
     static public BillMessageRoomDto from(BillUserRelation billUserRelation) {
         return BillMessageRoomDto.builder()
@@ -29,6 +31,7 @@ public class BillMessageRoomDto {
                 .title(billUserRelation.getBill().getTitle())
                 .numberOfUnreadMessages(countUnreadMessages(billUserRelation))
                 .latestMessageContent(getLatestMessageContent(billUserRelation))
+                .latestMessageCreatedAt(getLastestBillMessageCreatedAt(billUserRelation))
                 .build();
     }
 
@@ -43,12 +46,23 @@ public class BillMessageRoomDto {
     }
 
     static private String getLatestMessageContent(BillUserRelation billUserRelation) {
-        BillMessage billMessage = ListTool.getLastElement(
-                billUserRelation.getBill().getBillMessages()
-        );
+        BillMessage billMessage = getLastestBillMessage(billUserRelation);
         if (billMessage == null)
             return null;
         return billMessage.getContent();
+    }
+
+    private static BillMessage getLastestBillMessage(BillUserRelation billUserRelation) {
+        return ListTool.getLastElement(
+                billUserRelation.getBill().getBillMessages()
+        );
+    }
+
+    static private LocalDateTime getLastestBillMessageCreatedAt(BillUserRelation billUserRelation) {
+        BillMessage billMessage = getLastestBillMessage(billUserRelation);
+        if (billMessage == null)
+            return null;
+        return billMessage.getCreatedAt();
     }
 
     // TODO 아직 대표태그가 아니라 첫번째 태그만 보냄. 추후에 대표태그만 보내는 로직 짜기
