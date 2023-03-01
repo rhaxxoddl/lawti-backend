@@ -94,6 +94,7 @@ type BillMessageRoomDto {
     title: String
     numberOfUnreadMessages: Int
     latestMessageContent: String
+    latestMessageCreatedAt: LocalDateTime
 }
 
 type BillMessageListDto {
@@ -104,6 +105,7 @@ type BillMessageListDto {
 type BillMessageDto {
     billMessageId: Long!
     content: String!
+    createdAt: LocalDateTime!
 }
 
 type ExitBillMessageRoomResultDto {
