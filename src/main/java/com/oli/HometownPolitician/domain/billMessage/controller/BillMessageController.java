@@ -2,7 +2,6 @@ package com.oli.HometownPolitician.domain.billMessage.controller;
 
 import com.oli.HometownPolitician.domain.billMessage.dto.BillMessageListDto;
 import com.oli.HometownPolitician.domain.billMessage.dto.BillMessageRoomListDto;
-import com.oli.HometownPolitician.domain.billMessage.dto.ExitMessageRoomResultDto;
 import com.oli.HometownPolitician.domain.billMessage.input.BillMessageListInput;
 import com.oli.HometownPolitician.domain.billMessage.input.BillMessageRoomListInput;
 import com.oli.HometownPolitician.domain.billMessage.input.ExitBillMessageRoomListInput;
@@ -31,7 +30,7 @@ public class BillMessageController {
         return billMessageService.queryBillMessageList(billMessageListInput);
     }
     @MutationMapping("exitBillMessageRooms")
-    public ExitMessageRoomResultDto exitBillMessageRooms(@Argument(name = "input") @Valid ExitBillMessageRoomListInput exitBillMessageRoomListInput, @ContextValue String authorization) {
-        return billMessageService.exitMessageRooms(exitBillMessageRoomListInput, authorization);
+    public void exitBillMessageRooms(@Argument(name = "input") @Valid ExitBillMessageRoomListInput exitBillMessageRoomListInput, @ContextValue String authorization) {
+        billMessageService.exitMessageRooms(exitBillMessageRoomListInput, authorization);
     }
 }
