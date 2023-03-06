@@ -15,12 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-@Table(name = "users")
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@Table(name = "users")
 @SequenceGenerator(name = "USER_SEQ_GENERATOR", sequenceName = "USER_SEQ")
 public class User extends BaseTimeEntity {
 

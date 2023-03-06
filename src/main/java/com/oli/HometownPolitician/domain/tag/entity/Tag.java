@@ -11,13 +11,13 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 @Entity
+@Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "tags")
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@Table(name = "tags")
 @SequenceGenerator(name = "TAG_SEQ_GENERATOR", sequenceName = "TAG_SEQ")
 public class Tag extends BaseTimeEntity {
     @Id

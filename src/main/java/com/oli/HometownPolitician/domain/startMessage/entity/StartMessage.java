@@ -1,18 +1,16 @@
 package com.oli.HometownPolitician.domain.startMessage.entity;
 
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
-@Getter
 @Entity
-@AllArgsConstructor
+@Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(name = "start_message")
 @EntityListeners(AuditingEntityListener.class)
 public class StartMessage extends BaseTimeEntity {

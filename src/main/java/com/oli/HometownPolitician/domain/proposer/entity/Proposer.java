@@ -10,14 +10,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
+@Entity
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-@Table(name = "proposers")
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@Table(name = "proposers")
 @SequenceGenerator(name = "PROPOSER_SEQ_GENERATOR", sequenceName = "PROPOSER_SEQ")
 public class Proposer extends BaseTimeEntity {
     @Id

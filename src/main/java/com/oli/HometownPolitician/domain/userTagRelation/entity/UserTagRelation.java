@@ -9,12 +9,14 @@ import org.springframework.util.Assert;
 
 import javax.persistence.*;
 
+@Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-@Table(name = "user_tag_relations")
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@Table(name = "user_tag_relations")
 @SequenceGenerator(name = "USERTAGRELATION_SEQ_GENERATOR", sequenceName = "USERTAGRELATION_SEQ")
 public class UserTagRelation extends BaseTimeEntity {
 

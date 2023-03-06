@@ -9,13 +9,13 @@ import org.springframework.util.Assert;
 
 import javax.persistence.*;
 
-@Getter
 @Entity
+@Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "bill_messages")
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@Table(name = "bill_messages")
 @SequenceGenerator(name = "BILL_MESSAGE_SEQ_GENERATOR", sequenceName = "BILL_MESSAGE_SEQ")
 public class BillMessage extends BaseTimeEntity {
 
