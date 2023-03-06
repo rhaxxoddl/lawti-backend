@@ -5,6 +5,7 @@ import com.oli.HometownPolitician.domain.user.entity.User;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 
@@ -30,8 +31,11 @@ public class UserTagRelation extends BaseTimeEntity {
     @JoinColumn(name = "tag_id", referencedColumnName = "tag_id", nullable = false)
     private Tag tag;
 
-    @Builder
+    @Builder(builderClassName = "InitBuilder", builderMethodName = "InitBuilder")
     public UserTagRelation(User user, Tag tag) {
+        Assert.notNull(user, "user가 null이 될 수 없습니다");
+        Assert.notNull(user, "tag가 null이 될 수 없습니다");
+
         this.user = user;
         this.tag = tag;
     }

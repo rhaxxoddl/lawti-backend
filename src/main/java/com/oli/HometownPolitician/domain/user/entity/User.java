@@ -58,7 +58,7 @@ public class User extends BaseTimeEntity {
             if (userTagRelations.stream()
                     .noneMatch(followedTag -> (followedTag.getTag() == tag)))
                 userTagRelations.add(UserTagRelation
-                        .builder()
+                        .InitBuilder()
                         .user(this)
                         .tag(tag)
                         .build());
@@ -128,7 +128,7 @@ public class User extends BaseTimeEntity {
         BillUserRelation billUserRelation = this.billUserRelations.stream().filter(followedBillUserRelation ->
                 followedBillUserRelation.getIsUnfollowed().equals(false) &&
                         followedBillUserRelation.getBill().getId().equals(lastReadBillMessage.getBill().getId())
-        ).findFirst().orElseThrow(()->new NotFoundError("해당 법안은 팔로우하고 있지 않습니다"));
+        ).findFirst().orElseThrow(() -> new NotFoundError("해당 법안은 팔로우하고 있지 않습니다"));
         billUserRelation.setLastReadBillMessage(lastReadBillMessage);
     }
 

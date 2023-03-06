@@ -1,5 +1,6 @@
 package com.oli.HometownPolitician.domain.billTagRelation.entity;
 
+import com.mysema.commons.lang.Assert;
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
@@ -35,5 +36,14 @@ public class BillTagRelation extends BaseTimeEntity {
                 .bill(bill)
                 .tag(tag)
                 .build();
+    }
+
+    @Builder(builderClassName = "InitBuilder", builderMethodName = "InitBuilder")
+    public BillTagRelation(Tag tag, Bill bill) {
+        Assert.notNull(tag, "Tag에 null이 들어올 수 없습니다");
+        Assert.notNull(bill, "Bill에 null이 들어올 수 없습니다");
+
+        this.tag = tag;
+        this.bill = bill;
     }
 }
