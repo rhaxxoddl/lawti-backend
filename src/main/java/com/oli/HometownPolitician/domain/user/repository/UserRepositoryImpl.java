@@ -37,7 +37,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                 .where(
                         userCond.userEqUuid(uuid)
                                 .and(userCond.userNotDeleted())
-                ).leftJoin(user.followedUserTagRelations, userTagRelation)
+                ).leftJoin(user.userTagRelations, userTagRelation)
                 .fetchJoin()
                 .stream().findFirst();
     }

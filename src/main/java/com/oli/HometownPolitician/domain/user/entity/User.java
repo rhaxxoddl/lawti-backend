@@ -36,10 +36,10 @@ public class User extends BaseTimeEntity {
     private String uuid;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserTagRelation> followedUserTagRelations = new ArrayList<>();
+    private List<UserTagRelation> userTagRelations = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BillUserRelation> followedBillUserRelations = new ArrayList<>();
+    private List<BillUserRelation> billUserRelations = new ArrayList<>();
 
     @Builder
     public User(String uuid) {
@@ -47,7 +47,7 @@ public class User extends BaseTimeEntity {
     }
 
     public List<Tag> getFollowingTags() {
-        return followedUserTagRelations
+        return userTagRelations
                 .stream()
                 .map(UserTagRelation::getTag)
                 .collect(Collectors.toList());
@@ -55,9 +55,9 @@ public class User extends BaseTimeEntity {
 
     public void followTags(List<Tag> tags) {
         tags.forEach(tag -> {
-            if (followedUserTagRelations.stream()
+            if (userTagRelations.stream()
                     .noneMatch(followedTag -> (followedTag.getTag() == tag)))
-                followedUserTagRelations.add(UserTagRelation
+                userTagRelations.add(UserTagRelation
                         .builder()
                         .user(this)
                         .tag(tag)
@@ -66,13 +66,13 @@ public class User extends BaseTimeEntity {
     }
 
     public void unfollowTags(List<Tag> tags) {
-        tags.forEach(tag -> followedUserTagRelations.removeIf(followedTag ->
+        tags.forEach(tag -> userTagRelations.removeIf(followedTag ->
                 (followedTag.getTag() == tag)
         ));
     }
 
     public List<Bill> getFollowingBills() {
-        return followedBillUserRelations.stream()
+        return billUserRelations.stream()
                 .filter(billUserRelation -> !billUserRelation.getIsUnfollowed())
                 .map(BillUserRelation::getBill)
                 .collect(Collectors.toList());
@@ -80,21 +80,21 @@ public class User extends BaseTimeEntity {
 
     public List<Bill> followBills(List<Bill> bills) {
         bills.forEach(bill -> {
-            List<BillUserRelation> billUserRelations = followedBillUserRelations.stream()
+            List<BillUserRelation> target = billUserRelations.stream()
                     .filter(billUserRelation -> (billUserRelation.getBill().getId().equals(bill.getId())))
                     .toList();
-            if (billUserRelations.size() == 0) {
-                BillUserRelation billUserRelation = BillUserRelation.builder()
+            if (target.size() == 0) {
+                BillUserRelation billUserRelation = BillUserRelation.InitBuilder()
                         .user(this)
                         .bill(bill)
                         .isUnfollowed(false)
                         .build();
-                followedBillUserRelations.add(billUserRelation);
+                billUserRelations.add(billUserRelation);
                 bill.getBillUserRelations().add(billUserRelation);
-            } else if (billUserRelations.size() > 1)
+            } else if (target.size() > 1)
                 throw new Error("해당 법안과 유저의 관계가 중복되었습니다");
             else
-                billUserRelations.get(0).setIsUnfollowed(false);
+                target.get(0).setIsUnfollowed(false);
             bill.increaseFollowerCount();
         });
         return getFollowingBills();
@@ -102,21 +102,21 @@ public class User extends BaseTimeEntity {
 
     public List<Bill> unfollowBills(List<Bill> bills) {
         bills.forEach(bill -> {
-            List<BillUserRelation> billUserRelations = followedBillUserRelations.stream()
+            List<BillUserRelation> target = billUserRelations.stream()
                     .filter(billUserRelation -> (billUserRelation.getBill().getId().equals(bill.getId())))
                     .toList();
-            if (billUserRelations.size() == 0)
-                followedBillUserRelations.add(
-                        BillUserRelation.builder()
+            if (target.size() == 0)
+                billUserRelations.add(
+                        BillUserRelation.InitBuilder()
                                 .user(this)
                                 .bill(bill)
                                 .isUnfollowed(true)
                                 .build()
                 );
-            else if (billUserRelations.size() > 1)
+            else if (target.size() > 1)
                 throw new Error("해당 법안과 유저의 관계가 중복되었습니다");
             else
-                billUserRelations.get(0).setIsUnfollowed(true);
+                target.get(0).setIsUnfollowed(true);
             bill.decreaseFollowerCount();
         });
         return getFollowingBills();
@@ -125,7 +125,7 @@ public class User extends BaseTimeEntity {
     public void readBillMessage(BillMessage lastReadBillMessage) {
         if (lastReadBillMessage == null)
             throw new IllegalArgumentException("lastReadBillMessage로 null이 들어왔습니다");
-        BillUserRelation billUserRelation = this.followedBillUserRelations.stream().filter(followedBillUserRelation ->
+        BillUserRelation billUserRelation = this.billUserRelations.stream().filter(followedBillUserRelation ->
                 followedBillUserRelation.getIsUnfollowed().equals(false) &&
                         followedBillUserRelation.getBill().getId().equals(lastReadBillMessage.getBill().getId())
         ).findFirst().orElseThrow(()->new NotFoundError("해당 법안은 팔로우하고 있지 않습니다"));

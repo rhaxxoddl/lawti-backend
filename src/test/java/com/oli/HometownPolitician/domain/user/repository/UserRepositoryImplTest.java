@@ -68,9 +68,9 @@ class UserRepositoryImplTest {
         assertThat(user).isNotNull();
         assertThat(user.getId()).isNotNull();
         assertThat(user.getUuid()).isNotNull();
-        assertThat(user.getFollowedUserTagRelations()).isNotNull();
-        assertThat(user.getFollowedUserTagRelations().size()).isEqualTo(FOLLOWED_TAGS_SIZE);
-        user.getFollowedUserTagRelations().forEach(followedTag -> {
+        assertThat(user.getUserTagRelations()).isNotNull();
+        assertThat(user.getUserTagRelations().size()).isEqualTo(FOLLOWED_TAGS_SIZE);
+        user.getUserTagRelations().forEach(followedTag -> {
             assertThat(followedTag).isNotNull();
             assertThat(followedTag.getId()).isNotNull();
             assertThat(followedTag.getUser()).isNotNull();
@@ -89,8 +89,8 @@ class UserRepositoryImplTest {
         assertThat(user).isNotNull();
         assertThat(user.getId()).isNotNull();
         assertThat(user.getUuid()).isNotNull();
-        assertThat(user.getFollowedUserTagRelations()).isNotNull();
-        assertThat(user.getFollowedUserTagRelations().size()).isEqualTo(0);
+        assertThat(user.getUserTagRelations()).isNotNull();
+        assertThat(user.getUserTagRelations().size()).isEqualTo(0);
     }
 
     private void insertUserData() {
