@@ -1,5 +1,6 @@
 package com.oli.HometownPolitician.domain.proposer.entity;
 
+import com.mysema.commons.lang.Assert;
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.politician.entity.Politician;
 import com.oli.HometownPolitician.domain.proposer.enumeration.ProposerRole;
@@ -33,11 +34,14 @@ public class Proposer extends BaseTimeEntity {
     @Column(name = "role", nullable = false)
     private ProposerRole proposerRole;
 
-    static public Proposer from(Bill bill, Politician politician, ProposerRole proposerRole) {
-        return Proposer.builder()
-                .bill(bill)
-                .politician(politician)
-                .proposerRole(proposerRole)
-                .build();
+    @Builder(builderClassName = "InitBuilder", builderMethodName = "InitBuilder")
+    public Proposer(Bill bill, Politician politician, ProposerRole role) {
+        Assert.notNull(bill, "bill에 null이 들어올 수 없습니다");
+        Assert.notNull(politician, "politician에 null이 들어올 수 없습니다");
+        Assert.notNull(role, "role에 null이 들어올 수 없습니다");
+
+        this.bill = bill;
+        this.politician = politician;
+        proposerRole = role;
     }
 }

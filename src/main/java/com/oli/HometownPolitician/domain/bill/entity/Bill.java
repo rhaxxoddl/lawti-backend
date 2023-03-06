@@ -105,18 +105,21 @@ public class Bill extends BaseTimeEntity {
     }
 
     public void addProposers(List<Politician> representativeProposers, List<Politician> publicProposers) {
-        List<Proposer> proposers = new ArrayList<>();
         for (Politician politician : representativeProposers) {
-            Proposer proposer = Proposer.from(this, politician, ProposerRole.REPRESENTATIVE);
-            politician.getProposeList().add(proposer);
-            proposers.add(proposer);
+            addProposer(politician, ProposerRole.REPRESENTATIVE);
         }
         for (Politician politician : publicProposers) {
-            proposers.add(Proposer.from(this, politician, ProposerRole.PUBLIC));
-            Proposer proposer = Proposer.from(this, politician, ProposerRole.REPRESENTATIVE);
-            politician.getProposeList().add(proposer);
+            addProposer(politician, ProposerRole.PUBLIC);
         }
-        this.getProposers().addAll(proposers);
+    }
 
+    private void addProposer(Politician politician, ProposerRole role) {
+        Proposer publicProposer = Proposer.InitBuilder()
+                .bill(this)
+                .politician(politician)
+                .role(role)
+                .build();
+        this.proposers.add(publicProposer);
+        politician.getProposeList().add(publicProposer);
     }
 }
