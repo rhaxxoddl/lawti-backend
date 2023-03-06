@@ -19,24 +19,23 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.oli.HometownPolitician.domain.billMessage.service.BillMessageGenerator.generateBillMessageByCurrentStage;
 
+@Entity
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-@Table(name = "bills")
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@Table(name = "bills")
 @SequenceGenerator(name = "BILL_SEQ_GENERATOR", sequenceName = "BILL_SEQ")
 public class Bill extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BILL_SEQ")
     @Column(name = "bill_id", unique = true, nullable = false)
     private Long id;
-    @Column(name = "external_bill_id", unique = true, nullable = false)
-    private String externalBillId;
+    @Column(name = "bill_external_id", unique = true, nullable = false)
+    private String billExternalId;
     @Column(name = "number", nullable = false)
     private Long number;
     @Column(name = "title", nullable = false)
@@ -75,7 +74,7 @@ public class Bill extends BaseTimeEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<BillUserRelation> followedBillUserRelations = new ArrayList<>();
+    private List<BillUserRelation> billUserRelations = new ArrayList<>();
     @Builder.Default
     @Column(name = "follower_count")
     private Long followerCount = 0L;
@@ -86,11 +85,14 @@ public class Bill extends BaseTimeEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<BillTagRelation> tags = new ArrayList<>();
+    private List<BillTagRelation> billTagRelations = new ArrayList<>();
 
     public void updateCurrentStage(BillStageType updateStage) {
         this.setCurrentStage(updateStage);
-        BillMessage newBillMessage = generateBillMessageByCurrentStage(this, updateStage);
+        BillMessage newBillMessage = BillMessage.ByCurrentStageBuilder()
+                .bill(this)
+                .currentStage(updateStage)
+                .build();
         this.billMessages.add(newBillMessage);
     }
 

@@ -187,7 +187,7 @@ class SearchServiceTest {
         for (int i = 0; i < 100; i++) {
             bills.add(Bill.builder()
                     .title("test title " + i)
-                    .externalBillId("testExternalBillIds" + i)
+                    .billExternalId("testExternalBillIds" + i)
                     .number(12341568L + i)
                     .proposeDate(LocalDate.now())
                     .committee(committeeList.get(i % committeeList.size()))
@@ -199,8 +199,8 @@ class SearchServiceTest {
                     .proposeAssembly(21L)
                     .summary("test summary")
                     .billPdfUri("test billPdfUri")
-                    .tags(new ArrayList<>())
-                    .followedBillUserRelations(new ArrayList<>())
+                    .billTagRelations(new ArrayList<>())
+                    .billUserRelations(new ArrayList<>())
                     .alternativeBill(null)
                     .build());
         }

@@ -90,7 +90,7 @@ public class User extends BaseTimeEntity {
                         .isUnfollowed(false)
                         .build();
                 followedBillUserRelations.add(billUserRelation);
-                bill.getFollowedBillUserRelations().add(billUserRelation);
+                bill.getBillUserRelations().add(billUserRelation);
             } else if (billUserRelations.size() > 1)
                 throw new Error("해당 법안과 유저의 관계가 중복되었습니다");
             else

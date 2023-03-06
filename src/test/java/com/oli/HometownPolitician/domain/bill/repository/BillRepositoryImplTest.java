@@ -102,7 +102,7 @@ class BillRepositoryImplTest {
         SearchInput searchInput = getSearchInput(null, null, null, null, 10, true, SearchResultOrderBy.RECENTLY);
         List<Bill> bills = billRepository.queryBillsBySearchInput(searchInput);
         assertThat(bills).isNotNull();
-        assertThat(bills.size()).isEqualTo(5);
+        assertThat(bills.size()).isEqualTo(10);
     }
 
     @Test
@@ -285,7 +285,7 @@ class BillRepositoryImplTest {
         for (int i = 0; i < 100; i++) {
             bills.add(Bill.builder()
                     .title("test title " + i)
-                    .externalBillId("testExternalBillIds" + i)
+                    .billExternalId("testExternalBillIds" + i)
                     .number(12341568L + i)
                     .proposeDate(LocalDate.now())
                     .committee(committeeList.get(i % committeeList.size()))
@@ -297,8 +297,8 @@ class BillRepositoryImplTest {
                     .proposeAssembly(21L)
                     .summary("test summary")
                     .billPdfUri("test billPdfUri")
-                    .tags(new ArrayList<>())
-                    .followedBillUserRelations(new ArrayList<>())
+                    .billTagRelations(new ArrayList<>())
+                    .billUserRelations(new ArrayList<>())
                     .alternativeBill(null)
                     .build());
         }

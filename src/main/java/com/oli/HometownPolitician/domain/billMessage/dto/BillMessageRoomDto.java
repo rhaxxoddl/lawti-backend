@@ -67,7 +67,7 @@ public class BillMessageRoomDto {
 
     // TODO 아직 대표태그가 아니라 첫번째 태그만 보냄. 추후에 대표태그만 보내는 로직 짜기
     static private TagDto getRepresentativeTag(BillUserRelation billUserRelation) {
-        List<Tag> tags = billUserRelation.getBill().getTags()
+        List<Tag> tags = billUserRelation.getBill().getBillTagRelations()
                 .stream()
                 .map(BillTagRelation::getTag)
                 .toList();

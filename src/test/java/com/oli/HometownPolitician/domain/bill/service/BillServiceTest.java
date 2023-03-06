@@ -119,15 +119,7 @@ class BillServiceTest {
         assertThat(followedBillUserRelations).isNotNull();
         assertThat(followedBillUserRelations.size()).isEqualTo(0);
 
-        followedBillUserRelations.add(BillUserRelation.builder()
-                .user(user)
-                .bill(bills.get(0))
-                .build());
-        followedBillUserRelations.add(BillUserRelation.builder()
-                .user(user)
-                .bill(bills.get(1))
-                .build());
-        billUserRelationRepository.saveAll(followedBillUserRelations);
+        billService.followBills(billsInput, AUTHORIZATION);
 
         FollowingBillsDto followingBillsDto = billService.queryFollowingBills(AUTHORIZATION);
         assertThat(followingBillsDto).isNotNull();
@@ -137,6 +129,8 @@ class BillServiceTest {
         assertThat(followingBillsDto.getList().get(0).getClass()).isEqualTo(BillDto.class);
         assertThat(followingBillsDto.getList().get(0).getBillId().getClass()).isEqualTo(Long.class);
         assertThat(followingBillsDto.getList().get(0).getTitle().getClass()).isEqualTo(String.class);
+        assertThat(bills.get(0).getFollowerCount()).isEqualTo(1);
+        assertThat(bills.get(1).getFollowerCount()).isEqualTo(1);
     }
 
     @Test
@@ -171,15 +165,9 @@ class BillServiceTest {
         assertThat(followedBillUserRelations).isNotNull();
         assertThat(followedBillUserRelations.size()).isEqualTo(0);
 
-        followedBillUserRelations.add(BillUserRelation.builder()
-                .user(user)
-                .bill(bills.get(0))
-                .build());
-        followedBillUserRelations.add(BillUserRelation.builder()
-                .user(user)
-                .bill(bills.get(1))
-                .build());
-        billUserRelationRepository.saveAll(followedBillUserRelations);
+        user.followBills(bills);
+        assertThat(bills.get(0).getFollowerCount()).isEqualTo(1);
+        assertThat(bills.get(1).getFollowerCount()).isEqualTo(1);
         FollowingBillsDto unfollowingBillsDtoBefore = billService.queryFollowingBills(AUTHORIZATION);
         assertThat(unfollowingBillsDtoBefore).isNotNull();
         assertThat(unfollowingBillsDtoBefore.getList()).isNotNull();
@@ -187,6 +175,8 @@ class BillServiceTest {
 
         billsInput.getList().remove(1);
         FollowingBillsDto unfollowingBillsDtoAfter = billService.unfollowBills(billsInput, AUTHORIZATION);
+        assertThat(bills.get(0).getFollowerCount()).isEqualTo(0);
+        assertThat(bills.get(1).getFollowerCount()).isEqualTo(1);
         assertThat(unfollowingBillsDtoAfter).isNotNull();
         assertThat(unfollowingBillsDtoAfter.getList()).isNotNull();
         assertThat(unfollowingBillsDtoAfter.getList().size()).isEqualTo(1);
@@ -201,7 +191,7 @@ class BillServiceTest {
         bills.add(Bill.builder()
                 .id(1L)
                 .title("test title")
-                .externalBillId("testExternalBillId")
+                .billExternalId("testExternalBillId")
                 .number(123456L)
                 .proposeDate(LocalDate.now())
                 .committee(null)
@@ -218,7 +208,7 @@ class BillServiceTest {
         bills.add(Bill.builder()
                 .id(2L)
                 .title("test title2")
-                .externalBillId("testExternalBillId2")
+                .billExternalId("testExternalBillId2")
                 .number(1234567L)
                 .proposeDate(LocalDate.now())
                 .committee(null)

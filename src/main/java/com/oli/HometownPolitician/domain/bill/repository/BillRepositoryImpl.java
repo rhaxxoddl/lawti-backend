@@ -4,7 +4,6 @@ import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.committee.repository.CommitteeRepositoryCond;
 import com.oli.HometownPolitician.domain.search.input.SearchInput;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -12,7 +11,6 @@ import java.util.List;
 
 import static com.oli.HometownPolitician.domain.bill.entity.QBill.bill;
 import static com.oli.HometownPolitician.domain.billTagRelation.entity.QBillTagRelation.billTagRelation;
-import static com.oli.HometownPolitician.domain.billUserRelation.entity.QBillUserRelation.billUserRelation;
 import static com.oli.HometownPolitician.domain.committee.entity.QCommittee.committee;
 import static com.oli.HometownPolitician.domain.politician.entity.QPolitician.politician;
 import static com.oli.HometownPolitician.domain.proposer.entity.QProposer.proposer;
@@ -43,7 +41,7 @@ public class BillRepositoryImpl implements BillRepositoryCustom {
                 .selectDistinct(bill)
                 .from(bill)
                 .leftJoin(bill.committee, committee).fetchJoin()
-                .leftJoin(bill.tags, billTagRelation).leftJoin(billTagRelation.tag, tag)
+                .leftJoin(bill.billTagRelations, billTagRelation).leftJoin(billTagRelation.tag, tag)
                 .leftJoin(bill.proposers, proposer).leftJoin(proposer.politician, politician)
                 .where(
                         billCond.billNotDeleted()
@@ -57,17 +55,5 @@ public class BillRepositoryImpl implements BillRepositoryCustom {
                 )
                 .limit(billCond.billLimit(input.getPagination()))
                 .fetch();
-    }
-
-    private static OrderSpecifier<?> numberOfFollower(SearchInput input) {
-        if (input == null || input.getFilter() == null)
-            return null;
-        return (OrderSpecifier<?>) JPAExpressions
-                .select(billUserRelation.count())
-                .from(billUserRelation)
-                .where(
-                        billUserRelation.bill.id.eq(bill.id)
-                                .and(billUserRelation.isUnfollowed.isFalse())
-                );
     }
 }

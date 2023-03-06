@@ -42,6 +42,6 @@ public class Tag extends BaseTimeEntity {
                 .tag(this)
                 .build();
         this.billTagRelations.add(billTagRelation);
-        bill.getTags().add(billTagRelation);
+        bill.getBillTagRelations().add(billTagRelation);
     }
 }

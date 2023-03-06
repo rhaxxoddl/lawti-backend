@@ -140,7 +140,7 @@ public class BillRepositoryCond {
     public BooleanExpression tagsInTagIdList(List<Long> tagIdList) {
         if (tagIdList.size() == 0)
             return null;
-        return bill.tags.any().tag.id.in(tagIdList);
+        return bill.billTagRelations.any().tag.id.in(tagIdList);
     }
 
     public BooleanBuilder searchFilter(SearchFilterInput input) {
@@ -150,7 +150,7 @@ public class BillRepositoryCond {
         if (input.getCommittee() != null)
             builder.and(bill.committee.id.eq(input.getCommittee().getCommitteeId()));
         if (input.getTag() != null)
-            builder.and(bill.tags.any().tag.id.eq(input.getTag().getId()));
+            builder.and(bill.billTagRelations.any().tag.id.eq(input.getTag().getId()));
         return builder;
     }
 
