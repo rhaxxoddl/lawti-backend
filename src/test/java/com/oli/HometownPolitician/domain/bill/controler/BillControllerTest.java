@@ -25,7 +25,7 @@ class BillControllerTest {
     private GraphQlTester graphQlTester;
 
     @Test
-    @DisplayName("queryBillDetail이 잘 호출되는지 확인")
+    @DisplayName("데이터가 없을 때 queryBillDetail에 NotFoundError 잘 반환되는지 확인")
     void queryBillDetail_well_test() {
         Map<String, Object> input = new ConcurrentHashMap<>() {{
             put("billId", 1L);
@@ -50,7 +50,7 @@ class BillControllerTest {
                 .entity(LocalDate.class)
                 .path("queryBillDetail.committee")
                 .entity(CommitteeDto.class)
-                .path("queryBillDetail.committeDate")
+                .path("queryBillDetail.committeeDate")
                 .entity(LocalDate.class);
     }
 

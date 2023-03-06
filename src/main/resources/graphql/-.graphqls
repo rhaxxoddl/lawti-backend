@@ -7,7 +7,6 @@ scalar Short        #Java Short 타입
 scalar Char         #Java Char 타입
 scalar BigDecimal   #Java BigDecimal 타입
 scalar BigInteger   #Java BigInteger 타입
-scalar DateTime     #ISO8601 YYYY-MM-DDTHH:MM:SS 형식의 Date 타입 (DD와 HH 사이에 T는 구분자)
 
 schema {
     query: Query

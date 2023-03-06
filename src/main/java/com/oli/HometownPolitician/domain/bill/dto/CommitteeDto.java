@@ -7,14 +7,14 @@ import lombok.Getter;
 @Builder
 @Getter
 public class CommitteeDto {
-    private Long committeId;
+    private Long committeeId;
     private String name;
 
     static public CommitteeDto from(Committee committee) {
         if (committee == null)
             return null;
         return CommitteeDto.builder()
-                .committeId(committee.getId())
+                .committeeId(committee.getId())
                 .name(committee.getName())
                 .build();
     }

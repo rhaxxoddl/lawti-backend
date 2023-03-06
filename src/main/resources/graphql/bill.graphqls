@@ -71,8 +71,8 @@ type BillDetailDto {
     currentStage: String!
     summary: String!
     proposers: ProposersDto!
-    proposerDate: Date!
     committee: CommitteeDto
+    proposerDate: Date!
     noticeEndDate: Date
     committeeDate: Date
     plenaryResult: String

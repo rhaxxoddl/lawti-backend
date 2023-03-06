@@ -115,7 +115,7 @@ class BillServiceTest {
         assertThat(bills.size()).isEqualTo(2);
         assertThat(bills.get(0).getClass()).isEqualTo(Bill.class);
 
-        List<BillUserRelation> followedBillUserRelations = user.getFollowedBillUserRelations();
+        List<BillUserRelation> followedBillUserRelations = user.getBillUserRelations();
         assertThat(followedBillUserRelations).isNotNull();
         assertThat(followedBillUserRelations.size()).isEqualTo(0);
 
@@ -161,7 +161,7 @@ class BillServiceTest {
         assertThat(bills.size()).isEqualTo(2);
         assertThat(bills.get(0).getClass()).isEqualTo(Bill.class);
 
-        List<BillUserRelation> followedBillUserRelations = user.getFollowedBillUserRelations();
+        List<BillUserRelation> followedBillUserRelations = user.getBillUserRelations();
         assertThat(followedBillUserRelations).isNotNull();
         assertThat(followedBillUserRelations.size()).isEqualTo(0);
 

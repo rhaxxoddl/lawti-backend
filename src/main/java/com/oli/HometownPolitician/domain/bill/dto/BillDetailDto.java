@@ -18,7 +18,7 @@ public class BillDetailDto {
     private ProposersDto proposers;
     private LocalDate proposerDate;
     private CommitteeDto committee;
-    private LocalDate committeDate;
+    private LocalDate committeeDate;
     private LocalDate noticeEndDate;
     private PlenaryResultType plenaryResult;
     private LocalDate plenaryProcessingDage;
@@ -34,7 +34,7 @@ public class BillDetailDto {
                 .proposers(ProposersDto.from(bill.getProposers()))
                 .proposerDate(bill.getProposeDate())
                 .committee(CommitteeDto.from(bill.getCommittee()))
-                .committeDate(bill.getCommitteeDate())
+                .committeeDate(bill.getCommitteeDate())
                 .noticeEndDate(bill.getNoticeEndDate())
                 .plenaryResult(bill.getPlenaryResult())
                 .plenaryProcessingDage(bill.getPlenaryProcessingDate())
