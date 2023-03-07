@@ -1,6 +1,7 @@
 package com.oli.HometownPolitician.domain.committee.entity;
 
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
+import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "committees")
 @SequenceGenerator(name = "COMMITTEE_SEQ_GENERATOR", sequenceName = "COMMITTEE_SEQ")
-public class Committee {
+public class Committee extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "COMMITTEE_SEQ")
     @Column(name = "committee_id", unique = true, nullable = false)
