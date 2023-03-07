@@ -122,4 +122,9 @@ public class Bill extends BaseTimeEntity {
         this.proposers.add(publicProposer);
         politician.getProposeList().add(publicProposer);
     }
+
+    @PrePersist
+    void prePersist() {
+        this.followerCount = this.followerCount != null ? this.followerCount : 0L;
+    }
 }
