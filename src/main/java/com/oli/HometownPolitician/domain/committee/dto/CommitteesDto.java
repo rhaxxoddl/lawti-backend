@@ -5,14 +5,12 @@ import io.jsonwebtoken.lang.Assert;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Builder
 @Getter
 public class CommitteesDto {
-    @Builder.Default
-    private List<CommitteeDto> list = new ArrayList<>();
+    private List<CommitteeDto> list;
 
     @Builder(builderClassName = "InitBuilder", builderMethodName = "InitBuilder")
     public CommitteesDto(List<CommitteeDto> list) {
@@ -22,7 +20,9 @@ public class CommitteesDto {
     }
 
     static public CommitteesDto from(List<Committee> committees) {
-        return InitBuilder()
+        if (committees == null)
+            return null;
+        return CommitteesDto.InitBuilder()
                 .list(
                         committees.stream()
                                 .map(CommitteeDto::from)

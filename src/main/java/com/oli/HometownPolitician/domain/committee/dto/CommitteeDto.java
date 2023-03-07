@@ -20,6 +20,8 @@ public class CommitteeDto {
         this.name = name;
     }
     static public CommitteeDto from(Committee committee) {
+        if (committee == null)
+            return null;
         return InitBuilder()
                 .committeeId(committee.getId())
                 .name(committee.getName())
