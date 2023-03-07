@@ -1,10 +1,19 @@
 extend type Query {
+    #    위원회 목록을 반환하는 메서드
+    #    [Usage]
+    #    query queryCommittees {
+    #    queryCommittees {
+    #       committeeId
+    #       name
+    #   }
+    #}
     queryCommittees: CommitteesDto!
 }
 
 input CommitteeInput {
-    committeId: Long!
+    committeeId: Long!
 }
+
 type CommitteesDto {
     list: [CommitteeDto]!
 }
