@@ -1,0 +1,8 @@
+query queryCommittees {
+    queryCommittees{
+        list {
+            committeeId
+            name
+        }
+    }
+}
