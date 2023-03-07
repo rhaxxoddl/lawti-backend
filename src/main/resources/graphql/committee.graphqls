@@ -1,12 +1,14 @@
 extend type Query {
     #    위원회 목록을 반환하는 메서드
     #    [Usage]
-    #    query queryCommittees {
-    #    queryCommittees {
-    #       committeeId
-    #       name
-    #   }
-    #}
+    #     query queryCommittees {
+    #     queryCommittees{
+    #         list {
+    #             committeeId
+    #             name
+    #         }
+    #     }
+    # }
     queryCommittees: CommitteesDto!
 }
 
