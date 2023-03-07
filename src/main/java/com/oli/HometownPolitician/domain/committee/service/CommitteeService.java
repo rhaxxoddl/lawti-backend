@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 public class CommitteeService {
     private CommitteeRepository committeeRepository;
-    CommitteesDto queryCommittees() {
+    public CommitteesDto queryCommittees() {
         return CommitteesDto.from(committeeRepository.qFindAll());
     }
 }
