@@ -37,9 +37,11 @@ public class User extends BaseTimeEntity {
     @Column(name = "uuid", unique = true)
     private String uuid;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserTagRelation> userTagRelations = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BillUserRelation> billUserRelations = new ArrayList<>();
 

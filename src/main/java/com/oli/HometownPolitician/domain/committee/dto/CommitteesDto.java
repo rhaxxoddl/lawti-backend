@@ -11,6 +11,7 @@ import java.util.List;
 @Builder
 @Getter
 public class CommitteesDto {
+    @Builder.Default
     private List<CommitteeDto> list = new ArrayList<>();
 
     @Builder(builderClassName = "InitBuilder", builderMethodName = "InitBuilder")
