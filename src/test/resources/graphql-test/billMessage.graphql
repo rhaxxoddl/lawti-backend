@@ -39,7 +39,5 @@ query queryBillMessageList($input: BillMessageListInput!) {
     }
 }
 mutation exitBillMessageRooms($input: ExitBillMessageRoomListInput!) {
-    exitBillMessageRooms(input: $input) {
-        isSuccess
-    }
+    exitBillMessageRooms(input: $input)
 }
