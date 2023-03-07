@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 public class CommitteeService {
-    private CommitteeRepository committeeRepository;
+    private final CommitteeRepository committeeRepository;
     public CommitteesDto queryCommittees() {
         return CommitteesDto.from(committeeRepository.qFindAll());
     }
