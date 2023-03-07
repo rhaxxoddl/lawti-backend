@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Validated
 public class CommitteeController {
-    private CommitteeService committeeService;
+    private final CommitteeService committeeService;
     @QueryMapping(name = "queryCommittees")
     public CommitteesDto queryCommittees() {
         return committeeService.queryCommittees();
