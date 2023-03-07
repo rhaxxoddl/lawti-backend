@@ -1,8 +1,8 @@
 package com.oli.HometownPolitician.domain.bill.controler;
 
 import com.oli.HometownPolitician.domain.bill.dto.BillDto;
-import com.oli.HometownPolitician.domain.bill.dto.CommitteeDto;
 import com.oli.HometownPolitician.domain.bill.dto.ProposersDto;
+import com.oli.HometownPolitician.domain.committee.dto.CommitteeDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

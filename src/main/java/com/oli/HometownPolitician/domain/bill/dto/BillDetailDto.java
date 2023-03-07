@@ -3,6 +3,7 @@ package com.oli.HometownPolitician.domain.bill.dto;
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.bill.enumeration.PlenaryResultType;
+import com.oli.HometownPolitician.domain.committee.dto.CommitteeDto;
 import lombok.Builder;
 import lombok.Getter;
 

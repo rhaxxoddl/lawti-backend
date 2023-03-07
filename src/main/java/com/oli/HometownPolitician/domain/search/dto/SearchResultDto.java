@@ -1,8 +1,8 @@
 package com.oli.HometownPolitician.domain.search.dto;
 
-import com.oli.HometownPolitician.domain.bill.dto.CommitteeDto;
 import com.oli.HometownPolitician.domain.bill.dto.ProposersDto;
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
+import com.oli.HometownPolitician.domain.committee.dto.CommitteeDto;
 import lombok.Builder;
 import lombok.Getter;
 
