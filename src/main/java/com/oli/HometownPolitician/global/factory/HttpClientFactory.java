@@ -25,7 +25,7 @@ public class HttpClientFactory {
                                 .addHandlerLast(new WriteTimeoutHandler(timeout.writeTimeout())));
     }
 
-    HttpClient customHttpClient(int connectTimeout, int responseTimeout, int readTimeout, int writeTimeout){
+    public HttpClient customHttpClient(int connectTimeout, int responseTimeout, int readTimeout, int writeTimeout){
         return HttpClient
                 .create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout)
