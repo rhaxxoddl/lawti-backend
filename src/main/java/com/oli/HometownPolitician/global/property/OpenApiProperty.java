@@ -3,13 +3,13 @@ package com.oli.HometownPolitician.global.property;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.ConstructorBinding;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @Getter
 @ConstructorBinding
 @RequiredArgsConstructor
-@EnableConfigurationProperties
+@ConfigurationPropertiesScan
 @ConfigurationProperties(prefix = "open-api")
 public class OpenApiProperty {
 
