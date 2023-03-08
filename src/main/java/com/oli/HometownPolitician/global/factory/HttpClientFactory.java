@@ -4,14 +4,18 @@ import com.oli.HometownPolitician.global.property.OpenApiProperty;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import reactor.netty.http.client.HttpClient;
 
 import java.time.Duration;
 
+@Component
+@RequiredArgsConstructor
 public class HttpClientFactory {
-    private OpenApiProperty.Timeout timeout;
+    private final OpenApiProperty.Timeout timeout;
 
-    HttpClient initHttpClient() {
+    public HttpClient initHttpClient() {
         return HttpClient
                 .create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, timeout.connectTimeout())
