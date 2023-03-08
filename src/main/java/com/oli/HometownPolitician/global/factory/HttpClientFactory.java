@@ -13,16 +13,16 @@ import java.time.Duration;
 @Component
 @RequiredArgsConstructor
 public class HttpClientFactory {
-    private final OpenApiProperty.Timeout timeout;
+    private final OpenApiProperty openApiProperty;
 
     public HttpClient initHttpClient() {
         return HttpClient
                 .create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, timeout.connectTimeout())
-                .responseTimeout(Duration.ofMillis(timeout.responseTimeout()))
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, openApiProperty.getTimeouts().connect())
+                .responseTimeout(Duration.ofMillis(openApiProperty.getTimeouts().response()))
                 .doOnConnected(connection ->
-                        connection.addHandlerLast(new ReadTimeoutHandler(timeout.readTimeout()))
-                                .addHandlerLast(new WriteTimeoutHandler(timeout.writeTimeout())));
+                        connection.addHandlerLast(new ReadTimeoutHandler(openApiProperty.getTimeouts().read()))
+                                .addHandlerLast(new WriteTimeoutHandler(openApiProperty.getTimeouts().write())));
     }
 
     public HttpClient customHttpClient(int connectTimeout, int responseTimeout, int readTimeout, int writeTimeout){
