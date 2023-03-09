@@ -5,6 +5,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 
+import java.util.Optional;
+
 import static com.oli.HometownPolitician.domain.politician.entity.QPolitician.politician;
 
 public class PoliticianRepositoryImpl implements PoliticianRepositoryCustom{
@@ -17,10 +19,12 @@ public class PoliticianRepositoryImpl implements PoliticianRepositoryCustom{
     }
 
     @Override
-    public Politician queryPoliticiansByPolitician(Politician input) {
+    public Optional<Politician> queryPoliticiansByPolitician(Politician input) {
         return queryFactory.selectFrom(politician)
                 .where(
                         politicianCond.eqChineseName(input.getChineseName())
-                ).fetchOne();
+                )
+                .stream()
+                .findAny();
     }
 }
