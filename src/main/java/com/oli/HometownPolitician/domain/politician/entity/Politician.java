@@ -53,7 +53,7 @@ public class Politician extends BaseTimeEntity {
                 .name(politicianInfo.getName())
                 .chineseName(politicianInfo.getName_han())
                 .party(
-                        ListTool.getLastElement(Arrays.asList(politicianInfo.getDae().split(" ")))
+                        ListTool.getLastElement(Arrays.asList(politicianInfo.getDae().split(" |\\)|\\s")))
                 )
                 .build();
     }
