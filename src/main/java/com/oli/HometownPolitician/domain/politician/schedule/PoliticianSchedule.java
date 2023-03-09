@@ -3,7 +3,9 @@ package com.oli.HometownPolitician.domain.politician.schedule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oli.HometownPolitician.domain.politician.entity.Politician;
 import com.oli.HometownPolitician.domain.politician.repository.PoliticianRepository;
-import com.oli.HometownPolitician.domain.politician.responseEntity.*;
+import com.oli.HometownPolitician.domain.politician.responseEntity.CurrentStatusOfPoliticians;
+import com.oli.HometownPolitician.domain.politician.responseEntity.CurrentStatusOfPoliticiansBody;
+import com.oli.HometownPolitician.domain.politician.responseEntity.PoliticianInfo;
 import com.oli.HometownPolitician.global.error.FailedError;
 import com.oli.HometownPolitician.global.factory.WebClientFactory;
 import com.oli.HometownPolitician.global.property.OpenApiProperty;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +34,11 @@ public class PoliticianSchedule {
     private final PoliticianRepository politicianRepository;
     private final int DATA_SIZE = 100;
     private final int DAESU = 21;
+    private final int SCHEDULE_CYCLE_TIME = 1000 * 60 * 60 * 8;
 
+    @Scheduled(fixedDelay = SCHEDULE_CYCLE_TIME)
     public void parseCurrentStatusOfPoliticians() {
+        System.out.println("start parseCurrentStatusOfPoliticians");
         WebClient politicianClient = webClientFactory.getOpenAssemblyClient();
         WebClient.UriSpec<?> uriSpec = politicianClient.get();
         int resultSize = DATA_SIZE;
