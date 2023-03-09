@@ -1,12 +1,16 @@
 package com.oli.HometownPolitician.domain.politician.entity;
 
+import com.oli.HometownPolitician.domain.politician.responseEntity.PoliticianInfo;
 import com.oli.HometownPolitician.domain.proposer.entity.Proposer;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
+import com.oli.HometownPolitician.global.tool.ListTool;
+import io.jsonwebtoken.lang.Assert;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -32,4 +36,25 @@ public class Politician extends BaseTimeEntity {
     @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "politician")
     private List<Proposer> proposeList = new ArrayList<>();
+
+    @Builder(builderClassName = "InitBuilder", builderMethodName = "InitBuilder")
+    public Politician(String name, String chineseName, String party) {
+        Assert.notNull(name, "name에 null이 들어올 수 없습니다");
+        Assert.notNull(chineseName, "chineseName에 null이 들어올 수 없습니다");
+        Assert.notNull(party, "party에 null이 들어올 수 없습니다");
+
+        this.name = name;
+        this.chineseName = chineseName;
+        this.party = party;
+    }
+
+    static public Politician from(PoliticianInfo politicianInfo) {
+        return Politician.InitBuilder()
+                .name(politicianInfo.getName())
+                .chineseName(politicianInfo.getName_han())
+                .party(
+                        ListTool.getLastElement(Arrays.asList(politicianInfo.getDae().split(" ")))
+                )
+                .build();
+    }
 }
