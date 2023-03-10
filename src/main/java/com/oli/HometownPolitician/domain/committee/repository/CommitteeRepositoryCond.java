@@ -8,4 +8,9 @@ public class CommitteeRepositoryCond {
     public BooleanExpression notDeleted() {
         return committee.deletedAt.isNull();
     }
+    public BooleanExpression eqExternalCommitteeId(String externalCommitteeId) {
+        if (externalCommitteeId == null)
+            return null;
+        return committee.externalCommitteeId.eq(externalCommitteeId);
+    }
 }
