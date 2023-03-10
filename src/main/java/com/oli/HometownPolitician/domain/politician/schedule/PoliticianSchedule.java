@@ -46,14 +46,14 @@ public class PoliticianSchedule {
             WebClient.RequestHeadersSpec<?> headersSpec = getUriWithParameter(uriSpec, i, DATA_SIZE, "json", DAESU);
             ResponseEntity<String> responseResult = getResponse(headersSpec);
             ObjectMapper objectMapper = ObjectMapperProvider.getCustomObjectMapper();
-            CurrentPoliticiansBody currentStatusOfPoliticiansResult;
+            CurrentPoliticiansBody currentPoliticiansBody;
             try {
-                currentStatusOfPoliticiansResult = objectMapper.readValue(responseResult.getBody(), CurrentPoliticiansBody.class);
+                currentPoliticiansBody = objectMapper.readValue(responseResult.getBody(), CurrentPoliticiansBody.class);
             } catch (Exception error) {
                 throw new FailedError("Json 데이터를 객체로 변환하는데 실패했습니다\n detail: " + error);
             }
 
-            List<CurrentPoliticians> currentPoliticiansList = Arrays.asList(currentStatusOfPoliticiansResult.getCurrentPoliticiansList());
+            List<CurrentPoliticians> currentPoliticiansList = Arrays.asList(currentPoliticiansBody.getCurrentPoliticiansList());
             List<PoliticianInfo> politicianInfos = Arrays.asList(currentPoliticiansList.get(1).getPoliticianInfos());
             resultSize = politicianInfos.size();
             List<Politician> politicians = politicianInfos.stream()
