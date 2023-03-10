@@ -39,7 +39,7 @@ public class Committee extends BaseTimeEntity {
         this.external_committee_id = external_committee_id;
         this.name = name;
     }
-    public Committee from(CommitteeInfo committeeInfo) {
+    static public Committee from(CommitteeInfo committeeInfo) {
         if (committeeInfo == null)
             return null;
         return Committee.InitBuilder()
