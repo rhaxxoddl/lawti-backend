@@ -19,7 +19,7 @@ public class PoliticianRepositoryImpl implements PoliticianRepositoryCustom{
     }
 
     @Override
-    public Optional<Politician> queryPoliticiansByPolitician(Politician input) {
+    public Optional<Politician> qFindByPolitician(Politician input) {
         return queryFactory.selectFrom(politician)
                 .where(
                         politicianCond.eqChineseName(input.getChineseName())

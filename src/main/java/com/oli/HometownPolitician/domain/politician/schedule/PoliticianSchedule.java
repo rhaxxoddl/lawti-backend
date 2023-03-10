@@ -69,7 +69,7 @@ public class PoliticianSchedule {
 
     private void updatePolitician(List<Politician> politicians) {
         for (Politician politician : politicians) {
-            Optional<Politician> originPolitician = politicianRepository.queryPoliticiansByPolitician(politician);
+            Optional<Politician> originPolitician = politicianRepository.qFindByPolitician(politician);
             if (originPolitician.isEmpty()) {
                 politicianRepository.save(politician);
             } else {
