@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class GetBillInfoListBody {
-    private BillInfo[] items;
+    private BillInfos items;
     private int numOfRows;
     private int pageNo;
     private int totalCount;
