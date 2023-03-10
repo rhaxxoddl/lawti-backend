@@ -1,17 +1,19 @@
 package com.oli.HometownPolitician.domain.bill.schedule;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
 import com.oli.HometownPolitician.domain.bill.repository.BillRepository;
 import com.oli.HometownPolitician.domain.bill.responseEntity.publicData.getBillInfoList.BillInfo;
 import com.oli.HometownPolitician.domain.bill.responseEntity.publicData.getBillInfoList.GetBillInfoListBody;
+import com.oli.HometownPolitician.domain.bill.responseEntity.publicData.getBillInfoList.GetBillInfoListResponse;
+import com.oli.HometownPolitician.domain.bill.responseEntity.publicData.getBillInfoList.GetBillInfoListResponseBody;
 import com.oli.HometownPolitician.global.error.FailedError;
 import com.oli.HometownPolitician.global.factory.WebClientFactory;
 import com.oli.HometownPolitician.global.property.OpenApiProperty;
+import com.oli.HometownPolitician.global.provider.ObjectMapperProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -39,7 +41,7 @@ public class BillSchedule {
 
     @Scheduled(fixedDelay = SCHEDULE_CYCLE_TIME)
     public void parseGetBillInfoList() {
-        WebClient client = webClientFactory.getOpenAssemblyClient();
+        WebClient client = webClientFactory.getPublicPortalBillInfoService2Client();
         WebClient.UriSpec<?> uriSpec = client.get();
         int resultSize = DATA_SIZE;
         for (int i = 1; resultSize == DATA_SIZE; i++) {
@@ -50,19 +52,18 @@ public class BillSchedule {
             else if (responseResult.getStatusCode().is5xxServerError()) {
                 throw new FailedError("API 서버 오류");
             }
-            XmlMapper xmlMapper = new XmlMapper();
-            xmlMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-                    .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            GetBillInfoListBody getBillInfoListBody;
+            ObjectMapper objectMapper = ObjectMapperProvider.getCustomObjectMapper().registerModule(new JavaTimeModule());
+            GetBillInfoListResponseBody getBillInfoListResponseBody;
             try {
-                getBillInfoListBody = xmlMapper.readValue(responseResult.getBody(), GetBillInfoListBody.class);
+                getBillInfoListResponseBody = objectMapper.readValue(responseResult.getBody(), GetBillInfoListResponseBody.class);
             } catch (JsonMappingException e) {
                 throw new RuntimeException(e);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
-            List<BillInfo> billInfos = Arrays.asList(getBillInfoListBody.getItems());
+            GetBillInfoListResponse getBillInfoListResponse = getBillInfoListResponseBody.getResponse();
+            GetBillInfoListBody getBillInfoListBody = getBillInfoListResponse.getBody();
+            List<BillInfo> billInfos = Arrays.asList(getBillInfoListBody.getItems().getItem());
             resultSize = billInfos.size();
             List<Bill> bills = billInfos.stream()
                     .map(Bill::from)
@@ -108,7 +109,7 @@ public class BillSchedule {
     private WebClient.RequestHeadersSpec<?> getUriWithParameter(WebClient.UriSpec<?> uriSpec, int pageIndex, int size) {
         return uriSpec.uri(
                 uriBuilder -> uriBuilder
-                        .pathSegment("nxrvzonlafugpqjuh")
+                        .pathSegment("getBillInfoList")
                         .queryParam("serviceKey", openApiProperty.getKeys().publicDataBill())
                         .queryParam("pageNo", pageIndex)
                         .queryParam("numOfRows", size)
@@ -117,7 +118,7 @@ public class BillSchedule {
                         .queryParam("end_ord", 21)
                         .queryParam("gbn", "dae_num")
                         .queryParam("bill_kind_cd", "B04")
-                        .build()
+                        .build(true)
         );
     }
 }
