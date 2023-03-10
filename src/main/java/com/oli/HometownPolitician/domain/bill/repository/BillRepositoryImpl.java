@@ -56,4 +56,14 @@ public class BillRepositoryImpl implements BillRepositoryCustom {
                 .limit(billCond.billLimit(input.getPagination()))
                 .fetch();
     }
+
+    @Override
+    public List<Bill> queryBillsByBillExternalIdList(List<String> billExternalIdList) {
+        return queryFactory
+                .selectFrom(bill)
+                .where(
+                        bill.billExternalId.in(billExternalIdList)
+                )
+                .fetch();
+    }
 }
