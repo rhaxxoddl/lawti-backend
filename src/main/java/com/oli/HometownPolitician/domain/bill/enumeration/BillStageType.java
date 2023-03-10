@@ -1,5 +1,10 @@
 package com.oli.HometownPolitician.domain.bill.enumeration;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public enum BillStageType {
     RECEIPT("접수"),
     COMMITTEE_RECEIPT("소관위접수"),
@@ -12,13 +17,19 @@ public enum BillStageType {
     DISCARD("폐기"),
     WITHDRAWAL("철수");
 
-    private final String value;
+    private final String lable;
 
     BillStageType(String value) {
-        this.value = value;
+        this.lable = value;
     }
 
-    public String getValue() {
-        return value;
+    public String getLable() {
+        return lable;
+    }
+    private static final Map<String, BillStageType> BY_LABEL =
+            Stream.of(values())
+                    .collect(Collectors.toMap(BillStageType::getLable, e -> e));
+    public static Optional<BillStageType> valueOfLable(String lable) {
+        return Optional.ofNullable(BY_LABEL.get(lable));
     }
 }
