@@ -44,6 +44,11 @@ public class CommitteeSchedule {
         for (int i = 1; resultSize == DATA_SIZE; i++) {
             WebClient.RequestHeadersSpec<?> headersSpec = getUriWithParameter(uriSpec, i, DATA_SIZE, "json");
             ResponseEntity<String> responseResult = getResponse(headersSpec);
+            if (responseResult.getStatusCode().is4xxClientError())
+                throw new FailedError("API를 잘못된 형식으로 호출했습니다");
+            else if (responseResult.getStatusCode().is5xxServerError()) {
+                throw new FailedError("API 서버 오류");
+            }
             ObjectMapper objectMapper = ObjectMapperProvider.getCustomObjectMapper();
             CurrentCommitteesBody currentCommitteesBody;
             try {
