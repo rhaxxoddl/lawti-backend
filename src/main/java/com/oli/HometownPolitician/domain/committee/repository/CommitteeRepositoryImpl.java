@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 public class CommitteeRepositoryImpl implements CommitteeRepositoryCustom{
     private final JPAQueryFactory queryFactory;
@@ -23,5 +24,15 @@ public class CommitteeRepositoryImpl implements CommitteeRepositoryCustom{
                         committeeCond.notDeleted()
                 )
                 .fetch();
+    }
+
+    @Override
+    public Optional<Committee> qFindByExternalCommitteeId(String externalCommitteeId) {
+        return queryFactory
+                .selectFrom(committee)
+                .where(
+                        committeeCond.eqExternalCommitteeId(externalCommitteeId)
+                )
+                .stream().findAny();
     }
 }
