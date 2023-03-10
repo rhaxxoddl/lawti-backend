@@ -2,9 +2,6 @@ package com.oli.HometownPolitician.domain.politician.schedule;
 
 import com.oli.HometownPolitician.domain.politician.entity.Politician;
 import com.oli.HometownPolitician.domain.politician.repository.PoliticianRepository;
-import com.oli.HometownPolitician.global.factory.WebClientFactory;
-import com.oli.HometownPolitician.global.property.OpenApiProperty;
-import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
 class PoliticianScheduleTest {
-    @Autowired
-    private WebClientFactory webClientFactory;
-    @Autowired
-    private OpenApiProperty openApiProperty;
     @Autowired
     private PoliticianSchedule politicianSchedule;
     @Autowired
