@@ -9,7 +9,6 @@ import com.oli.HometownPolitician.domain.bill.input.BillInput;
 import com.oli.HometownPolitician.domain.bill.input.BillsInput;
 import com.oli.HometownPolitician.domain.bill.repository.BillRepository;
 import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelation;
-import com.oli.HometownPolitician.domain.billUserRelation.repository.BillUserRelationRepository;
 import com.oli.HometownPolitician.domain.committee.entity.Committee;
 import com.oli.HometownPolitician.domain.committee.repository.CommitteeRepository;
 import com.oli.HometownPolitician.domain.politician.entity.Politician;
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-// TODO queryBillsByIdList_well_test()를 제외한 나머지 테스트 통합 실행시 에러남
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
@@ -58,8 +56,6 @@ class BillServiceTest {
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
-    @Autowired
-    private BillUserRelationRepository billUserRelationRepository;
     @Autowired
     private EntityManager em;
 
@@ -86,9 +82,7 @@ class BillServiceTest {
     @Test
     @DisplayName("Bill의 상세정보를 BillDetailDto로 잘 가져오는지 확인")
     void queryBillDetail_well_test() {
-        BillInput billInput = BillInput.builder()
-                .billId(1L)
-                .build();
+        BillInput billInput = getBillsInput().getList().get(0);
         BillDetailDto billDetailDto = billService.queryBillDetail(billInput);
         assertThat(billDetailDto).isNotNull();
         assertThat(billDetailDto.getClass()).isEqualTo(BillDetailDto.class);
@@ -189,7 +183,6 @@ class BillServiceTest {
     private List<Bill> initBill() {
         List<Bill> bills = new ArrayList<>();
         bills.add(Bill.builder()
-                .id(1L)
                 .title("test title")
                 .billExternalId("testExternalBillId")
                 .number(123456L)
@@ -206,7 +199,6 @@ class BillServiceTest {
                 .alternativeBill(null)
                 .build());
         bills.add(Bill.builder()
-                .id(2L)
                 .title("test title2")
                 .billExternalId("testExternalBillId2")
                 .number(1234567L)
@@ -295,9 +287,10 @@ class BillServiceTest {
         billRepository.saveAll(bills);
     }
     private BillsInput getBillsInput() {
+        List<Bill> bills = billRepository.findAll();
         List<BillInput> billInputs = new ArrayList<>();
-        billInputs.add(BillInput.builder().billId(1L).build());
-        billInputs.add(BillInput.builder().billId(2L).build());
+        billInputs.add(BillInput.builder().billId(bills.get(0).getId()).build());
+        billInputs.add(BillInput.builder().billId(bills.get(1).getId()).build());
         return BillsInput.builder().list(billInputs).build();
     }
 
