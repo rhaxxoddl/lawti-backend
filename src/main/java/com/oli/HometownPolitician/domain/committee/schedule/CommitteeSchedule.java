@@ -1,11 +1,11 @@
-package com.oli.HometownPolitician.domain.politician.schedule;
+package com.oli.HometownPolitician.domain.committee.schedule;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oli.HometownPolitician.domain.politician.entity.Politician;
-import com.oli.HometownPolitician.domain.politician.repository.PoliticianRepository;
-import com.oli.HometownPolitician.domain.politician.responseEntity.CurrentPoliticians;
-import com.oli.HometownPolitician.domain.politician.responseEntity.CurrentPoliticiansBody;
-import com.oli.HometownPolitician.domain.politician.responseEntity.PoliticianInfo;
+import com.oli.HometownPolitician.domain.committee.entity.Committee;
+import com.oli.HometownPolitician.domain.committee.repository.CommitteeRepository;
+import com.oli.HometownPolitician.domain.committee.responseEntity.CommitteeInfo;
+import com.oli.HometownPolitician.domain.committee.responseEntity.CurrentCommittees;
+import com.oli.HometownPolitician.domain.committee.responseEntity.CurrentCommitteesBody;
 import com.oli.HometownPolitician.global.error.FailedError;
 import com.oli.HometownPolitician.global.factory.WebClientFactory;
 import com.oli.HometownPolitician.global.property.OpenApiProperty;
@@ -29,51 +29,46 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-public class PoliticianSchedule {
+public class CommitteeSchedule {
     private final WebClientFactory webClientFactory;
     private final OpenApiProperty openApiProperty;
-    private final PoliticianRepository politicianRepository;
-    private final int DATA_SIZE = 100;
-    private final int DAESU = 21;
-    private final int SCHEDULE_CYCLE_TIME = 1000 * 60 * 60 * 8;
+    private final CommitteeRepository committeeRepository;
+    private final int DATA_SIZE = 50;
 
+    private final int SCHEDULE_CYCLE_TIME = 1000 * 60 * 60 * 24;
     @Scheduled(fixedDelay = SCHEDULE_CYCLE_TIME)
-    public void parseCurrentStatusOfPoliticians() {
-        WebClient politicianClient = webClientFactory.getOpenAssemblyClient();
-        WebClient.UriSpec<?> uriSpec = politicianClient.get();
+    public void parseCurrentStatusOfCommittees() {
+        WebClient client = webClientFactory.getOpenAssemblyClient();
+        WebClient.UriSpec<?> uriSpec = client.get();
         int resultSize = DATA_SIZE;
-
         for (int i = 1; resultSize == DATA_SIZE; i++) {
-            WebClient.RequestHeadersSpec<?> headersSpec = getUriWithParameter(uriSpec, i, DATA_SIZE, "json", DAESU);
+            WebClient.RequestHeadersSpec<?> headersSpec = getUriWithParameter(uriSpec, i, DATA_SIZE, "json");
             ResponseEntity<String> responseResult = getResponse(headersSpec);
             ObjectMapper objectMapper = ObjectMapperProvider.getCustomObjectMapper();
-            CurrentPoliticiansBody currentPoliticiansBody;
+            CurrentCommitteesBody currentCommitteesBody;
             try {
-                currentPoliticiansBody = objectMapper.readValue(responseResult.getBody(), CurrentPoliticiansBody.class);
+                currentCommitteesBody = objectMapper.readValue(responseResult.getBody(), CurrentCommitteesBody.class);
             } catch (Exception error) {
                 throw new FailedError("Json 데이터를 객체로 변환하는데 실패했습니다\n detail: " + error);
             }
-
-            List<CurrentPoliticians> currentPoliticiansList = Arrays.asList(currentPoliticiansBody.getCurrentPoliticiansList());
-            Head head = currentPoliticiansList.get(0).getHead()[1];
+            List<CurrentCommittees> currentCommitteesList = Arrays.asList(currentCommitteesBody.getCurrentCommitteesList());
+            Head head = currentCommitteesList.get(0).getHead()[1];
             if (head.getResult().getCode() == "INFO-200")
                 throw new FailedError("Api로 데이터를 가져오는데 실패했습니다");
-            List<PoliticianInfo> politicianInfos = Arrays.asList(currentPoliticiansList.get(1).getPoliticianInfos());
-            resultSize = politicianInfos.size();
-            List<Politician> politicians = politicianInfos.stream()
-                    .map(Politician::from)
+            List<CommitteeInfo> committeeInfos = Arrays.asList(currentCommitteesList.get(1).getCommitteeInfos());
+            resultSize = committeeInfos.size();
+            List<Committee> committees = committeeInfos.stream()
+                    .map(Committee::from)
                     .toList();
-            updatePolitician(politicians);
+            updateCommittee(committees);
         }
     }
 
-    private void updatePolitician(List<Politician> politicians) {
-        for (Politician politician : politicians) {
-            Optional<Politician> originPolitician = politicianRepository.queryPoliticiansByPolitician(politician);
-            if (originPolitician.isEmpty()) {
-                politicianRepository.save(politician);
-            } else {
-                originPolitician.get().setParty(politician.getParty());
+    private void updateCommittee(List<Committee> committees) {
+        for (Committee committee : committees) {
+            Optional<Committee> originCommittee = committeeRepository.qFindByExternalCommitteeId(committee.getExternalCommitteeId());
+            if (originCommittee.isEmpty()) {
+                committeeRepository.save(committee);
             }
         }
     }
@@ -93,15 +88,14 @@ public class PoliticianSchedule {
                 .block();
     }
 
-    private WebClient.RequestHeadersSpec<?> getUriWithParameter(WebClient.UriSpec<?> uriSpec, int pageIndex, int size, String dataType, int daesu) {
+    private WebClient.RequestHeadersSpec<?> getUriWithParameter(WebClient.UriSpec<?> uriSpec, int pageIndex, int size, String dataType) {
         return uriSpec.uri(
                 uriBuilder -> uriBuilder
-                        .pathSegment("nprlapfmaufmqytet")
+                        .pathSegment("nxrvzonlafugpqjuh")
                         .queryParam("KEY", openApiProperty.getKeys().openAssembly())
                         .queryParam("pindex", pageIndex)
                         .queryParam("pSize", size)
                         .queryParam("Type", dataType)
-                        .queryParam("DAESU", daesu)
                         .build()
         );
     }
