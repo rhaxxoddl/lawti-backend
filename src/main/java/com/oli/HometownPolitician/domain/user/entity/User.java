@@ -46,6 +46,14 @@ public class User extends BaseTimeEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BillUserRelation> billUserRelations = new ArrayList<>();
 
+    @PrePersist
+    public void setup() {
+        if (this.billUserRelations == null)
+            this.billUserRelations = new ArrayList<>();
+        if (this.userTagRelations == null)
+            this.userTagRelations = new ArrayList<>();
+    }
+
     @Builder(builderClassName = "InitBuilder", builderMethodName = "InitBuilder")
     public User(String uuid) {
         Assert.notNull(uuid, "uuid에 null이 들어올 수 없습니다");

@@ -8,6 +8,7 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -38,6 +39,12 @@ public class Committee extends BaseTimeEntity {
 
         this.externalCommitteeId = externalCommitteeId;
         this.name = name;
+    }
+
+    @PrePersist
+    public void setup() {
+        if (this.bills == null)
+            this.bills = new ArrayList<>();
     }
     static public Committee from(CommitteeInfo committeeInfo) {
         if (committeeInfo == null)

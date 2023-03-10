@@ -37,6 +37,12 @@ public class Politician extends BaseTimeEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "politician")
     private List<Proposer> proposeList = new ArrayList<>();
 
+    @PrePersist
+    public void setup() {
+        if (this.proposeList == null)
+            this.proposeList = new ArrayList<>();
+    }
+
     @Builder(builderClassName = "InitBuilder", builderMethodName = "InitBuilder")
     public Politician(String name, String chineseName, String party) {
         Assert.notNull(name, "name에 null이 들어올 수 없습니다");

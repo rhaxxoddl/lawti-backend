@@ -35,6 +35,13 @@ public class Tag extends BaseTimeEntity {
     @Builder.Default
     @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<BillTagRelation> billTagRelations = new ArrayList<>();
+    @PrePersist
+    public void setup() {
+        if (this.userTagRelations == null)
+            this.userTagRelations = new ArrayList<>();
+        if (this.billTagRelations == null)
+            this.billTagRelations = new ArrayList<>();
+    }
 
     public void addBill(Bill bill) {
         BillTagRelation billTagRelation = BillTagRelation.builder()

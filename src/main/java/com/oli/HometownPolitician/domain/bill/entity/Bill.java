@@ -87,6 +87,18 @@ public class Bill extends BaseTimeEntity {
     @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<BillTagRelation> billTagRelations = new ArrayList<>();
 
+    @PrePersist
+    public void setup() {
+        if (this.billTagRelations == null)
+            this.billTagRelations = new ArrayList<>();
+        if (this.billUserRelations == null)
+            this.billUserRelations = new ArrayList<>();
+        if (this.billMessages == null)
+            this.billMessages = new ArrayList<>();
+        if (this.followerCount == null)
+            this.followerCount = 0L;
+    }
+
     public void updateCurrentStage(BillStageType updateStage) {
         this.setCurrentStage(updateStage);
         BillMessage newBillMessage = BillMessage.ByCurrentStageBuilder()
@@ -121,10 +133,5 @@ public class Bill extends BaseTimeEntity {
                 .build();
         this.proposers.add(publicProposer);
         politician.getProposeList().add(publicProposer);
-    }
-
-    @PrePersist
-    void prePersist() {
-        this.followerCount = this.followerCount != null ? this.followerCount : 0L;
     }
 }
