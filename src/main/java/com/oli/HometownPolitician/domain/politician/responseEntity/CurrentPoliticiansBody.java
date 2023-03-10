@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class CurrentStatusOfPoliticiansBody {
+public class CurrentPoliticiansBody {
     @JsonProperty("nprlapfmaufmqytet")
-    private CurrentStatusOfPoliticians[] currentStatusOfPoliticiansList;
+    private CurrentPoliticians[] currentPoliticiansList;
 }

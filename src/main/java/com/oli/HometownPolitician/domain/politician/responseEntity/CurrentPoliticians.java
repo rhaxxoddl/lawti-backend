@@ -5,7 +5,7 @@ import com.oli.HometownPolitician.global.responseEntity.Head;
 import lombok.Data;
 
 @Data
-public class CurrentStatusOfPoliticians {
+public class CurrentPoliticians {
     private Head[] head;
     @JsonProperty("row")
     private PoliticianInfo[] politicianInfos;

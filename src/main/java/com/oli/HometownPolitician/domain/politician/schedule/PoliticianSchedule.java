@@ -3,8 +3,8 @@ package com.oli.HometownPolitician.domain.politician.schedule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oli.HometownPolitician.domain.politician.entity.Politician;
 import com.oli.HometownPolitician.domain.politician.repository.PoliticianRepository;
-import com.oli.HometownPolitician.domain.politician.responseEntity.CurrentStatusOfPoliticians;
-import com.oli.HometownPolitician.domain.politician.responseEntity.CurrentStatusOfPoliticiansBody;
+import com.oli.HometownPolitician.domain.politician.responseEntity.CurrentPoliticians;
+import com.oli.HometownPolitician.domain.politician.responseEntity.CurrentPoliticiansBody;
 import com.oli.HometownPolitician.domain.politician.responseEntity.PoliticianInfo;
 import com.oli.HometownPolitician.global.error.FailedError;
 import com.oli.HometownPolitician.global.factory.WebClientFactory;
@@ -46,15 +46,15 @@ public class PoliticianSchedule {
             WebClient.RequestHeadersSpec<?> headersSpec = getUriWithParameter(uriSpec, i, DATA_SIZE, "json", DAESU);
             ResponseEntity<String> responseResult = getResponse(headersSpec);
             ObjectMapper objectMapper = ObjectMapperProvider.getCustomObjectMapper();
-            CurrentStatusOfPoliticiansBody currentStatusOfPoliticiansResult;
+            CurrentPoliticiansBody currentStatusOfPoliticiansResult;
             try {
-                currentStatusOfPoliticiansResult = objectMapper.readValue(responseResult.getBody(), CurrentStatusOfPoliticiansBody.class);
+                currentStatusOfPoliticiansResult = objectMapper.readValue(responseResult.getBody(), CurrentPoliticiansBody.class);
             } catch (Exception error) {
                 throw new FailedError("Json 데이터를 객체로 변환하는데 실패했습니다\n detail: " + error);
             }
 
-            List<CurrentStatusOfPoliticians> currentStatusOfPoliticiansList = Arrays.asList(currentStatusOfPoliticiansResult.getCurrentStatusOfPoliticiansList());
-            List<PoliticianInfo> politicianInfos = Arrays.asList(currentStatusOfPoliticiansList.get(1).getPoliticianInfos());
+            List<CurrentPoliticians> currentPoliticiansList = Arrays.asList(currentStatusOfPoliticiansResult.getCurrentPoliticiansList());
+            List<PoliticianInfo> politicianInfos = Arrays.asList(currentPoliticiansList.get(1).getPoliticianInfos());
             resultSize = politicianInfos.size();
             List<Politician> politicians = politicianInfos.stream()
                     .map(Politician::from)
