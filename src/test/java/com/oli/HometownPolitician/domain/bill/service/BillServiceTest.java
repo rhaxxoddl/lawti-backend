@@ -253,7 +253,7 @@ class BillServiceTest {
 
     private Committee initCommittee() {
         Committee committee = Committee.builder()
-                .external_committee_id("test committee id")
+                .externalCommitteeId("test committee id")
                 .name("test name")
                 .build();
         committeeRepository.save(committee);
@@ -302,7 +302,9 @@ class BillServiceTest {
     }
 
     private void initUser() {
-        User user = new User(USER_UUID);
+        User user = User.InitBuilder()
+                .uuid(USER_UUID)
+                .build();
         userRepository.save(user);
     }
 

@@ -86,7 +86,9 @@ class UserTagRelationRepositoryImplTest {
     }
 
     private void insertUserData() {
-        User user = new User(USER_UUID);
+        User user = User.InitBuilder()
+                .uuid(USER_UUID)
+                .build();
         userRepository.save(user);
     }
 

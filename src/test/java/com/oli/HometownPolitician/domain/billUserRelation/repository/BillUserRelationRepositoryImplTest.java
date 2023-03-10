@@ -296,7 +296,7 @@ class BillUserRelationRepositoryImplTest {
             committeeList.add(Committee.builder()
                     .id(i + 1)
                     .name(committeeNameList.get(i.intValue()))
-                    .external_committee_id((12345L + i.toString()))
+                    .externalCommitteeId((12345L + i.toString()))
                     .build());
         }
         committeeRepository.saveAll(committeeList);

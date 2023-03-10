@@ -7,6 +7,7 @@ import com.oli.HometownPolitician.domain.tag.entity.Tag;
 import com.oli.HometownPolitician.domain.userTagRelation.entity.UserTagRelation;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
 import com.oli.HometownPolitician.global.error.NotFoundError;
+import io.jsonwebtoken.lang.Assert;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -45,8 +46,9 @@ public class User extends BaseTimeEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BillUserRelation> billUserRelations = new ArrayList<>();
 
-    @Builder
+    @Builder(builderClassName = "InitBuilder", builderMethodName = "InitBuilder")
     public User(String uuid) {
+        Assert.notNull(uuid, "uuid에 null이 들어올 수 없습니다");
         this.uuid = uuid;
     }
 

@@ -24,26 +24,26 @@ public class Committee extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "COMMITTEE_SEQ")
     @Column(name = "committee_id", unique = true, nullable = false)
     private Long id;
-    @Column(name = "external_committee_id", unique = true, nullable = false)
-    private String external_committee_id;
+    @Column(name = "externalCommitteeId", unique = true, nullable = false)
+    private String externalCommitteeId;
     @Column(name = "name", nullable = false)
     private String name;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "committee")
     private List<Bill> bills;
 
     @Builder(builderClassName = "InitBuilder", builderMethodName = "InitBuilder")
-    public Committee(String external_committee_id, String name) {
-        Assert.notNull(external_committee_id, "external_committee_id에 null이 들어올 수 없습니다");
+    public Committee(String externalCommitteeId, String name) {
+        Assert.notNull(externalCommitteeId, "externalCommitteeId에 null이 들어올 수 없습니다");
         Assert.notNull(name, "name에 null이 들어올 수 없습니다");
 
-        this.external_committee_id = external_committee_id;
+        this.externalCommitteeId = externalCommitteeId;
         this.name = name;
     }
     static public Committee from(CommitteeInfo committeeInfo) {
         if (committeeInfo == null)
             return null;
         return Committee.InitBuilder()
-                .external_committee_id(committeeInfo.getHr_dept_cd())
+                .externalCommitteeId(committeeInfo.getHr_dept_cd())
                 .name(committeeInfo.getCommittee_name())
                 .build();
     }
