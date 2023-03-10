@@ -38,7 +38,6 @@ public class PoliticianSchedule {
 
     @Scheduled(fixedDelay = SCHEDULE_CYCLE_TIME)
     public void parseCurrentStatusOfPoliticians() {
-        System.out.println("start parseCurrentStatusOfPoliticians");
         WebClient politicianClient = webClientFactory.getOpenAssemblyClient();
         WebClient.UriSpec<?> uriSpec = politicianClient.get();
         int resultSize = DATA_SIZE;
