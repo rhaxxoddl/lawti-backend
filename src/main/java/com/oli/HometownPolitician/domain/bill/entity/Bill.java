@@ -3,6 +3,7 @@ package com.oli.HometownPolitician.domain.bill.entity;
 
 import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.bill.enumeration.PlenaryResultType;
+import com.oli.HometownPolitician.domain.bill.responseEntity.publicData.getBillInfoList.BillInfo;
 import com.oli.HometownPolitician.domain.billMessage.entity.BillMessage;
 import com.oli.HometownPolitician.domain.billTagRelation.entity.BillTagRelation;
 import com.oli.HometownPolitician.domain.billUserRelation.entity.BillUserRelation;
@@ -11,6 +12,7 @@ import com.oli.HometownPolitician.domain.politician.entity.Politician;
 import com.oli.HometownPolitician.domain.proposer.entity.Proposer;
 import com.oli.HometownPolitician.domain.proposer.enumeration.ProposerRole;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
+import io.jsonwebtoken.lang.Assert;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -37,7 +39,7 @@ public class Bill extends BaseTimeEntity {
     @Column(name = "bill_external_id", unique = true, nullable = false)
     private String billExternalId;
     @Column(name = "number", nullable = false)
-    private Long number;
+    private int number;
     @Column(name = "title", nullable = false)
     private String title;
     @Builder.Default
@@ -99,13 +101,49 @@ public class Bill extends BaseTimeEntity {
             this.followerCount = 0L;
     }
 
-    public void updateCurrentStage(BillStageType updateStage) {
-        this.setCurrentStage(updateStage);
-        BillMessage newBillMessage = BillMessage.ByCurrentStageBuilder()
-                .bill(this)
-                .currentStage(updateStage)
+    @Builder(builderClassName = "InitBuilder", builderMethodName = "InitBuilder")
+    public Bill(String billExternalId,
+                int number,
+                String title,
+                LocalDate proposeDate,
+                BillStageType currentStage,
+                String summary) {
+        Assert.notNull(billExternalId, "billExternalId에 null이 들어올 수 없습니다");
+        Assert.notNull(number, "number에 null이 들어올 수 없습니다");
+        Assert.notNull(title, "title에 null이 들어올 수 없습니다");
+        Assert.notNull(proposeDate, "proposeDate에 null이 들어올 수 없습니다");
+        Assert.notNull(currentStage, "currentStage에 null이 들어올 수 없습니다");
+        Assert.notNull(summary, "summary에 null이 들어올 수 없습니다");
+
+        this.billExternalId = billExternalId;
+        this.number = number;
+        this.title = title;
+        this.proposeDate = proposeDate;
+        this.currentStage = currentStage;
+        this.summary = summary;
+    }
+
+    static public Bill from(BillInfo billInfo) {
+        return Bill.InitBuilder()
+                .billExternalId(billInfo.getBillId())
+                .number(billInfo.getBillNo())
+                .title(billInfo.getBillName())
+                .proposeDate(billInfo.getProposeDt())
+                .currentStage(BillStageType.valueOf(billInfo.getProcStageCd()))
+                .summary(billInfo.getSummary())
                 .build();
-        this.billMessages.add(newBillMessage);
+    }
+
+    public void updateCurrentStage(BillStageType updateStage) {
+        if (!this.currentStage.equals(updateStage)) {
+            this.setCurrentStage(updateStage);
+            BillMessage newBillMessage = BillMessage.ByCurrentStageBuilder()
+                    .bill(this)
+                    .currentStage(updateStage)
+                    .build();
+            this.billMessages.add(newBillMessage);
+            // TODO 해당 Bill을 Follow하고 있는 사람에게 noti 보내는 로직 추가
+        }
     }
 
     public void increaseFollowerCount() {
