@@ -54,7 +54,7 @@ public class PoliticianSchedule {
             }
 
             List<CurrentStatusOfPoliticians> currentStatusOfPoliticiansList = Arrays.asList(currentStatusOfPoliticiansResult.getCurrentStatusOfPoliticiansList());
-            List<PoliticianInfo> politicianInfos = Arrays.asList(currentStatusOfPoliticiansList.get(1).getPoliticians());
+            List<PoliticianInfo> politicianInfos = Arrays.asList(currentStatusOfPoliticiansList.get(1).getPoliticianInfos());
             resultSize = politicianInfos.size();
             List<Politician> politicians = politicianInfos.stream()
                     .map(Politician::from)

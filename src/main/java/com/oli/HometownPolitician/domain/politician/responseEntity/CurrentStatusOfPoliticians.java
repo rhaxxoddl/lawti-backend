@@ -8,5 +8,5 @@ import lombok.Data;
 public class CurrentStatusOfPoliticians {
     private Head[] head;
     @JsonProperty("row")
-    private PoliticianInfo[] politicians;
+    private PoliticianInfo[] politicianInfos;
 }
