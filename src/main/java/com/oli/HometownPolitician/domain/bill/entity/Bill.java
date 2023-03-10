@@ -129,7 +129,9 @@ public class Bill extends BaseTimeEntity {
                 .number(billInfo.getBillNo())
                 .title(billInfo.getBillName())
                 .proposeDate(billInfo.getProposeDt())
-                .currentStage(BillStageType.valueOf(billInfo.getProcStageCd()))
+                .currentStage(
+                        BillStageType.valueOfLable(billInfo.getProcStageCd())
+                )
                 .summary(billInfo.getSummary())
                 .build();
     }

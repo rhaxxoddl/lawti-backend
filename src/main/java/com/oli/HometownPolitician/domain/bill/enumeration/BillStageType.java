@@ -1,7 +1,6 @@
 package com.oli.HometownPolitician.domain.bill.enumeration;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,7 +28,7 @@ public enum BillStageType {
     private static final Map<String, BillStageType> BY_LABEL =
             Stream.of(values())
                     .collect(Collectors.toMap(BillStageType::getLable, e -> e));
-    public static Optional<BillStageType> valueOfLable(String lable) {
-        return Optional.ofNullable(BY_LABEL.get(lable));
+    public static BillStageType valueOfLable(String lable) {
+        return BY_LABEL.get(lable);
     }
 }
