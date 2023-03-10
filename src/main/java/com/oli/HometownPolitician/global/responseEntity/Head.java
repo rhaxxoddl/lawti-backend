@@ -1,4 +1,4 @@
-package com.oli.HometownPolitician.domain.politician.responseEntity;
+package com.oli.HometownPolitician.global.responseEntity;
 
 import lombok.Data;
 
