@@ -301,7 +301,7 @@ class BillMessageServiceTest {
             bills.add(Bill.builder()
                     .title("test title " + i)
                     .billExternalId("testExternalBillIds" + i)
-                    .number(12341568L + i)
+                    .number(12341568 + i)
                     .proposeDate(LocalDate.now())
                     .committee(committeeList.get(i % committeeList.size()))
                     .committeeDate(LocalDate.now())

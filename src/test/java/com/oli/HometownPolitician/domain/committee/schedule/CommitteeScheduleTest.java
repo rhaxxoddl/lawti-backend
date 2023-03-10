@@ -32,6 +32,5 @@ class CommitteeScheduleTest {
         List<Committee> afterCommittees = committeeRepository.qFindAll();
         Assertions.assertThat(afterCommittees).isNotNull();
         Assertions.assertThat(afterCommittees.size()).isGreaterThan(10);
-
     }
 }
