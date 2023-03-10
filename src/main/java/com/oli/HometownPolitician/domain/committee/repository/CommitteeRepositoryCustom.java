@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface CommitteeRepositoryCustom {
     List<Committee> qFindAll();
-    Optional<Committee> qFindByExternalCommitteeId(String ex);
+    Optional<Committee> qFindByExternalCommitteeId(String externalCommitteeId);
 }
