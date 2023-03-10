@@ -73,7 +73,7 @@ public class CommitteeSchedule {
         }
     }
 
-    private static ResponseEntity<String> getResponse(WebClient.RequestHeadersSpec<?> headersSpec) {
+    private ResponseEntity<String> getResponse(WebClient.RequestHeadersSpec<?> headersSpec) {
         return headersSpec
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML)
