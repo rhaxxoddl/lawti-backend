@@ -1,7 +1,9 @@
 package com.oli.HometownPolitician.domain.committee.entity;
 
 import com.oli.HometownPolitician.domain.bill.entity.Bill;
+import com.oli.HometownPolitician.domain.committee.responseEntity.CommitteeInfo;
 import com.oli.HometownPolitician.global.entity.BaseTimeEntity;
+import io.jsonwebtoken.lang.Assert;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -28,4 +30,21 @@ public class Committee extends BaseTimeEntity {
     private String name;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "committee")
     private List<Bill> bills;
+
+    @Builder(builderClassName = "InitBuilder", builderMethodName = "InitBuilder")
+    public Committee(String external_committee_id, String name) {
+        Assert.notNull(external_committee_id, "external_committee_id에 null이 들어올 수 없습니다");
+        Assert.notNull(name, "name에 null이 들어올 수 없습니다");
+
+        this.external_committee_id = external_committee_id;
+        this.name = name;
+    }
+    public Committee from(CommitteeInfo committeeInfo) {
+        if (committeeInfo == null)
+            return null;
+        return Committee.InitBuilder()
+                .external_committee_id(committeeInfo.getHr_dept_cd())
+                .name(committeeInfo.getCommittee_name())
+                .build();
+    }
 }
