@@ -49,6 +49,7 @@ public class Bill extends BaseTimeEntity {
     private LocalDate proposeDate;
     @Column(name = "propose_assembly")
     private Long proposeAssembly;
+    @Lob
     @Column(name = "summary")
     private String summary;
     @Column(name = "bill_pdf_uri")
@@ -112,6 +113,8 @@ public class Bill extends BaseTimeEntity {
         Assert.notNull(number, "number에 null이 들어올 수 없습니다");
         Assert.notNull(title, "title에 null이 들어올 수 없습니다");
         Assert.notNull(proposeDate, "proposeDate에 null이 들어올 수 없습니다");
+        if (currentStage == null)
+            System.out.println("asfasdf");
         Assert.notNull(currentStage, "currentStage에 null이 들어올 수 없습니다");
 
         this.billExternalId = billExternalId;
