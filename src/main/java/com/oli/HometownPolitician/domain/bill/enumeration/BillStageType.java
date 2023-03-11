@@ -10,10 +10,13 @@ public enum BillStageType {
     COMMITTEE_REVIEW("소관위심사"),
     SYSTEMATIC_REVIEW("체계자구심사"), // 법사위 심사
     MAIN_SESSION_AGENDA("본회의부의안건"),
+    MAIN_SESSION_DECISION("본회의의결"),
+    GOVERNMENT_TRANSFER("정부이송"),
     PROMULGATION("공포"),
     MAIN_SESSION_REJECTION("본회의불부의"),
     ALTERNATIVE_DISCARD("대안반영폐기"),
     DISCARD("폐기"),
+    WITHDRAW("철회"),
     WITHDRAWAL("철수");
 
     private final String lable;
@@ -29,6 +32,9 @@ public enum BillStageType {
             Stream.of(values())
                     .collect(Collectors.toMap(BillStageType::getLable, e -> e));
     public static BillStageType valueOfLable(String lable) {
-        return BY_LABEL.get(lable);
+        BillStageType billStageType = BY_LABEL.get(lable);
+        if (billStageType == null)
+            throw new EnumConstantNotPresentException(BillStageType.class, lable);
+        return billStageType;
     }
 }

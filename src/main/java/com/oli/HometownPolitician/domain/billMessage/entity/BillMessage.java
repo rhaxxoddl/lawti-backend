@@ -53,10 +53,13 @@ public class BillMessage extends BaseTimeEntity {
             case COMMITTEE_REVIEW -> "이(가) 상임위원회에서 심사중이에요";
             case SYSTEMATIC_REVIEW -> "이(가) 법제사법위원회에서 체계·자구 심사중이에요";
             case MAIN_SESSION_AGENDA -> "이(가) 국회 본회의에 부의되었어요";
+            case MAIN_SESSION_DECISION -> "이(가) 국회 본회의에서 의결 중이에요";
+            case GOVERNMENT_TRANSFER -> "이(가) 정부이송 중이에요";
             case PROMULGATION -> "이(가) 공포되었어요";
             case MAIN_SESSION_REJECTION -> "이(가) 국회 본회의에 불부의되었어요";
             case ALTERNATIVE_DISCARD -> "이(가) 대안이 반영되어 폐기되었어요";
             case DISCARD -> "이(가) 폐기되었어요";
+            case WITHDRAW -> "이(가) 철회되었어요";
             case WITHDRAWAL -> "이(가) 철수되었어요";
         };
     }
