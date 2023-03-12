@@ -56,17 +56,29 @@ public class CommitteeSchedule {
             } catch (Exception error) {
                 throw new FailedError("Json 데이터를 객체로 변환하는데 실패했습니다\n detail: " + error);
             }
-            List<CurrentCommittees> currentCommitteesList = Arrays.asList(currentCommitteesBody.getCurrentCommitteesList());
-            Head head = currentCommitteesList.get(0).getHead()[1];
-            if (head.getResult().getCode() == "INFO-200")
-                throw new FailedError("Api로 데이터를 가져오는데 실패했습니다");
-            List<CommitteeInfo> committeeInfos = Arrays.asList(currentCommitteesList.get(1).getCommitteeInfos());
-            resultSize = committeeInfos.size();
-            List<Committee> committees = committeeInfos.stream()
-                    .map(Committee::from)
-                    .toList();
+            if (currentCommitteesBody == null || currentCommitteesBody.getCurrentCommitteesList() == null)
+                break;
+            List<Committee> committees = extractCommittees(currentCommitteesBody);
+            if (committees == null || committees.isEmpty())
+                break;
+            resultSize = committees.size();
             updateCommittee(committees);
         }
+    }
+
+    private List<Committee> extractCommittees(CurrentCommitteesBody currentCommitteesBody) {
+        List<CurrentCommittees> currentCommitteesList = Arrays.asList(currentCommitteesBody.getCurrentCommitteesList());
+        if (currentCommitteesList.isEmpty() || currentCommitteesList.get(0) == null || currentCommitteesList.get(0).getHead() == null)
+            return null;
+        Head head = currentCommitteesList.get(0).getHead()[1];
+        if (head.getResult().getCode().equals("INFO-200"))
+            throw new FailedError("Api로 데이터를 가져오는데 실패했습니다");
+        if (currentCommitteesList.get(1) == null || currentCommitteesList.get(1).getCommitteeInfos() == null)
+            return null;
+        List<CommitteeInfo> committeeInfos = Arrays.asList(currentCommitteesList.get(1).getCommitteeInfos());
+        return committeeInfos.stream()
+                .map(Committee::from)
+                .toList();
     }
 
     private void updateCommittee(List<Committee> committees) {

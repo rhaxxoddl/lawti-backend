@@ -53,18 +53,29 @@ public class PoliticianSchedule {
             } catch (Exception error) {
                 throw new FailedError("Json 데이터를 객체로 변환하는데 실패했습니다\n detail: " + error);
             }
-
-            List<CurrentPoliticians> currentPoliticiansList = Arrays.asList(currentPoliticiansBody.getCurrentPoliticiansList());
-            Head head = currentPoliticiansList.get(0).getHead()[1];
-            if (head.getResult().getCode() == "INFO-200")
-                throw new FailedError("Api로 데이터를 가져오는데 실패했습니다");
-            List<PoliticianInfo> politicianInfos = Arrays.asList(currentPoliticiansList.get(1).getPoliticianInfos());
-            resultSize = politicianInfos.size();
-            List<Politician> politicians = politicianInfos.stream()
-                    .map(Politician::from)
-                    .toList();
+            if (currentPoliticiansBody == null || currentPoliticiansBody.getCurrentPoliticiansList() == null)
+                break;
+            List<Politician> politicians = extractPoliticians(currentPoliticiansBody);
+            if (politicians == null || politicians.isEmpty())
+                break;
+            resultSize = politicians.size();
             updatePolitician(politicians);
         }
+    }
+
+    private List<Politician> extractPoliticians(CurrentPoliticiansBody currentPoliticiansBody) {
+        List<CurrentPoliticians> currentPoliticiansList = Arrays.asList(currentPoliticiansBody.getCurrentPoliticiansList());
+        if (currentPoliticiansList.isEmpty())
+            return null;
+        Head head = currentPoliticiansList.get(0).getHead()[1];
+        if (head.getResult().getCode().equals("INFO-200"))
+            throw new FailedError("Api로 데이터를 가져오는데 실패했습니다");
+        if (currentPoliticiansList.get(1) == null || currentPoliticiansList.get(1).getPoliticianInfos() == null)
+            return null;
+        List<PoliticianInfo> politicianInfos = Arrays.asList(currentPoliticiansList.get(1).getPoliticianInfos());
+        return politicianInfos.stream()
+                .map(Politician::from)
+                .toList();
     }
 
     private void updatePolitician(List<Politician> politicians) {
