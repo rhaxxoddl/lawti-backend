@@ -3,6 +3,8 @@ package com.oli.HometownPolitician.domain.bill.entity;
 
 import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.bill.enumeration.PlenaryResultType;
+import com.oli.HometownPolitician.domain.bill.enumeration.ProposerKind;
+import com.oli.HometownPolitician.domain.bill.responseEntity.openAssembly.searchBills.SearchBill;
 import com.oli.HometownPolitician.domain.bill.responseEntity.publicData.getBillInfoList.BillInfo;
 import com.oli.HometownPolitician.domain.billMessage.entity.BillMessage;
 import com.oli.HometownPolitician.domain.billTagRelation.entity.BillTagRelation;
@@ -42,13 +44,15 @@ public class Bill extends BaseTimeEntity {
     private int number;
     @Column(name = "title", nullable = false)
     private String title;
+    @Column(name ="proposer_kind")
+    private ProposerKind proposerKind;
     @Builder.Default
     @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Proposer> proposers = new ArrayList<>();
     @Column(name = "propose_date", nullable = false)
     private LocalDate proposeDate;
     @Column(name = "propose_assembly")
-    private Long proposeAssembly;
+    private int proposeAssembly;
     @Lob
     @Column(name = "summary")
     private String summary;
@@ -110,7 +114,6 @@ public class Bill extends BaseTimeEntity {
                 BillStageType currentStage,
                 String summary) {
         Assert.notNull(billExternalId, "billExternalId에 null이 들어올 수 없습니다");
-        Assert.notNull(number, "number에 null이 들어올 수 없습니다");
         Assert.notNull(title, "title에 null이 들어올 수 없습니다");
         Assert.notNull(proposeDate, "proposeDate에 null이 들어올 수 없습니다");
         if (currentStage == null)
@@ -124,8 +127,36 @@ public class Bill extends BaseTimeEntity {
         this.currentStage = currentStage;
         this.summary = summary;
     }
+    @Builder(builderClassName = "SearchBillsBuilder", builderMethodName = "SearchBillsBuilder")
+    public Bill(String billExternalId,
+                int number,
+                String title,
+                LocalDate proposeDate,
+                ProposerKind proposerKind,
+                Committee committee,
+                LocalDate committeeDate,
+                PlenaryResultType plenaryResult,
+                LocalDate plenaryProcessingDate,
+                int proposeAssembly
+                ) {
+        Assert.notNull(billExternalId, "billExternalId에 null이 들어올 수 없습니다");
+        Assert.notNull(title, "title에 null이 들어올 수 없습니다");
+        Assert.notNull(proposeDate, "proposeDate에 null이 들어올 수 없습니다");
+        Assert.notNull(proposerKind, "proposerKind에 null이 들어올 수 없습니다");
 
-    static public Bill from(BillInfo billInfo) {
+        this.billExternalId = billExternalId;
+        this.number = number;
+        this.title = title;
+        this.proposeDate = proposeDate;
+        this.proposerKind = proposerKind;
+        this.committee = committee;
+        this.committeeDate = committeeDate;
+        this.plenaryResult = plenaryResult;
+        this.plenaryProcessingDate = plenaryProcessingDate;
+        this.proposeAssembly = proposeAssembly;
+    }
+
+    static public Bill fromByBillInfo(BillInfo billInfo) {
         return Bill.InitBuilder()
                 .billExternalId(billInfo.getBillId())
                 .number(billInfo.getBillNo())
@@ -137,7 +168,19 @@ public class Bill extends BaseTimeEntity {
                 .summary(billInfo.getSummary())
                 .build();
     }
-
+    static public Bill fromSearchBill(SearchBill searchBill) {
+        return Bill.SearchBillsBuilder()
+                .billExternalId(searchBill.getBill_id())
+                .number(searchBill.getBill_no())
+                .title(searchBill.getBill_name())
+                .proposeDate(searchBill.getPropose_dt())
+                .proposerKind(ProposerKind.valueOfLable(searchBill.getProposer_kind()))
+                .committeeDate(searchBill.getCommittee_dt())
+                .plenaryResult(PlenaryResultType.valueOfLable(searchBill.getProc_result_cd()))
+                .plenaryProcessingDate(searchBill.getProc_dt())
+                .proposeAssembly(searchBill.getAge())
+                .build();
+    }
     public void updateCurrentStage(BillStageType updateStage) {
         if (!this.currentStage.equals(updateStage)) {
             this.setCurrentStage(updateStage);
@@ -149,6 +192,7 @@ public class Bill extends BaseTimeEntity {
             // TODO 해당 Bill을 Follow하고 있는 사람에게 noti 보내는 로직 추가
         }
     }
+
 
     public void increaseFollowerCount() {
         this.followerCount++;
