@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,9 +34,7 @@ public class PoliticianSchedule {
     private final PoliticianRepository politicianRepository;
     private final int DATA_SIZE = 100;
     private final int DAESU = 21;
-    private final int SCHEDULE_CYCLE_TIME = 1000 * 60 * 60 * 8;
 
-    @Scheduled(fixedDelay = SCHEDULE_CYCLE_TIME)
     public void parseCurrentStatusOfPoliticians() {
         WebClient politicianClient = webClientFactory.getOpenAssemblyClient();
         WebClient.UriSpec<?> uriSpec = politicianClient.get();

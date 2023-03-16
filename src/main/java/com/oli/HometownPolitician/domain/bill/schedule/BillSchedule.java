@@ -9,12 +9,12 @@ import com.oli.HometownPolitician.domain.bill.enumeration.PlenaryResultType;
 import com.oli.HometownPolitician.domain.bill.enumeration.ProposerKind;
 import com.oli.HometownPolitician.domain.bill.repository.BillRepository;
 import com.oli.HometownPolitician.domain.bill.responseEntity.openAssembly.searchBills.SearchBill;
+import com.oli.HometownPolitician.domain.bill.responseEntity.openAssembly.searchBills.SearchBills;
 import com.oli.HometownPolitician.domain.bill.responseEntity.openAssembly.searchBills.SearchBillsBody;
 import com.oli.HometownPolitician.domain.bill.responseEntity.publicData.getBillInfoList.BillInfo;
 import com.oli.HometownPolitician.domain.bill.responseEntity.publicData.getBillInfoList.GetBillInfoListResponseBody;
 import com.oli.HometownPolitician.domain.committee.entity.Committee;
 import com.oli.HometownPolitician.domain.committee.repository.CommitteeRepository;
-import com.oli.HometownPolitician.global.error.NotFoundError;
 import com.oli.HometownPolitician.global.factory.WebClientFactory;
 import com.oli.HometownPolitician.global.property.OpenApiProperty;
 import com.oli.HometownPolitician.global.provider.ObjectMapperProvider;
@@ -22,11 +22,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -41,31 +41,36 @@ public class BillSchedule {
     private final OpenApiProperty openApiProperty;
     private final BillRepository billRepository;
     private final CommitteeRepository committeeRepository;
-    private final int DATA_SIZE = 250;
-    private final int SCHEDULE_CYCLE_TIME = 1000 * 60 * 60 * 8;
+    private final int GET_BILL_INFO_LIST_DATA_SIZE = 250;
+    private final int SEARCH_BILLS_DATA_SIZE = 300;
 
-    //    TODO Bill을 동적으로 파싱할 수 있게 변경
-    @Scheduled(fixedDelay = SCHEDULE_CYCLE_TIME)
-    public void parseGetBillInfoList1() {
+    public void parseGetBillInfoList(int startIdx, int depth) {
         WebClient client = webClientFactory.getPublicPortalBillInfoService2Client();
         WebClient.UriSpec<?> uriSpec = client.get();
 
-        int resultSize = DATA_SIZE;
-        for (int i = 1; resultSize == DATA_SIZE && i <= 40; i++) {
-            System.out.println("Bill Page: " + i);
-            WebClient.RequestHeadersSpec<?> headersSpec = getBillInfoListUriWithParameter(uriSpec, i, DATA_SIZE);
-            ResponseEntity<String> responseResult = getResponse(headersSpec);
-            if (responseResult.getStatusCode().is4xxClientError()) {
-                System.err.println("[ERROR] API를 잘못된 형식으로 호출했습니다");
-                continue;
-            } else if (responseResult.getStatusCode().is5xxServerError()) {
-                System.err.println("[ERROR] API 서버 오류");
-                break;
-            }
+        int resultSize = GET_BILL_INFO_LIST_DATA_SIZE;
+        for (int i = startIdx; resultSize == GET_BILL_INFO_LIST_DATA_SIZE; i++) {
+            System.out.println("GetBillInfoList Page: " + i);
+            WebClient.RequestHeadersSpec<?> headersSpec = getBillInfoListUriWithParameter(uriSpec, i, GET_BILL_INFO_LIST_DATA_SIZE);
+            ResponseEntity<String> responseResult;
             ObjectMapper objectMapper = ObjectMapperProvider.getCustomObjectMapper().registerModule(new JavaTimeModule());
-            GetBillInfoListResponseBody getBillInfoListResponseBody;
+            GetBillInfoListResponseBody getBillInfoListResponseBody = null;
             try {
+                responseResult = getResponse(headersSpec);
                 getBillInfoListResponseBody = objectMapper.readValue(responseResult.getBody(), GetBillInfoListResponseBody.class);
+            } catch (WebClientResponseException e) {
+                if (depth >= 5)
+                    throw e;
+                if (e.getStatusCode().is3xxRedirection()) {
+                    parseGetBillInfoList(i, depth + 1);
+                    break;
+                }else if (e.getStatusCode().is4xxClientError()) {
+                    parseGetBillInfoList(i, depth + 1);
+                    break;
+                } else if (e.getStatusCode().is5xxServerError()) {
+                    System.err.println("[ERROR] API 서버 오류");
+                    break;
+                }
             } catch (JsonMappingException e) {
                 throw new RuntimeException(e);
             } catch (JsonProcessingException e) {
@@ -82,110 +87,50 @@ public class BillSchedule {
         }
     }
 
-    @Scheduled(fixedDelay = SCHEDULE_CYCLE_TIME)
-    public void parseGetBillInfoList2() {
-        WebClient client = webClientFactory.getPublicPortalBillInfoService2Client();
-        WebClient.UriSpec<?> uriSpec = client.get();
-        int resultSize = DATA_SIZE;
-        for (int i = 41; resultSize == DATA_SIZE && i <= 80; i++) {
-            System.out.println("Bill Page: " + i);
-            WebClient.RequestHeadersSpec<?> headersSpec = getBillInfoListUriWithParameter(uriSpec, i, DATA_SIZE);
-            ResponseEntity<String> responseResult = getResponse(headersSpec);
-            if (responseResult.getStatusCode().is4xxClientError()) {
-                System.err.println("[ERROR] API를 잘못된 형식으로 호출했습니다");
-                continue;
-            } else if (responseResult.getStatusCode().is5xxServerError()) {
-                System.err.println("[ERROR] API 서버 오류");
-                break;
-            }
-            ObjectMapper objectMapper = ObjectMapperProvider.getCustomObjectMapper().registerModule(new JavaTimeModule());
-            GetBillInfoListResponseBody getBillInfoListResponseBody;
-            try {
-                getBillInfoListResponseBody = objectMapper.readValue(responseResult.getBody(), GetBillInfoListResponseBody.class);
-            } catch (JsonMappingException e) {
-                throw new RuntimeException(e);
-            } catch (JsonProcessingException e) {
-                System.err.println(e);
-                continue;
-            }
-            if (getBillInfoListResponseBody == null)
-                break;
-            List<Bill> bills = extractBillsFromGetBillInfoListResponseBody(getBillInfoListResponseBody);
-            if (bills == null || bills.isEmpty())
-                break;
-            resultSize = bills.size();
-            reflectBill(bills);
-        }
-    }
-
-    @Scheduled(fixedDelay = SCHEDULE_CYCLE_TIME)
-    public void parseGetBillInfoList3() {
-        WebClient client = webClientFactory.getPublicPortalBillInfoService2Client();
-        WebClient.UriSpec<?> uriSpec = client.get();
-        int resultSize = DATA_SIZE;
-        for (int i = 81; resultSize == DATA_SIZE && i <= 120; i++) {
-            System.out.println("Bill Page: " + i);
-            WebClient.RequestHeadersSpec<?> headersSpec = getBillInfoListUriWithParameter(uriSpec, i, DATA_SIZE);
-            ResponseEntity<String> responseResult = getResponse(headersSpec);
-            if (responseResult.getStatusCode().is4xxClientError()) {
-                System.err.println("[ERROR] API를 잘못된 형식으로 호출했습니다");
-                continue;
-            } else if (responseResult.getStatusCode().is5xxServerError()) {
-                System.err.println("[ERROR] API 서버 오류");
-                break;
-            }
-            ObjectMapper objectMapper = ObjectMapperProvider.getCustomObjectMapper().registerModule(new JavaTimeModule());
-            GetBillInfoListResponseBody getBillInfoListResponseBody;
-            try {
-                getBillInfoListResponseBody = objectMapper.readValue(responseResult.getBody(), GetBillInfoListResponseBody.class);
-            } catch (JsonMappingException e) {
-                throw new RuntimeException(e);
-            } catch (JsonProcessingException e) {
-                System.err.println(e);
-                continue;
-            }
-            if (getBillInfoListResponseBody == null)
-                break;
-            List<Bill> bills = extractBillsFromGetBillInfoListResponseBody(getBillInfoListResponseBody);
-            if (bills == null || bills.isEmpty())
-                break;
-            resultSize = bills.size();
-            reflectBill(bills);
-        }
-    }
-
-    @Scheduled(fixedDelay = SCHEDULE_CYCLE_TIME)
-    public void parseSearchBills() {
+    public void parseSearchBills(int start_idx, int depth) {
         WebClient client = webClientFactory.getOpenAssemblyClient();
         WebClient.UriSpec<?> uriSpec = client.get();
-        int resultSize = DATA_SIZE;
-        for (int i = 287; resultSize == DATA_SIZE && i <= 120; i++) {
-            System.out.println("Bill Page: " + i);
-            WebClient.RequestHeadersSpec<?> headersSpec = searchBillsUriWithParameter(uriSpec, i, DATA_SIZE);
-            ResponseEntity<String> responseResult = getResponse(headersSpec);
-            if (responseResult.getStatusCode().is4xxClientError()) {
-                System.err.println("[ERROR] API를 잘못된 형식으로 호출했습니다");
-                continue;
-            } else if (responseResult.getStatusCode().is5xxServerError()) {
-                System.err.println("[ERROR] API 서버 오류");
-                break;
-            }
+        int resultSize = SEARCH_BILLS_DATA_SIZE;
+        for (int i = start_idx; resultSize == SEARCH_BILLS_DATA_SIZE; i++) {
+            System.out.println("SearchBills Page: " + i);
+            WebClient.RequestHeadersSpec<?> headersSpec = searchBillsUriWithParameter(uriSpec, i, SEARCH_BILLS_DATA_SIZE);
+            ResponseEntity<String> responseResult = null;
             ObjectMapper objectMapper = ObjectMapperProvider.getCustomObjectMapper();
-            SearchBillsBody searchBillsBody;
+            SearchBillsBody searchBillsBody = null;
             try {
+                responseResult = getResponse(headersSpec);
                 searchBillsBody = objectMapper.readValue(responseResult.getBody(), SearchBillsBody.class);
             } catch (JsonMappingException e) {
                 throw new RuntimeException(e);
             } catch (JsonProcessingException e) {
                 System.err.println(e);
                 continue;
+            } catch (WebClientResponseException e) {
+                if (depth >= 5)
+                    throw e;
+                if (responseResult.getStatusCode().is3xxRedirection()) {
+                    System.err.println(responseResult.getStatusCode());
+                    parseSearchBills(i, depth + 1);
+                    break;
+                } else if (responseResult.getStatusCode().is4xxClientError()) {
+                    System.err.println("[ERROR] API를 잘못된 형식으로 호출했습니다");
+                    continue;
+                } else if (responseResult.getStatusCode().is5xxServerError()) {
+                    System.err.println("[ERROR] API 서버 오류");
+                    break;
+                }
             }
             if (searchBillsBody == null)
                 break;
             List<Bill> bills = extractBillsFromSearchBillsBody(searchBillsBody);
-            if (bills == null || bills.isEmpty())
+            if (bills == null)
                 break;
-            resultSize = bills.size();
+            if (bills.isEmpty())
+                continue;
+            resultSize = Arrays
+                    .stream(searchBillsBody.getSearchBillsList()[1].getSearchBills())
+                    .toList()
+                    .size();
             reflectBill(bills);
         }
 
@@ -204,11 +149,16 @@ public class BillSchedule {
     }
 
     private List<Bill> extractBillsFromSearchBillsBody(SearchBillsBody searchBillsBody) {
-        if (searchBillsBody.getSearchBill() == null
-                || searchBillsBody.getSearchBill().getSearchBills() == null)
+        if (searchBillsBody.getSearchBillsList() == null)
             return null;
+        List<SearchBills> searchBillsList = Arrays.asList(searchBillsBody.getSearchBillsList());
+        if (searchBillsList == null
+                || searchBillsList.isEmpty()
+                || searchBillsList.get(1) == null
+                || searchBillsList.get(1).getSearchBills() == null)
+            return null;
+        List<SearchBill> searchBills = List.of(searchBillsList.get(1).getSearchBills());
         List<Committee> committees = committeeRepository.findAll();
-        List<SearchBill> searchBills = Arrays.asList(searchBillsBody.getSearchBill().getSearchBills());
         return searchBills.stream()
                 .filter(searchBill -> searchBill.getAge() == 21)
                 .map(searchBill -> Bill.SearchBillsBuilder()
@@ -224,7 +174,7 @@ public class BillSchedule {
                                                         .equals(searchBill.getCurr_committee_id())
                                         )
                                         .findFirst()
-                                        .orElseThrow(() -> new NotFoundError("해당하는 Committee을 찾을 수 없습니다"))
+                                        .orElse(null)
                         )
                         .proposerKind(ProposerKind.valueOfLable(searchBill.getProposer_kind()))
                         .committeeDate(searchBill.getCommittee_dt())
@@ -263,6 +213,8 @@ public class BillSchedule {
             originBill.setProposerKind(updatebill.getProposerKind());
         if (updatebill.getProposeDate() != null && originBill.getProposeDate() == null)
             originBill.setProposeDate(updatebill.getProposeDate());
+        if (updatebill.getCommittee() != null && originBill.getCommittee() == null)
+            originBill.setCommittee(updatebill.getCommittee());
         if (updatebill.getCommitteeDate() != null && originBill.getCommitteeDate() == null)
             originBill.setCommitteeDate(updatebill.getCommitteeDate());
         if (updatebill.getNoticeEndDate() != null && originBill.getNoticeEndDate() == null)
