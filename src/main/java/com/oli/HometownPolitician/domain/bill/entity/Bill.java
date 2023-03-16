@@ -4,7 +4,6 @@ package com.oli.HometownPolitician.domain.bill.entity;
 import com.oli.HometownPolitician.domain.bill.enumeration.BillStageType;
 import com.oli.HometownPolitician.domain.bill.enumeration.PlenaryResultType;
 import com.oli.HometownPolitician.domain.bill.enumeration.ProposerKind;
-import com.oli.HometownPolitician.domain.bill.responseEntity.openAssembly.searchBills.SearchBill;
 import com.oli.HometownPolitician.domain.bill.responseEntity.publicData.getBillInfoList.BillInfo;
 import com.oli.HometownPolitician.domain.billMessage.entity.BillMessage;
 import com.oli.HometownPolitician.domain.billTagRelation.entity.BillTagRelation;
@@ -44,6 +43,7 @@ public class Bill extends BaseTimeEntity {
     private int number;
     @Column(name = "title", nullable = false)
     private String title;
+    @Enumerated(EnumType.STRING)
     @Column(name ="proposer_kind")
     private ProposerKind proposerKind;
     @Builder.Default
@@ -166,19 +166,6 @@ public class Bill extends BaseTimeEntity {
                         BillStageType.valueOfLable(billInfo.getProcStageCd())
                 )
                 .summary(billInfo.getSummary())
-                .build();
-    }
-    static public Bill fromSearchBill(SearchBill searchBill) {
-        return Bill.SearchBillsBuilder()
-                .billExternalId(searchBill.getBill_id())
-                .number(searchBill.getBill_no())
-                .title(searchBill.getBill_name())
-                .proposeDate(searchBill.getPropose_dt())
-                .proposerKind(ProposerKind.valueOfLable(searchBill.getProposer_kind()))
-                .committeeDate(searchBill.getCommittee_dt())
-                .plenaryResult(PlenaryResultType.valueOfLable(searchBill.getProc_result_cd()))
-                .plenaryProcessingDate(searchBill.getProc_dt())
-                .proposeAssembly(searchBill.getAge())
                 .build();
     }
     public void updateCurrentStage(BillStageType updateStage) {
