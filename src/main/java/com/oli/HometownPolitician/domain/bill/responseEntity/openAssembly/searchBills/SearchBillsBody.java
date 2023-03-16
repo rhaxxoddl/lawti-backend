@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 public class SearchBillsBody {
     @JsonProperty("TVBPMBILL11")
-    private SearchBills searchBill;
+    private SearchBills[] searchBillsList;
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class SearchBills {
-    private Head head;
+    private Head[] head;
     @JsonProperty("row")
     private SearchBill[] SearchBills;
 }
