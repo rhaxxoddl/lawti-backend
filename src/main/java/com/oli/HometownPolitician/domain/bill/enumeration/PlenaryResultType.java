@@ -6,6 +6,8 @@ import java.util.stream.Stream;
 
 public enum PlenaryResultType {
     PASS("가결"),
+    CORRECTION_PASS("수정가결"),
+    ORIGINAL_PASS("원안가결"),
     REJECT("부결"),
     ALTERNATIVE_DISCARD("대안반영폐기"),
     DISCARD("폐기"),
@@ -27,6 +29,8 @@ public enum PlenaryResultType {
             Stream.of(values())
                     .collect(Collectors.toMap(PlenaryResultType::getLable, e -> e));
     public static PlenaryResultType valueOfLable(String lable) {
+        if (lable == null || lable.isEmpty())
+            return null;
         PlenaryResultType plenaryResultType = BY_LABEL.get(lable);
         if (plenaryResultType == null)
             throw new EnumConstantNotPresentException(ProposerKind.class, lable);
