@@ -38,4 +38,4 @@ out/
 .vscode/
 
 **/.DS_Store
-**/application-local.yml
+**/application-*
